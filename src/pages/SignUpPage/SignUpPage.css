@@ -1,0 +1,143 @@
+/* .signup-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+} */
+
+.signup-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  padding: 80px 0;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* .signup-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  z-index: 10;
+} */
+
+.signup-card {
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  z-index: 10;
+}
+.gradient-title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  background: linear-gradient(to right, #4a6cac, #6db8cf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: oblique;
+}
+
+
+.signup-title {
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 5px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.signup-input {
+  width: 80%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 16px;
+  outline: none;
+}
+
+.signup-input:focus {
+  border-color: #4a6cac;
+}
+
+.signup-button {
+  width: 80%;
+  padding: 12px;
+  background: linear-gradient(to right, #4a6cac, #6db8cf);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.signup-links {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.signup-links a {
+  color: #3366cc;
+  text-decoration: none;
+}
+
+.signup-links a:hover {
+  text-decoration: underline;
+}
+
+.signup-select {
+  width: 80%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  background-color: white;
+  color: #020f3d;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%227%22%20viewBox%3D%220%200%2010%207%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M1%201L5%205L9%201%22%20stroke%3D%22%234a6cac%22%20stroke-width%3D%222%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  box-sizing: border-box;
+}
+.signup-select:focus {
+  border-color: #4a6cac;
+}
+
+@media (max-width: 600px) {
+  .signup-card {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  .gradient-title {
+    font-size: 22px;
+  }
+
+  .signup-title {
+    font-size: 20px;
+  }
+
+  .signup-button {
+    width: 90%;
+  }
+}

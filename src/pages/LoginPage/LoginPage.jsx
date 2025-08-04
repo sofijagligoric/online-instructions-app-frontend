@@ -1,0 +1,48 @@
+import React, { useState } from "react";
+import Background1 from "../../utils/Background1";
+import { useNavigate, Link } from "react-router-dom";
+import "./LoginPage.css";
+
+const LoginPage = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    alert(`Korisničko ime: ${username}\nLozinka: ${password}`);
+  };
+
+  return (
+    <div className="login-container">
+      <Background1 />
+      <div className="login-card">
+         <h1 className="gradient-title">Online Instructions</h1>
+        <h2 className="login-title">Login</h2>
+        <form className="login-form" onSubmit={handleLogin}>
+          <input type="username" placeholder="Username" className="login-input"  value={username}
+            onChange={(e) => setUsername(e.target.value)} />
+          <input
+            type="password"
+            placeholder="Password"
+            className="login-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit" className="login-button">
+            Login
+          </button>
+        </form>
+        <div className="login-links">
+          <p>
+            Forgot <a href="#">Password?</a>
+          </p>
+          <p>
+            Don't have an account? <Link to="/signup">Sign up</Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
