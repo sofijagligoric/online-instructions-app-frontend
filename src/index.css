@@ -1,6 +1,6 @@
 :root {
   --main-text-color: #020f3d;
-  --primary-button-color: #2c7fab; /* zelena */
+  --primary-button-color: #2c7fab; 
   --primary-button-text-color: #fff;
 }
 
@@ -15,6 +15,10 @@ body {
 }
 
 input {
+  color: var(--main-text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
   color: var(--main-text-color);
 }
 

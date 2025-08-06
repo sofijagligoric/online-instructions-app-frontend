@@ -12,6 +12,7 @@ const HomePageTesting = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        gap: "15px",
       }}
     >
       <img
@@ -28,6 +29,36 @@ const HomePageTesting = () => {
         }}
       >
         Login
+      </button>
+      <button
+        onClick={() => navigate("/admin")}
+        style={{
+          padding: "12px 24px",
+          fontSize: "18px",
+          cursor: "pointer",
+        }}
+      >
+        Admin main layout
+      </button>
+      <button
+        onClick={() => navigate("/instructor")}
+        style={{
+          padding: "12px 24px",
+          fontSize: "18px",
+          cursor: "pointer",
+        }}
+      >
+        Instructor main layout
+      </button>
+      <button
+        onClick={() => navigate("/student")}
+        style={{
+          padding: "12px 24px",
+          fontSize: "18px",
+          cursor: "pointer",
+        }}
+      >
+        Student main layout
       </button>
     </div>
   );

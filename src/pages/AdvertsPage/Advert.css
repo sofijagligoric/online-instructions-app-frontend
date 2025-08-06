@@ -1,0 +1,124 @@
+.advert-card {
+  display: flex;
+  flex-direction: column;
+  /* background: linear-gradient(to top, #e4ecf0, #c8dee8); */
+  /* background: #e4ecf0; */
+  margin: 10px auto;
+  padding: 20px 25px;
+  width: 90%;
+  border-radius: 12px;
+ box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.advert-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.advert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.advert-info {
+  display: flex;
+  gap: 10px;
+  color: #849296;
+}
+
+.menu-wrapper {
+  position: relative;
+}
+
+.dots-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #4a5f66;
+}
+
+.advert-menu {
+  position: absolute;
+  right: 0;
+  top: 30px;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 100;
+  min-width: 120px;
+}
+
+.advert-menu div {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.advert-menu div:hover {
+  background: #e1e8fc;
+}
+
+.advert-title h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.advert-description {
+  color: #333;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Max 2 lines */
+  -webkit-box-orient: vertical;
+  cursor: pointer;
+  position: relative;
+}
+
+.advert-description.full {
+  display: block;
+}
+
+.more-text {
+  color: #666;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.advert-contact-info {
+  display: flex;
+  gap: 5px;
+  color: #4a5f66;
+}
+
+.ant-dropdown-menu-item {
+  padding: 10px 15px !important;
+   color: #020f3d !important;
+}
+
+.ant-dropdown-menu-item:hover {
+  background-color: #e1e8fc !important; 
+  color: #020f3d !important;
+}
+
+
+.ant-dropdown-menu-item:active {
+  background-color: #6db8cf !important; 
+  color: #020f3d !important;
+}
+
+.custom-dropdown-button {
+  color: #020f3d ;   
+  border: none;     
+  background: transparent; 
+  font-size: 1.5rem;  
+  cursor: pointer;
+}
+
+.custom-dropdown-button:hover {
+  color: #020f3d ;
+}

@@ -1,0 +1,31 @@
+.adverts-main-div {
+    display: flex;
+    flex-direction: column;
+  align-items: center;
+}
+.adverts-title-and-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+}
+
+.adverts-title {
+  color: #3f3d56;
+  background: linear-gradient(to right, #4a6cac, #8dd9f0); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 3rem;
+  text-align: right;
+} 
+.create-button {
+  align-self: flex-end; 
+  margin-bottom: 16px;
+  padding: 10px 20px;
+  border: none;
+  margin-right: 5%;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
