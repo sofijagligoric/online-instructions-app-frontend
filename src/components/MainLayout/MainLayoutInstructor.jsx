@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { Layout, Menu, Button, Drawer } from "antd";
 import {
   HomeOutlined,
@@ -7,12 +7,12 @@ import {
   UserOutlined,
   PoweroffOutlined,
   BookOutlined,
-  ExclamationCircleOutlined,
   ScheduleOutlined,
   UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
+import Footer from "../Footer/Footer";
 // import { useAuth } from "../components/AuthContext";
 
 const { Header, Content } = Layout;
@@ -20,7 +20,6 @@ const { Header, Content } = Layout;
 function MainLayoutInstructor() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [sectionTitle, setSectionTitle] = useState("");
   // const { logout } = useAuth();
 
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -119,7 +118,8 @@ function MainLayoutInstructor() {
         <Content style={{ minHeight: "280px" }}>
           <Outlet />
         </Content>
-        {/*   <AppFooter /> */}
+     {/* <Footer role={currentUser.role} /> */}
+     <Footer role="instructor" />
       </Layout>
     </Layout>
   );

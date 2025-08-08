@@ -1,0 +1,150 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #020f3d;
+  color: #e1e8fc;
+  padding: 20px 40px;
+  min-height: 200px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* LEVO */
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-logo-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.branding {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #3f3d56;
+  background: linear-gradient(to right, #4a6cac, #8dd9f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: left;
+}
+
+.tm {
+  font-size: 1rem;
+  vertical-align: super;
+  margin-left: 4px;
+}
+
+/* SREDINA - linkovi vertikalno */
+.footer-center {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  flex: 1;
+  min-width: 120px;
+  justify-content: flex-start;
+  margin-right: 10px;
+}
+
+.footer-link {
+  color: #e1e8fc;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #6db8cf;
+  text-decoration: underline;
+}
+
+/* DESNO - about us i kontakt */
+.footer-right {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-right h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.3rem;
+  color: #8dd9f0;
+}
+
+.about-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: #e1e8fc;
+}
+
+.contact-info {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #a0bde0;
+}
+
+.contact-info a {
+  color: #6db8cf;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive za manje ekrane */
+@media (max-width: 780px) {
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    min-width: 100%;
+    flex: unset;
+  }
+
+  .footer-center {
+    gap: 20px;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .footer-right {
+    gap: 10px;
+    align-items: center;
+  }
+
+  .footer-right h3 {
+  text-align: center;
+  margin: 0;
+}
+
+.about-text {
+ text-align: center;
+}
+
+.contact-info {
+  text-align: center;
+}
+}

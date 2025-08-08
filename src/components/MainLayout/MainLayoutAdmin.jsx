@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { Layout, Menu, Button, Drawer } from "antd";
 import {
   HomeOutlined,
   FormOutlined,
   MenuOutlined,
   UsergroupAddOutlined,
-   PoweroffOutlined,
+  PoweroffOutlined,
   BookOutlined,
   ExclamationCircleOutlined,
   ScheduleOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
+import Footer from "../Footer/Footer";
 // import { useAuth } from "../components/AuthContext";
 
 const { Header, Content } = Layout;
@@ -19,7 +20,6 @@ const { Header, Content } = Layout;
 function MainLayoutAdmin() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [sectionTitle, setSectionTitle] = useState("");
   // const { logout } = useAuth();
 
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -29,8 +29,7 @@ function MainLayoutAdmin() {
     setDrawerVisible(false);
   };
 
-
-/*   const handleLogOut = async () => {
+  /*   const handleLogOut = async () => {
     try {
       await authService.logout();
       logout();
@@ -54,14 +53,14 @@ function MainLayoutAdmin() {
         Users
       </Menu.Item>
 
-       <Menu.Item key="/admin/adverts" icon={<ScheduleOutlined />}>
+      <Menu.Item key="/admin/adverts" icon={<ScheduleOutlined />}>
         Adverts
       </Menu.Item>
       <Menu.Item key="/admin/resources" icon={<BookOutlined />}>
         Resources
       </Menu.Item>
 
-     <Menu.Item key="/admin/discusion" icon={<FormOutlined />}>
+      <Menu.Item key="/admin/discusion" icon={<FormOutlined />}>
         Discusion
       </Menu.Item>
       <Menu.Item key="/admin/reports" icon={<ExclamationCircleOutlined />}>
@@ -94,11 +93,11 @@ function MainLayoutAdmin() {
             icon={<PoweroffOutlined />}
             onClick={handleLogOut}
           /> */}
-            <Button
+          <Button
             className="user_button"
             icon={<PoweroffOutlined />}
             onClick={() => navigate("/login")}
-          /> 
+          />
         </div>
       </Header>
       <Drawer
@@ -115,7 +114,7 @@ function MainLayoutAdmin() {
         <Content style={{ minHeight: "280px" }}>
           <Outlet />
         </Content>
-      {/*   <AppFooter /> */}
+        <Footer role="admin" />
       </Layout>
     </Layout>
   );

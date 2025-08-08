@@ -36,3 +36,91 @@
     transform: rotate(360deg);
   }
 }
+
+/* Sorter izgled */
+.custom-sort-select {
+  width: 50%;
+  max-width: 200px;
+  min-height: 40px;
+  border-radius: 8px;
+  background: #e1e8fc;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  color: #020f3d !important;
+ align-items: center !important;
+}
+
+.custom-sort-select:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.custom-sort-select .ant-select-selector {
+  border-radius: 8px !important;
+  border: 1px solid #abd4e0 !important;
+  height: 40px !important;
+  padding: 0 12px !important;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #020f3d !important;
+   border-color: #abd4e0 !important;
+}
+
+.custom-sort-select .ant-select-arrow {
+  color: #020f3d !important;
+  font-size: 14px;
+}
+
+
+
+.custom-sort-select .ant-select-item-option-selected {
+  background-color: #e1e8fc !important;
+  font-weight: 500;
+  color: #020f3d !important;
+}
+
+.ant-select-item-option {
+  color: #020f3d !important;
+}
+
+.ant-select-item-option-selected {
+  background-color: #e1e8fc!important;
+  color: #020f3d !important;
+}
+
+.ant-select-item-option:hover {
+  background-color: #e8f6fa !important; 
+  color: #020f3d !important;
+}
+
+.ant-layout-content {
+  color: #020f3d !important;
+}
+
+ .pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  background-color: #020f3d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #2c7fab;
+  cursor: not-allowed;
+}
+
+/* @media (max-width: 768px) {
+  .custom-sort-select {
+  width: 90%;
+  }
+} */

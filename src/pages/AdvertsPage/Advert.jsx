@@ -1,81 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import "./Advert.css";
-import { Menu, Dropdown, Button } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { Menu, Dropdown, Button } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FlagOutlined,
+  MoreOutlined,
+} from "@ant-design/icons";
 
 const Advert = ({ advert, currentUser, backgroundColor }) => {
   const isOwner = currentUser?.id === advert.authorId;
-  const isAdmin = currentUser?.role === 'admin';
-  const [showMenu, setShowMenu] = useState(false);
+  const isAdmin = currentUser?.role === "admin";
   const [showFullDesc, setShowFullDesc] = useState(false);
+  const [showFullTitle, setShowFullTitle] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
- const toggleMenu = () => {
-    setShowMenu(!showMenu);
-  };
-
-   const closeMenu = () => {
-    setShowMenu(false);
-  };
-
   const handleDelete = () => {
-    alert('Advert deleted.');
+    alert("Advert deleted.");
   };
 
   const handleEdit = () => {
-    alert('Edit advert.');
+    alert("Edit advert.");
   };
 
   const handleReport = () => {
-    alert('Advert reported.');
+    alert("Advert reported.");
   };
 
-    const menu = (
+  const menu = (
     <Menu>
-      {isOwner && <Menu.Item key="edit" onClick={handleEdit}>Edit</Menu.Item>}
-      {canDelete && <Menu.Item key="delete" onClick={handleDelete}>Delete</Menu.Item>}
-      {!isAdmin && <Menu.Item key="report" onClick={handleReport}>Report</Menu.Item>}
+      {isOwner && (
+        <Menu.Item key="edit" icon={<EditOutlined />} onClick={handleEdit}>
+          Edit
+        </Menu.Item>
+      )}
+      {canDelete && (
+        <Menu.Item
+          key="delete"
+          icon={<DeleteOutlined />}
+          onClick={handleDelete}
+        >
+          Delete
+        </Menu.Item>
+      )}
+      {!isAdmin && (
+        <Menu.Item key="report" icon={<FlagOutlined />} onClick={handleReport}>
+          Report
+        </Menu.Item>
+      )}
     </Menu>
-  ); 
+  );
 
   return (
     <div className="advert-card" style={{ backgroundColor }}>
       <div className="advert-header">
         <div className="advert-info">
-          <p>{advert.date || '01.02.2025.'}</p>
-          <p>@{advert.authorUsername || 'korisnik1'}</p>
+          <p>{advert.date || "01.02.2025."}</p>
+          <p>@{advert.authorUsername || "korisnik1"}</p>
         </div>
-       {/*  <div className="menu-wrapper" tabIndex={0} onBlur={closeMenu}>
-          <button className="dots-button" onClick={toggleMenu}>⋯</button>
-          {showMenu && (
-            <div className="advert-menu">
-              {isOwner && <div onClick={handleEdit}>Uredi</div>}
-              {canDelete && <div onClick={handleDelete}>Obriši</div>}
-              {!canDelete && <div onClick={handleReport}>Prijavi</div>}
-            </div>
-          )}
-        </div> */}
-         <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
-          <Button  className="custom-dropdown-button" shape="circle" icon={<EllipsisOutlined />} />
+        <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
+          <Button
+            className="custom-dropdown-button"
+            shape="circle"
+            icon={<MoreOutlined />}
+          />
         </Dropdown>
       </div>
 
-      <div className="advert-title">
+      <div
+        className={`advert-title ${showFullTitle ? "full" : ""}`}
+        onClick={() => setShowFullTitle(!showFullTitle)}
+      >
         <h3>{advert.title}</h3>
       </div>
 
       <div
-        className={`advert-description ${showFullDesc ? 'full' : ''}`}
+        className={`advert-description ${showFullDesc ? "full" : ""}`}
         onClick={() => setShowFullDesc(!showFullDesc)}
       >
         <p>{advert.description}</p>
-        {!showFullDesc && <span className="more-text">...more</span>}
       </div>
 
       <div className="advert-contact-info">
         <p>Contact:</p>
-        <p>{advert.contact || '065/821-158'}</p>
+        <p>{advert.contact || "065/821-158"}</p>
       </div>
     </div>
   );
