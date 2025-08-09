@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Advert.css";
+import "../../App.css";
 import { Menu, Dropdown, Button } from "antd";
 import {
   DeleteOutlined,

@@ -173,7 +173,7 @@ const AdvertsPage = () => {
           backgroundColor={colors[index % colors.length]}
         />
       ))}
-
+ {totalPages > 1 && (
       <div className="pagination">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -193,6 +193,7 @@ const AdvertsPage = () => {
           Next
         </button>
       </div>
+ )}
     </div>
   );
 };

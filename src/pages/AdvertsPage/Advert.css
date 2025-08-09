@@ -26,10 +26,6 @@
   color: #849296;
 }
 
-.menu-wrapper {
-  position: relative;
-}
-
 
  .advert-title h3 {
   display: -webkit-box;
@@ -75,21 +71,6 @@
   color: #4a5f66;
 }
 
-.ant-dropdown-menu-item {
-  padding: 10px 15px !important;
-   color: #020f3d !important;
-}
-
-.ant-dropdown-menu-item:hover {
-  background-color: #e1e8fc !important; 
-  color: #020f3d !important;
-}
-
-
-.ant-dropdown-menu-item:active {
-  background-color: #6db8cf !important; 
-  color: #020f3d !important;
-}
 
 .custom-dropdown-button {
   color: #020f3d ;   

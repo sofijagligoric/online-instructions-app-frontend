@@ -1,0 +1,86 @@
+.question-card {
+  display: flex;
+  flex-direction: column;
+  margin: 10px auto;
+  padding: 20px 25px;
+  width: 90%;
+  border-radius: 12px;
+ box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.question-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.question-info {
+  display: flex;
+  gap: 10px;
+  color: #849296;
+}
+
+
+
+ .question-title h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* 1 red */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all 0.3s ease;
+   margin: 0;
+  font-size: 20px;
+}
+
+.question-title.full h3 {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+.question-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* broj redova */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.question-description.full {
+  -webkit-line-clamp: unset; /* skida ograničenje */
+  overflow: visible;
+}
+
+.more-text {
+  color: #666;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.question-contact-info {
+  display: flex;
+  gap: 5px;
+  color: #4a5f66;
+}
+
+
+.custom-dropdown-button {
+  color: #020f3d ;   
+  border: none;     
+  background: transparent; 
+  font-size: 1.5rem;  
+  cursor: pointer;
+}
+
+.custom-dropdown-button:hover {
+  color: #020f3d ;
+}

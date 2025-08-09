@@ -1,0 +1,55 @@
+.new-question {
+  background-color: #c0cffa; 
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.new-question-title {
+  margin-bottom: 10px;
+}
+
+.new-question form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.new-question input,
+.new-question textarea {
+   width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: all 0.3s ease;
+  color: #020f3d;
+}
+
+.new-question input:focus,
+.new-question textarea:focus  {
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(100, 149, 237, 0.3);
+}
+
+.new-question textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+}
+
+.new-question button {
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 20%;
+  min-width: 200px;
+  margin: 0 auto;
+}

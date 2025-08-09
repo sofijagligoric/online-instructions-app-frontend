@@ -10,6 +10,8 @@ import MainLayoutAdmin from "./components/MainLayout/MainLayoutAdmin";
 import MainLayoutInstructor from "./components/MainLayout/MainLayoutInstructor";
 import MainLayoutStudent from "./components/MainLayout/MainLayoutStudent";
 import AdvertsPage from "./pages/AdvertsPage/AdvertsPage";
+import DiscusionPage from "./pages/DiscusionPage/DiscusionPage";
+import ViewQuestionPage from "./pages/DiscusionPage/ViewQuestionPage";
 
 function App() {
   // TODO - Popraviti rutiranje kada bude omoguceno na backu, staviti da bude preglednije i smislenije
@@ -56,30 +58,33 @@ function App() {
 
         {/* ADMIN RUTE */}
         <Route path="/admin" element={<MainLayoutAdmin />}>
-           <Route path="/admin/home" element={<AdminHomePage />} />
-        <Route path="/admin/users" element={<AdminHomePage />} />
-        <Route path="/admin/adverts" element={<AdvertsPage />} />
-        <Route path="/admin/resources" element={<AdminHomePage />} />
-        <Route path="/admin/discusion" element={<AdminHomePage />} />
-        <Route path="/admin/reports" element={<AdminHomePage />} />
+           <Route path="home" element={<AdminHomePage />} />
+        <Route path="users" element={<AdminHomePage />} />
+        <Route path="adverts" element={<AdvertsPage />} />
+        <Route path="resources" element={<AdminHomePage />} />
+        <Route path="discusion" element={<DiscusionPage />} />
+        <Route path="reports" element={<AdminHomePage />} />
+        <Route path="discusion/thread/:id" element={<ViewQuestionPage />} />
         </Route>
 
         {/* INSTRUCTOR RUTE */}
         <Route path="/instructor" element={<MainLayoutInstructor />}>
-          <Route path="/instructor/home" element={<InstructorHomePage />} />
-        <Route path="/instructor/users" element={<InstructorHomePage />} />
-        <Route path="/instructor/adverts" element={<AdvertsPage />} />
-        <Route path="/instructor/resources" element={<InstructorHomePage />} />
-        <Route path="/instructor/discusion" element={<InstructorHomePage />} />
+          <Route path="home" element={<InstructorHomePage />} />
+        <Route path="users" element={<InstructorHomePage />} />
+        <Route path="adverts" element={<AdvertsPage />} />
+        <Route path="resources" element={<InstructorHomePage />} />
+        <Route path="discusion" element={<DiscusionPage />} />
+        <Route path="discusion/thread/:id" element={<ViewQuestionPage />} />
         </Route>
 
         {/* STUDENT RUTE */}
         <Route path="/student" element={<MainLayoutStudent />}>
-           <Route path="/student/home" element={<StudentHomePage />} />
-        <Route path="/student/users" element={<StudentHomePage />} />
-        <Route path="/student/adverts" element={<AdvertsPage />} />
-        <Route path="/student/resources" element={<StudentHomePage />} />
-        <Route path="/student/discusion" element={<StudentHomePage />} />
+           <Route path="home" element={<StudentHomePage />} />
+        <Route path="users" element={<StudentHomePage />} />
+        <Route path="adverts" element={<AdvertsPage />} />
+        <Route path="resources" element={<StudentHomePage />} />
+        <Route path="discusion" element={<DiscusionPage />} />
+        <Route path="discusion/thread/:id" element={<ViewQuestionPage />} />
         </Route>
       </Routes>
     </Router>
