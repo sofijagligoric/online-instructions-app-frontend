@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import "./Question.css";
+import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import "../../App.css";
-import { Menu, Dropdown, Button} from "antd";
+import { Menu, Dropdown, Button } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
   FlagOutlined,
   MoreOutlined,
-  ArrowRightOutlined
+  ArrowRightOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
@@ -15,6 +16,7 @@ const Question = ({ question, currentUser, backgroundColor }) => {
   const isOwner = currentUser?.id === question.authorId;
   const isAdmin = currentUser?.role === "admin";
   const [showFullTitle, setShowFullTitle] = useState(false);
+  const [reportVisible, setReportVisible] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
@@ -26,8 +28,9 @@ const Question = ({ question, currentUser, backgroundColor }) => {
     alert("Edit question.");
   };
 
-  const handleReport = () => {
-    alert("Question reported.");
+  const handleReportSubmit = ({ advertId, reason, description }) => {
+    // alert(`Advert ID: ${advertId}\nReason: ${reason}\nDescription: ${description || "N/A"}`);
+    setReportVisible(false);
   };
 
   const menu = (
@@ -46,8 +49,12 @@ const Question = ({ question, currentUser, backgroundColor }) => {
           Delete
         </Menu.Item>
       )}
-      {!isAdmin && (
-        <Menu.Item key="report" icon={<FlagOutlined />} onClick={handleReport}>
+      {!canDelete && (
+        <Menu.Item
+          key="report"
+          icon={<FlagOutlined />}
+          onClick={() => setReportVisible(true)}
+        >
           Report
         </Menu.Item>
       )}
@@ -73,13 +80,19 @@ const Question = ({ question, currentUser, backgroundColor }) => {
       <div
         className={`question-title ${showFullTitle ? "full" : ""}`}
         onClick={() => setShowFullTitle(!showFullTitle)}
-        style={{marginBottom: "10px"}}
+        style={{ marginBottom: "10px" }}
       >
         <h3>{question.title}</h3>
       </div>
-       <Link to={`thread/${question.id}`} className="view-question-link">
-      View details <ArrowRightOutlined />
-    </Link>
+      <Link to={`thread/${question.id}`} className="view-question-link">
+        View details <ArrowRightOutlined />
+      </Link>
+      <CreateReportModal
+        visible={reportVisible}
+        onCancel={() => setReportVisible(false)}
+        advertId={question.id}
+        onSubmit={handleReportSubmit}
+      />
     </div>
   );
 };

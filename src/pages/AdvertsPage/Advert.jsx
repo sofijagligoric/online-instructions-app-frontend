@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Advert.css";
 import "../../App.css";
+import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import { Menu, Dropdown, Button } from "antd";
 import {
   DeleteOutlined,
@@ -14,6 +15,7 @@ const Advert = ({ advert, currentUser, backgroundColor }) => {
   const isAdmin = currentUser?.role === "admin";
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [showFullTitle, setShowFullTitle] = useState(false);
+  const [reportVisible, setReportVisible] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
@@ -25,8 +27,9 @@ const Advert = ({ advert, currentUser, backgroundColor }) => {
     alert("Edit advert.");
   };
 
-  const handleReport = () => {
-    alert("Advert reported.");
+  const handleReportSubmit = ({ advertId, reason, description }) => {
+    // alert(`Advert ID: ${advertId}\nReason: ${reason}\nDescription: ${description || "N/A"}`);
+    setReportVisible(false);
   };
 
   const menu = (
@@ -45,8 +48,12 @@ const Advert = ({ advert, currentUser, backgroundColor }) => {
           Delete
         </Menu.Item>
       )}
-      {!isAdmin && (
-        <Menu.Item key="report" icon={<FlagOutlined />} onClick={handleReport}>
+      {!canDelete && (
+        <Menu.Item
+          key="report"
+          icon={<FlagOutlined />}
+          onClick={() => setReportVisible(true)}
+        >
           Report
         </Menu.Item>
       )}
@@ -87,6 +94,12 @@ const Advert = ({ advert, currentUser, backgroundColor }) => {
         <p>Contact:</p>
         <p>{advert.contact || "065/821-158"}</p>
       </div>
+        <CreateReportModal
+        visible={reportVisible}
+        onCancel={() => setReportVisible(false)}
+        advertId={advert.id}
+        onSubmit={handleReportSubmit}
+      />
     </div>
   );
 };

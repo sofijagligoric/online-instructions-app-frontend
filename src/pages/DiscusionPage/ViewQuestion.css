@@ -44,8 +44,15 @@
 }
 
 .add-comment-section {
-  margin-top: 16px;
+  margin-top: 10px;
   padding: 15px;
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-end;
+}
+
+.add-comment-section textarea {
+  background: whitesmoke;
 }
 
 .comments-list {
@@ -63,8 +70,8 @@
   padding: 10px 16px;
   font-size: 14px;
   cursor: pointer;
-  border-radius: 3px;
-  margin-top: 10px;
+  border-radius: 20px;
+  margin-top: 15px;
 }
 
 .add-comment-button:hover {

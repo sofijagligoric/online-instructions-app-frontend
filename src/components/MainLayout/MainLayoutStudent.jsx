@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Layout, Menu, Button, Drawer } from "antd";
 import {
   HomeOutlined,
@@ -39,12 +39,10 @@ function MainLayoutStudent() {
     }
   }; */
 
+  const selectedKey =
+    location.pathname === "/student" ? "/student/home" : location.pathname;
   const renderMenu = () => (
-    <Menu
-      selectedKeys={[location.pathname]}
-      mode="inline"
-      onClick={handleMenuClick}
-    >
+    <Menu selectedKeys={[selectedKey]} mode="inline" onClick={handleMenuClick}>
       <Menu.Item key="/student/home" icon={<HomeOutlined />}>
         Home
       </Menu.Item>
@@ -117,7 +115,7 @@ function MainLayoutStudent() {
         <Content style={{ minHeight: "280px" }}>
           <Outlet />
         </Content>
-        <Footer role="student" /> 
+        <Footer role="student" />
       </Layout>
     </Layout>
   );

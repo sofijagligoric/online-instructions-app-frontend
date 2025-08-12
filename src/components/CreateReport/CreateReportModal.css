@@ -1,0 +1,58 @@
+.custom-report-modal .ant-modal-title {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #3f3d56;
+  background: linear-gradient(to right, #4a6cac, #8dd9f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.custom-report-modal label {
+  color: var(--main-text-color) !important;
+  font-weight: 500;
+}
+
+.custom-report-modal .ant-radio-wrapper {
+  display: block; /* stavlja radio dugmad jedan ispod drugog */
+  margin-bottom: 8px;
+  color: var(--main-text-color) !important;
+  font-weight: 500;
+}
+
+.custom-report-modal .ant-radio-wrapper:hover {
+  color: #2c7fab !important;
+}
+
+.custom-report-modal .ant-radio-inner {
+  border-color: #bcdee8 !important;
+}
+
+.custom-report-modal .ant-radio-checked .ant-radio-inner {
+  border-color: #2c7fab !important;
+  background-color: #2c7fab !important;
+}
+
+.custom-report-modal input,
+.custom-report-modal textarea {
+  border-radius: 8px;
+  padding: 8px;
+  color: var(--main-text-color) !important;
+  border-color: #bcdee8;
+}
+
+.custom-report-modal input:hover,
+.custom-report-modal textarea:hover {
+  border-color: #2c7fab !important;
+}
+
+.report-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.cancel-report-button {
+
+    margin-right: 10px;
+    background-color: #36b9e0;
+}

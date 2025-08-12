@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Layout, Menu, Button, Drawer } from "antd";
 import {
   HomeOutlined,
@@ -39,9 +39,13 @@ function MainLayoutAdmin() {
     }
   }; */
 
+  const selectedKey =
+    location.pathname === "/admin" ? "/admin/home" : location.pathname;
+
   const renderMenu = () => (
     <Menu
-      selectedKeys={[location.pathname]}
+      /*   selectedKeys={[location.pathname]} */
+      selectedKeys={[selectedKey]}
       mode="inline"
       onClick={handleMenuClick}
     >

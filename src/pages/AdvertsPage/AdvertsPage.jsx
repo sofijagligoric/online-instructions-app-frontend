@@ -11,6 +11,7 @@ import {
   FieldTimeOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons";
+import AddAdvertModal from "./AddAdvertModal";
 const { Option } = Select;
 
 const AdvertsPage = () => {
@@ -30,9 +31,11 @@ const AdvertsPage = () => {
   const indexOfFirstAdvert = indexOfLastAdvert - advertsPerPage;
 
   const canCreate = isInstructor;
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
-  const handleCreate = () => {
-    alert("Added.");
+  const handleAddAdvert = (resource) => {
+    console.log("New resource:", resource);
+    setIsAddModalVisible(false);
   };
 
   useEffect(() => {
@@ -159,8 +162,8 @@ const AdvertsPage = () => {
           </Select>
         </div>
         {canCreate && (
-          <button className="create-button" onClick={handleCreate}>
-            Create
+          <button className="create-button"  onClick={() => setIsAddModalVisible(true)}>
+            Add advert
           </button>
         )}
       </div>
@@ -194,6 +197,12 @@ const AdvertsPage = () => {
         </button>
       </div>
  )}
+
+ <AddAdvertModal
+        visible={isAddModalVisible}
+        onCancel={() => setIsAddModalVisible(false)}
+        onAdd={handleAddAdvert}
+      />
     </div>
   );
 };

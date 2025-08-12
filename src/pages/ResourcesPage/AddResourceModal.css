@@ -1,0 +1,50 @@
+.custom-add-resource-modal .ant-modal-title {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #3f3d56;
+  background: linear-gradient(to right, #4a6cac, #8dd9f0); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.custom-add-resource-modal label {
+  color: var(--main-text-color) !important;
+  font-weight: 500;
+}
+
+.custom-add-resource-modal input {
+  border-radius: 8px;
+  padding: 8px;
+   color: var(--main-text-color) !important;
+   border-color: #bcdee8;
+}
+
+.custom-add-resource-modal input:hover {
+   border-color: #2c7fab !important;
+}
+
+.custom-add-resource-modal .ant-upload-drag {
+  border-radius: 10px;
+  background-color: #fafafa;
+  border: 2px dashed #bcdee8;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.custom-add-resource-modal .ant-upload-drag:hover {
+  border-color: #2c7fab !important;
+}
+
+.custom-add-resource-modal .ant-icon {
+  color: var(--main-text-color) !important;
+}
+
+.cancel-resource-button {
+
+    margin-right: 10px;
+    background-color: #36b9e0;
+}
+
+.custom-add-resource-modal .ant-upload-text,
+.custom-add-resource-modal .ant-upload-hint {
+   color: var(--main-text-color) !important;
+}
