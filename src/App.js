@@ -13,6 +13,8 @@ import AdvertsPage from "./pages/AdvertsPage/AdvertsPage";
 import DiscusionPage from "./pages/DiscusionPage/DiscusionPage";
 import ViewQuestionPage from "./pages/DiscusionPage/ViewQuestionPage";
 import ResoucesPage from "./pages/ResourcesPage/ResurcesPage";
+import UsersPage from "./pages/UsersPage/UsersPage";
+import ViewProfilePage from "./pages/UsersPage/ViewProfilePage";
 
 function App() {
   // TODO - Popraviti rutiranje kada bude omoguceno na backu, staviti da bude preglednije i smislenije
@@ -61,7 +63,8 @@ function App() {
         <Route path="/admin" element={<MainLayoutAdmin />}>
          <Route index element={<AdminHomePage />} />
            <Route path="home" element={<AdminHomePage />} />
-        <Route path="users" element={<AdminHomePage />} />
+        <Route path="users" element={<UsersPage />} />
+        <Route path="users/:id" element={<ViewProfilePage />} />
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
         <Route path="discusion" element={<DiscusionPage />} />
@@ -73,7 +76,8 @@ function App() {
         <Route path="/instructor" element={<MainLayoutInstructor />}>
          <Route index element={<InstructorHomePage />} />
           <Route path="home" element={<InstructorHomePage />} />
-        <Route path="users" element={<InstructorHomePage />} />
+        <Route path="users" element={<UsersPage />} />
+        <Route path="users/:id" element={<ViewProfilePage />} />
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
         <Route path="discusion" element={<DiscusionPage />} />
@@ -84,7 +88,8 @@ function App() {
         <Route path="/student" element={<MainLayoutStudent />}>
          <Route index element={<StudentHomePage />} />
            <Route path="home" element={<StudentHomePage />} />
-        <Route path="users" element={<StudentHomePage />} />
+        <Route path="users" element={<UsersPage />} />
+         <Route path="users/:id" element={<ViewProfilePage />} />
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
         <Route path="discusion" element={<DiscusionPage />} />

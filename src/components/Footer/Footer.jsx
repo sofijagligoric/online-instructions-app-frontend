@@ -28,6 +28,9 @@ const Footer = ({ role }) => {
         <a href={getPath("/home")} className="footer-link">
           Home
         </a>
+          <a href={getPath("/users")} className="footer-link">
+          Users
+        </a>
         <a href={getPath("/adverts")} className="footer-link">
           Adverts
         </a>

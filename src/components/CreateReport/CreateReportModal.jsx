@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Radio, Input, Button } from "antd";
+import { Modal, Form, Radio, Input } from "antd";
 import "./CreateReportModal.css";
 import "../../App.css";
 

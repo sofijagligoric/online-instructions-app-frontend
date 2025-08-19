@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import Background1 from "../../utils/Background1";
 import { useNavigate, Link } from "react-router-dom";
 import "./LoginPage.css";
+import ForgotPasswordModal from "./ForgotPasswordModal";
+
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+   const [isForgotModalVisible, setIsForgotModalVisible] = useState(false); 
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -32,15 +35,24 @@ const LoginPage = () => {
             Login
           </button>
         </form>
-        <div className="login-links">
+      <div className="login-links">
           <p>
-            Forgot <a href="#">Password?</a>
+            Forgot{" "}
+            <a href="#" onClick={(e) => { e.preventDefault(); setIsForgotModalVisible(true); }}>
+              Password?
+            </a>
           </p>
           <p>
             Don't have an account? <Link to="/signup">Sign up</Link>
           </p>
         </div>
       </div>
+
+      {/* MODAL */}
+      <ForgotPasswordModal
+        visible={isForgotModalVisible}
+        onCancel={() => setIsForgotModalVisible(false)}
+      />
     </div>
   );
 };

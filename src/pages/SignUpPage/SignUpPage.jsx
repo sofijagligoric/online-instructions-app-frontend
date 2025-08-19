@@ -11,6 +11,7 @@ const SignUpPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+   const [phone, setPhone] = useState("");
   const [type, setType] = useState("Student");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -45,6 +46,7 @@ const SignUpPage = () => {
             className="signup-input"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            required
           />
           <input
             type="lastName"
@@ -52,6 +54,7 @@ const SignUpPage = () => {
             className="signup-input"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            required
           />
           <input
             type="username"
@@ -59,6 +62,7 @@ const SignUpPage = () => {
             className="signup-input"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
           <input
             type="email"
@@ -66,6 +70,14 @@ const SignUpPage = () => {
             className="signup-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+           <input
+            type="tel"
+            placeholder="Phone number"
+            className="signup-input"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
           <input
             type="password"
@@ -73,6 +85,7 @@ const SignUpPage = () => {
             className="signup-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <input
             type="password"
@@ -80,6 +93,7 @@ const SignUpPage = () => {
             className="signup-input"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
           />
            <select
             value={type}
