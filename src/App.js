@@ -78,6 +78,7 @@ function App() {
           <Route path="home" element={<InstructorHomePage />} />
         <Route path="users" element={<UsersPage />} />
         <Route path="users/:id" element={<ViewProfilePage />} />
+        <Route path="myProfile" element={<ViewProfilePage />} /> 
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
         <Route path="discusion" element={<DiscusionPage />} />
@@ -90,6 +91,7 @@ function App() {
            <Route path="home" element={<StudentHomePage />} />
         <Route path="users" element={<UsersPage />} />
          <Route path="users/:id" element={<ViewProfilePage />} />
+         <Route path="myProfile" element={<ViewProfilePage />} /> 
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
         <Route path="discusion" element={<DiscusionPage />} />

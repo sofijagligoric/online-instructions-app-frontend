@@ -99,3 +99,60 @@ background-color: var(--primary-button-color);
 .tabs button.active {
   background-color:#0a1e66; 
 }
+
+.user-profile-delete-button {
+  margin-top: 15px;
+   margin-bottom: 15px;
+  padding: 10px 16px;
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+}
+
+.user-profile-delete-button:hover {
+  opacity: 0.9;
+}
+
+.user-profile-edit-button {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 10px 16px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 250px;
+  background: #020f3d;
+}
+
+.user-profile-edit-button:hover {
+  opacity: 0.9;
+}
+
+.user-profile-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+  gap: 10px;
+}
+
+.user-profile-pagination button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #0a1e66;
+  color: white;
+  cursor: pointer;
+}
+
+.user-profile-pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+

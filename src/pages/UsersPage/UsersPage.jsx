@@ -49,7 +49,7 @@ const UsersPage = () => {
         isActive: true,
       },
       {
-        id: 2,
+        id: 7,
         firstName: "Marko",
         lastName: "Petrović",
         username: "markop",
@@ -83,7 +83,7 @@ const UsersPage = () => {
       },
       {
         id: 5,
-        firstName: "Jankooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+        firstName: "Janko",
         lastName: "Janković",
         username: "jankojankovic",
         email: "jann@example.com",

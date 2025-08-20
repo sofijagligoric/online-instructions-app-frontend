@@ -84,7 +84,7 @@ const Resource = ({ resource, currentUser, backgroundColor }) => {
       >
         <h3>{resource.title}</h3>
       </div>
-      <Link to={`thread/${resource.id}`} className="view-resource-link">
+      <Link to={`/login`} className="view-resource-link">
         View details <ArrowRightOutlined />
       </Link>
 

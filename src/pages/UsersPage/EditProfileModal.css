@@ -1,0 +1,29 @@
+.custom-edit-profile-modal .ant-modal-title {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #3f3d56;
+  background: linear-gradient(to right, #4a6cac, #8dd9f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.custom-edit-profile-modal label {
+  color: var(--main-text-color) !important;
+  font-weight: 500;
+}
+
+.custom-edit-profile-modal input {
+  border-radius: 8px;
+  padding: 8px;
+  color: var(--main-text-color) !important;
+  border-color: #bcdee8;
+}
+
+.custom-edit-profile-modal input:hover {
+  border-color: #2c7fab !important;
+}
+
+.cancel-profile-button {
+    margin-right: 10px;
+    background-color: #36b9e0;
+}

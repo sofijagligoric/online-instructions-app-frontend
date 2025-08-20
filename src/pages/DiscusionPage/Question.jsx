@@ -18,6 +18,12 @@ const Question = ({ question, currentUser, backgroundColor }) => {
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
 
+  const basePath =
+    currentUser.role === "admin"
+      ? "/admin"
+      : currentUser.role === "instructor"
+      ? "/instructor"
+      : "/student";
   const canDelete = isOwner || isAdmin;
 
   const handleDelete = () => {
@@ -84,7 +90,10 @@ const Question = ({ question, currentUser, backgroundColor }) => {
       >
         <h3>{question.title}</h3>
       </div>
-      <Link to={`thread/${question.id}`} className="view-question-link">
+      <Link
+        to={`${basePath}/discusion/thread/${question.id}`}
+        className="view-question-link"
+      >
         View details <ArrowRightOutlined />
       </Link>
       <CreateReportModal
