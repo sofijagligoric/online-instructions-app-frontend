@@ -3,7 +3,7 @@ import User from "./User";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import "./UsersPage.css";
 import "../../App.css";
-import usersService from "../../services/user.service"; 
+import usersService from "../../services/user.service";
 import { Select } from "antd";
 import {
   SortAscendingOutlined,
@@ -34,77 +34,9 @@ const UsersPage = () => {
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-   const mockCategories = ["Instructors", "Students"];
+  const mockCategories = ["Instructors", "Students"];
 
-  /* useEffect(() => {
-    const mockCategories = ["Instructors", "Students"];
-    const mockUsers = [
-      {
-        id: 1,
-        firstName: "Ana",
-        lastName: "Marić",
-        username: "anamaric",
-        email: "ana@example.com",
-        type: "student",
-        dateCreated: "2025-01-10",
-        phone: null,
-        isActive: true,
-      },
-      {
-        id: 7,
-        firstName: "Marko",
-        lastName: "Petrović",
-        username: "markop",
-        email: "marko@example.com",
-        type: "instructor",
-        dateCreated: "2024-12-01",
-        phone: "+38765123456",
-        isActive: true,
-      },
-      {
-        id: 3,
-        firstName: "Ivana",
-        lastName: "Jovanović",
-        username: "ivana_j",
-        email: "ivana@example.com",
-        type: "student",
-        dateCreated: "2025-02-01",
-        phone: null,
-        isActive: true,
-      },
-      {
-        id: 4,
-        firstName: "Jelena",
-        lastName: "Jelić",
-        username: "jelenajjj",
-        email: "jelena@example.com",
-        type: "student",
-        dateCreated: "2025-01-10",
-        phone: null,
-        isActive: true,
-      },
-      {
-        id: 5,
-        firstName: "Janko",
-        lastName: "Janković",
-        username: "jankojankovic",
-        email: "jann@example.com",
-        type: "student",
-        dateCreated: "2025-01-10",
-        phone: null,
-        isActive: true,
-      },
-    ];
-
-    setCategories(mockCategories);
-    setUsers(mockUsers);
-    setCurrentUser({
-      id: 5,
-      role: "instructor",
-    });
-  }, []); */
-
-   useEffect(() => {
+  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const allUsers = await usersService.getAllUsers();
@@ -118,7 +50,6 @@ const UsersPage = () => {
     setCategories(mockCategories);
   }, []);
 
-
   const filteredUsers = users.filter((u) => {
     const fullName = `${u.firstName} ${u.lastName} ${u.username}`.toLowerCase();
     const matchSearch = fullName.includes(searchTerm.toLowerCase());
@@ -131,7 +62,7 @@ const UsersPage = () => {
 
     const matchActive = u.isActive === true;
 
-  return matchSearch && matchCategory && matchActive;
+    return matchSearch && matchCategory && matchActive;
   });
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {

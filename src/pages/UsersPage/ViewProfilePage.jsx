@@ -6,6 +6,8 @@ import Advert from "../AdvertsPage/Advert";
 import "./ViewProfilePage.css";
 import ReviewsSection from "./ReviewsSection";
 import EditProfileModal from "./EditProfileModal";
+import userService from "../../services/user.service";
+import reviewService from "../../services/review.service";
 
 const ViewProfilePage = () => {
   const { id } = useParams();
@@ -18,7 +20,7 @@ const ViewProfilePage = () => {
   const [userResources, setUserResources] = useState([]);
   const [userAdverts, setUserAdverts] = useState([]);
   const [activeTab, setActiveTab] = useState("questions");
-  const [reviews, setReviews] = useState([]);
+  // const [reviews, setReviews] = useState([]);
 
   const [questionPage, setQuestionPage] = useState(1);
   const questionsPerPage = 10;
@@ -53,23 +55,15 @@ const ViewProfilePage = () => {
   const profileId = id || currentUser.id;
 
   useEffect(() => {
-    if (!user) {
-      // fetch korisnika po ID-u ako nije prosleđen
-      const mockUser = {
-        id: profileId,
-        firstName: "Ana",
-        lastName: "Marić",
-        username: "anamaric",
-        email: "ana@example.com",
-        type: "instructor",
-        dateCreated: "2025-01-10",
-        phone: "+38765123456",
-        isActive: true,
-      };
-      setUser(mockUser);
-    }
+    const fetchUser = async () => {
+      const fetchedUser = await userService.getUserById(profileId);
+      setUser(fetchedUser);
+    };
+    fetchUser();
+  }, [profileId]);
 
-    // fetch pitanja, materijala, oglasa (ili mock)
+  useEffect(() => {
+    if (!user) return;
     setUserQuestions([
       {
         id: 2,
@@ -123,25 +117,7 @@ const ViewProfilePage = () => {
         authorId: 7,
       },
     ]);
-    setReviews([
-      {
-        id: 1,
-        studentId: 10,
-        instructorId: profileId,
-        rating: 5,
-        description: "Odličan instruktor, sve jasno objašnjava!",
-        date: "2025-02-01",
-      },
-      {
-        id: 2,
-        studentId: 11,
-        instructorId: profileId,
-        rating: 4,
-        description: "",
-        date: "2025-02-10",
-      },
-    ]);
-  }, [profileId, user]);
+  }, [user]);
 
   if (!user) return <p>Loading...</p>;
 
@@ -207,12 +183,7 @@ const ViewProfilePage = () => {
           </div>
 
           {user.type === "instructor" && (
-            <ReviewsSection
-              reviews={reviews}
-              currentUser={currentUser}
-              instructorId={user.id}
-              onAddReview={(review) => setReviews([...reviews, review])}
-            />
+            <ReviewsSection currentUser={currentUser} instructorId={user.id} />
           )}
         </div>
 
