@@ -3,6 +3,7 @@ import User from "./User";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import "./UsersPage.css";
 import "../../App.css";
+import usersService from "../../services/user.service"; 
 import { Select } from "antd";
 import {
   SortAscendingOutlined,
@@ -33,8 +34,9 @@ const UsersPage = () => {
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
+   const mockCategories = ["Instructors", "Students"];
 
-  useEffect(() => {
+  /* useEffect(() => {
     const mockCategories = ["Instructors", "Students"];
     const mockUsers = [
       {
@@ -100,7 +102,22 @@ const UsersPage = () => {
       id: 5,
       role: "instructor",
     });
+  }, []); */
+
+   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const allUsers = await usersService.getAllUsers();
+        setUsers(allUsers);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUsers();
+    setCategories(mockCategories);
   }, []);
+
 
   const filteredUsers = users.filter((u) => {
     const fullName = `${u.firstName} ${u.lastName} ${u.username}`.toLowerCase();
