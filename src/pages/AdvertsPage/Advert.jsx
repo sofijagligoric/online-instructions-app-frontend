@@ -3,28 +3,50 @@ import "./Advert.css";
 import "../../App.css";
 import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import { Menu, Dropdown, Button } from "antd";
+import { formatDateTime } from "../../utils/formatDateTime";
 import {
   DeleteOutlined,
   EditOutlined,
   FlagOutlined,
   MoreOutlined,
 } from "@ant-design/icons";
+import advertsService from "../../services/adverts.service";
+import EditAdvertModal from "./EditAdvertModal";
 
-const Advert = ({ advert, currentUser, backgroundColor }) => {
-  const isOwner = currentUser?.id === advert.authorId;
+const Advert = ({
+  advert,
+  currentUser,
+  backgroundColor,
+  instructor,
+  onDelete,
+  onEdit,
+}) => {
+  const isOwner = currentUser?.id === advert.instructorId;
   const isAdmin = currentUser?.role === "admin";
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
-  const handleDelete = () => {
-    alert("Advert deleted.");
+  const handleDelete = async () => {
+    try {
+      await advertsService.deleteAdvert(advert.id);
+      alert("Advert deleted.");
+      if (onDelete) onDelete(advert.id);
+    } catch (err) {
+      console.error("Error deleting advert:", err);
+      alert("Failed to delete advert.");
+    }
   };
 
-  const handleEdit = () => {
-    alert("Edit advert.");
+  const handleEditClick = () => {
+    setIsEditModalVisible(true);
+  };
+
+  const handleEdit = (updatedAdvert) => {
+    if (onEdit) onEdit(updatedAdvert); // parent će update-ovati listu
   };
 
   const handleReportSubmit = ({ advertId, reason, description }) => {
@@ -35,7 +57,7 @@ const Advert = ({ advert, currentUser, backgroundColor }) => {
   const menu = (
     <Menu>
       {isOwner && (
-        <Menu.Item key="edit" icon={<EditOutlined />} onClick={handleEdit}>
+        <Menu.Item key="edit" icon={<EditOutlined />} onClick={handleEditClick}>
           Edit
         </Menu.Item>
       )}
@@ -64,8 +86,8 @@ const Advert = ({ advert, currentUser, backgroundColor }) => {
     <div className="advert-card" style={{ backgroundColor }}>
       <div className="advert-header">
         <div className="advert-info">
-          <p>{advert.date || "01.02.2025."}</p>
-          <p>@{advert.authorUsername || "korisnik1"}</p>
+          <p>{formatDateTime(advert.timestamp)}</p>
+          <p>@{instructor?.username || "N/A"}</p>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button
@@ -91,14 +113,24 @@ const Advert = ({ advert, currentUser, backgroundColor }) => {
       </div>
 
       <div className="advert-contact-info">
-        <p>Contact:</p>
-        <p>{advert.contact || "065/821-158"}</p>
+        <p>
+          <i>Contact: </i>
+        </p>
+        <p>email - {instructor?.email || "N/A"},</p>
+        <p>phone - {instructor?.phone || "N/A"}</p>
       </div>
-        <CreateReportModal
+      <CreateReportModal
         visible={reportVisible}
         onCancel={() => setReportVisible(false)}
         advertId={advert.id}
         onSubmit={handleReportSubmit}
+      />
+
+      <EditAdvertModal
+        visible={isEditModalVisible}
+        onCancel={() => setIsEditModalVisible(false)}
+        onEdit={handleEdit}
+        advert={advert}
       />
     </div>
   );

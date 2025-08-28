@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Modal, Form, Input } from "antd";
 import { Select } from "antd";
 import "./AddAdvertModal.css";
+import advertsService from "../../services/adverts.service";
+import categoryService from "../../services/category.service";
 const { Option } = Select;
 
 const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
@@ -9,37 +11,41 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState(null);
+   const [categoryId, setCategoryId] = useState(null);
 
   useEffect(() => {
-    setCategories([
-      { id: 1, name: "Mathematics" },
-      { id: 2, name: "Programming" },
-      { id: 3, name: "Languages" },
-    ]);
-    setCategory(1);
+     const fetchCategories = async () => {
+        try {
+          const response = await categoryService.getAllCategorys();
+          setCategories(response.data);
+        } catch (err) {
+          console.error("Error fetching categories:", err);
+        }
+      };
+      fetchCategories();
+    setCategoryId(1);
   }, []);
 
-  const handleOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        const formData = {
-          ...values,
-          category: categories.find((c) => c.id === category)?.name || "",
-        };
 
-        alert(
-          `Title: ${formData.title}\nDescription: ${formData.description}\nCategory: ${formData.category}`
-        );
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
 
-        ///  onAdd(formData);
+      const advertData = {
+        title: values.title,
+        description: values.description,
+        instructorId: 2, 
+        categoryId: categoryId,
+        timestamp: new Date().toISOString(), 
+      };
 
-        form.resetFields();
-      })
-      .catch((info) => {
-        console.log("Validation failed:", info);
-      });
+      const response = await advertsService.addAdvert(advertData);
+
+      form.resetFields();
+      onAdd(response.data);
+    } catch (err) {
+      console.error("Error creating advert:", err);
+    }
   };
 
   return (
@@ -52,24 +58,17 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
       centered
       className="custom-add-advert-modal"
       footer={[
-        <button
-          key="cancel"
-          className="cancel-advert-button"
-          onClick={onCancel}
-        >
+        <button key="cancel" className="cancel-advert-button" onClick={onCancel}>
           Cancel
         </button>,
         <button key="submit" type="primary" onClick={handleOk}>
-          {" "}
-          Add Advert{" "}
+          Add Advert
         </button>,
       ]}
     >
       <Form form={form} layout="vertical">
         <Form.Item
           name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
           label="Advert Title"
           rules={[{ required: true, message: "Please enter a title" }]}
         >
@@ -78,11 +77,10 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
 
         <Form.Item label="Category" required>
           <Select
-            value={category}
+            value={categoryId}
             placeholder="Select category"
-            onChange={(value) => setCategory(value)}
+            onChange={setCategoryId}
             className="custom-sort-select"
-            style={{ boxShadow: "none" }}
           >
             {categories.map((cat) => (
               <Option key={cat.id} value={cat.id}>
@@ -95,14 +93,11 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
         <Form.Item
           name="description"
           label="Description"
-          rules={[{ required: false, message: "Please enter description" }]}
+          rules={[{ required: false }]}
         >
           <Input.TextArea
             placeholder="Enter description"
-            rows={4} 
-            autoSize={{ minRows: 4, maxRows: 4 }} 
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            rows={4}
           />
         </Form.Item>
       </Form>
@@ -111,3 +106,4 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
 };
 
 export default AddAdvertModal;
+

@@ -8,6 +8,7 @@ import ReviewsSection from "./ReviewsSection";
 import EditProfileModal from "./EditProfileModal";
 import userService from "../../services/user.service";
 import reviewService from "../../services/review.service";
+import advertsService from "../../services/adverts.service";
 
 const ViewProfilePage = () => {
   const { id } = useParams();
@@ -99,24 +100,17 @@ const ViewProfilePage = () => {
       },
     ]);
 
-    setUserAdverts([
-      {
-        id: 1,
-        title: "Prodajem bicikl",
-        description: "Skoro nov bicikl, malo vožen.",
-        category: "Sport",
-        date: "2025-02-25",
-        authorId: 5,
-      },
-      {
-        id: 2,
-        title: "Dajem časove matematike",
-        description: "Online časovi za srednjoškolce.",
-        category: "Edukacija",
-        date: "2024-02-05",
-        authorId: 7,
-      },
-    ]);
+   if(user.type === "instructor") {
+  const fetchAdverts = async () => {
+    try {
+      const adverts = await advertsService.getAdvertsForInstructor(user.id);
+      setUserAdverts(adverts); 
+    } catch (err) {
+      console.error("Error fetching adverts:", err);
+    }
+  };
+  fetchAdverts();
+}
   }, [user]);
 
   if (!user) return <p>Loading...</p>;
@@ -135,6 +129,15 @@ const ViewProfilePage = () => {
     setUser((prev) => ({ ...prev, ...updatedData }));
   };
 
+  const handleDeleteAdvert = (id) => {
+    setUserAdverts((prev) => prev.filter((ad) => ad.id !== id));
+  };
+
+  const handleUpdateAdvert = (updatedAdvert) => {
+    setUserAdverts((prev) =>
+      prev.map((ad) => (ad.id === updatedAdvert.id ? updatedAdvert : ad))
+    );
+  };
   return (
     <div className="profile-page">
       <div className="profile-header">
@@ -258,6 +261,9 @@ const ViewProfilePage = () => {
                     advert={a}
                     currentUser={currentUser}
                     backgroundColor={colors[index % colors.length]}
+                     instructor={user}
+          onDelete={handleDeleteAdvert}
+          onEdit={handleUpdateAdvert}
                   />
                 ))}
                 {totalAdvertPages > 1 && (

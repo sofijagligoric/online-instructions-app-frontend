@@ -11,6 +11,9 @@ import {
   FieldTimeOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons";
+import advertsService from "../../services/adverts.service";
+import categoryService from "../../services/category.service";
+import userService from "../../services/user.service";
 import AddAdvertModal from "./AddAdvertModal";
 const { Option } = Select;
 
@@ -32,55 +35,51 @@ const AdvertsPage = () => {
 
   const canCreate = isInstructor;
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [instructors, setInstructors] = useState({});
 
-  const handleAddAdvert = (resource) => {
-    console.log("New resource:", resource);
+  const handleAddAdvert = (newAdvert) => {
+    setAdverts((prevAdverts) => [newAdvert, ...prevAdverts]);
     setIsAddModalVisible(false);
   };
-
   useEffect(() => {
-    const mockCategories = ["Sport", "Edukacija", "Nekretnine", "Servisi"];
-    const mockAdverts = [
-      {
-        id: 1,
-        title: "Prodajem bicikl",
-        description: "Skoro nov bicikl, malo vožen.",
-        category: "Sport",
-        date: "2025-02-25",
-        authorId: 5,
-      },
-      {
-        id: 2,
-        title: "Dajem časove matematike",
-        description: "Online časovi za srednjoškolce.",
-        category: "Edukacija",
-        date: "2024-02-05",
-        authorId: 7,
-      },
-      {
-        id: 3,
-        title:
-          "Etiam stan suscipit sem sit amet arcu sollicitudin elementum. Cras gravida rutrum libero ac aliquet. Nullam ut bibendum nisl, nec sagittis arcu. Curabitur at malesuada diam, in finibus lacus.",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae urna ex. Morbi ex dolor, accumsan sed pharetra finibus, tempus venenatis felis. Nulla neque arcu, aliquam quis sem eu, ullamcorper convallis libero. Nulla facilisi. Aliquam sed leo erat. Suspendisse hendrerit eget eros in condimentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Curabitur lobortis, arcu in pulvinar eleifend, justo leo laoreet mi, quis viverra nisi arcu sit amet nisi. Proin lacus leo, porta a metus vel, commodo commodo lectus.",
-        category: "Nekretnine",
-        date: "2025-01-05",
-        authorId: 10,
-      },
-      {
-        id: 4,
-        title: "Izdajem stan",
-        description: "Garsonjera u Boriku.",
-        category: "Nekretnine",
-        date: "2025-02-01",
-        authorId: 10,
-      },
-    ];
+    const fetchAdverts = async () => {
+      try {
+        const response = await advertsService.getAllAdverts();
+        setAdverts(response.data);
+      } catch (err) {
+        console.error("Error fetching adverts:", err);
+      }
+    };
 
-    setCategories(mockCategories);
-    setAdverts(mockAdverts);
+    const fetchCategories = async () => {
+      try {
+        const response = await categoryService.getAllCategorys();
+        setCategories(response.data);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+    const fetchInstructors = async () => {
+      try {
+        const instructorsList = await userService.getAllInstructors();
+        const instructorsMap = instructorsList.reduce((acc, instructor) => {
+          if (!instructor) return acc; // skip null
+          acc[instructor.id] = instructor;
+          return acc;
+        }, {});
+        setInstructors(instructorsMap);
+      } catch (err) {
+        console.error("Error fetching instructors:", err);
+      }
+    };
+
+    fetchAdverts();
+    fetchCategories();
+    fetchInstructors();
+
     setCurrentUser({
-      id: 5,
+      id: 2,
       role: "instructor",
     });
   }, []);
@@ -91,7 +90,7 @@ const AdvertsPage = () => {
       .includes(searchTerm.toLowerCase());
     const matchCategory =
       selectedCategories.length === 0 ||
-      selectedCategories.includes(a.category);
+      selectedCategories.includes(a.categoryId);
     return matchSearch && matchCategory;
   });
 
@@ -116,6 +115,16 @@ const AdvertsPage = () => {
     indexOfLastAdvert
   );
   const totalPages = Math.ceil(sortedAdverts.length / advertsPerPage);
+
+  const handleDeleteAdvert = (id) => {
+    setAdverts((prev) => prev.filter((ad) => ad.id !== id));
+  };
+
+  const handleUpdateAdvert = (updatedAdvert) => {
+    setAdverts((prev) =>
+      prev.map((ad) => (ad.id === updatedAdvert.id ? updatedAdvert : ad))
+    );
+  };
 
   return (
     <div className="adverts-main-div">
@@ -155,14 +164,17 @@ const AdvertsPage = () => {
             className="custom-sort-select"
           >
             {categories.map((cat) => (
-              <Option key={cat} value={cat}>
-                {cat}
+              <Option key={cat.id} value={cat.id}>
+                {cat.name}
               </Option>
             ))}
           </Select>
         </div>
         {canCreate && (
-          <button className="create-button"  onClick={() => setIsAddModalVisible(true)}>
+          <button
+            className="create-button"
+            onClick={() => setIsAddModalVisible(true)}
+          >
             Add advert
           </button>
         )}
@@ -172,33 +184,36 @@ const AdvertsPage = () => {
         <Advert
           key={ad.id}
           advert={ad}
-          currentUser={{ id: 5, role: "instructor" }}
+          currentUser={currentUser}
           backgroundColor={colors[index % colors.length]}
+          instructor={instructors[ad.instructorId]}
+          onDelete={handleDeleteAdvert}
+          onEdit={handleUpdateAdvert}
         />
       ))}
- {totalPages > 1 && (
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          Back
-        </button>
-        <span>
-          Page {currentPage} out of {totalPages}
-        </span>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
- )}
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Back
+          </button>
+          <span>
+            Page {currentPage} out of {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
 
- <AddAdvertModal
+      <AddAdvertModal
         visible={isAddModalVisible}
         onCancel={() => setIsAddModalVisible(false)}
         onAdd={handleAddAdvert}

@@ -7,12 +7,11 @@ export const getAllUsers = async () => {
     const accountResponse = await instance.get("/api/account");
     const accounts = accountResponse.data;
 
-    // filter odmah samo instruktore i studente
     const userAccounts = accounts.filter(acc => 
       acc.type.toLowerCase() === "instructor" || acc.type.toLowerCase() === "student"
     );
 
-    // za svaki nalog dohvatimo User detalje
+  
     const users = await Promise.all(
       userAccounts.map(async (acc) => {
         try {
@@ -81,4 +80,73 @@ export const getUserById = async (id) => {
   }
 };
 
-export default { getAllUsers, getUserById };
+export const getAllInstructors = async () => {
+  try {
+    const instResponse = await instance.get("/api/instructor");
+    const instructors = instResponse.data;
+
+    return Promise.all(
+      instructors.map(async (inst) => {
+        try {
+          const accountResponse = await instance.get(`/api/account/${inst.Account_Id}`);
+          const acc = accountResponse.data;
+
+          const userResponse = await instance.get(`/api/user/${inst.Account_Id}`);
+          const user = userResponse.data;
+
+          return {
+            id: acc.id,
+            username: acc.username,
+            type: "instructor",
+            isActive: acc.isActive,
+            dateCreated: acc.created,
+            firstName: user.fName || "",
+            lastName: user.lName || "",
+            email: user.email || "",
+            phone: user.phone || null,
+            description: inst.description || ""
+          };
+        } catch (err) {
+          console.error("Error merging instructor data:", err);
+          return null;
+        }
+      })
+    );
+  } catch (error) {
+    console.error("Error fetching instructors:", error);
+    throw error;
+  }
+};
+
+export const getInstructorById = async (id) => {
+  try {
+    // uzmi account
+    const accountResponse = await instance.get(`/api/account/${id}`);
+    const acc = accountResponse.data;
+
+    // uzmi user podatke
+    const userResponse = await instance.get(`/api/user/${id}`);
+    const user = userResponse.data;
+
+    // uzmi instructor podatke
+    const instResponse = await instance.get(`/api/instructor/${id}`);
+    const inst = instResponse.data;
+
+    return {
+      id: acc.id,
+      username: acc.username,
+      type: "instructor",
+      isActive: acc.isActive,
+      dateCreated: acc.created,
+      firstName: user.fName || "",
+      lastName: user.lName || "",
+      email: user.email || "",
+      phone: user.phone || null,
+      description: inst.description || ""
+    };
+  } catch (error) {
+    console.error("Error fetching instructor by id:", error);
+    return null;
+  }
+};
+export default { getAllUsers, getUserById, getAllInstructors, getInstructorById};
