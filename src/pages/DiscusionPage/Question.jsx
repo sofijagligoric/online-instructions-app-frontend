@@ -3,6 +3,7 @@ import "./Question.css";
 import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import "../../App.css";
 import { Menu, Dropdown, Button } from "antd";
+import { formatDateTime } from "../../utils/formatDateTime";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -11,12 +12,22 @@ import {
   ArrowRightOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import threadService from "../../services/thread.service";
+import EditQuestionModal from "./EditQuestionModal";
 
-const Question = ({ question, currentUser, backgroundColor }) => {
-  const isOwner = currentUser?.id === question.authorId;
+const Question = ({
+  question,
+  currentUser,
+  backgroundColor,
+  userName,
+  onDelete,
+  onEdit,
+}) => {
+  const isOwner = currentUser?.id === question.userId;
   const isAdmin = currentUser?.role === "admin";
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const basePath =
     currentUser.role === "admin"
@@ -26,12 +37,23 @@ const Question = ({ question, currentUser, backgroundColor }) => {
       : "/student";
   const canDelete = isOwner || isAdmin;
 
-  const handleDelete = () => {
-    alert("Question deleted.");
+  const handleDelete = async () => {
+    try {
+      await threadService.deleteDiscussionThread(question.id);
+      alert("Thread deleted.");
+      if (onDelete) onDelete(question.id);
+    } catch (err) {
+      console.error("Error deleting thread:", err);
+      alert("Failed to delete thread.");
+    }
   };
 
-  const handleEdit = () => {
-    alert("Edit question.");
+  const handleEditClick = () => {
+    setIsEditModalVisible(true);
+  };
+
+  const handleEdit = (updatedQuestion) => {
+    if (onEdit) onEdit(updatedQuestion);
   };
 
   const handleReportSubmit = ({ advertId, reason, description }) => {
@@ -42,7 +64,7 @@ const Question = ({ question, currentUser, backgroundColor }) => {
   const menu = (
     <Menu>
       {isOwner && (
-        <Menu.Item key="edit" icon={<EditOutlined />} onClick={handleEdit}>
+        <Menu.Item key="edit" icon={<EditOutlined />} onClick={handleEditClick}>
           Edit
         </Menu.Item>
       )}
@@ -71,8 +93,8 @@ const Question = ({ question, currentUser, backgroundColor }) => {
     <div className="question-card" style={{ backgroundColor }}>
       <div className="question-header">
         <div className="question-info">
-          <p>{question.date || "01.02.2025."}</p>
-          <p>@{question.authorUsername || "korisnik1"}</p>
+          <p>{formatDateTime(question.timestamp)}</p>
+          <p>@{userName || "N/A"}</p>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button
@@ -101,6 +123,13 @@ const Question = ({ question, currentUser, backgroundColor }) => {
         onCancel={() => setReportVisible(false)}
         advertId={question.id}
         onSubmit={handleReportSubmit}
+      />
+
+       <EditQuestionModal
+        visible={isEditModalVisible}
+        onCancel={() => setIsEditModalVisible(false)}
+        onEdit={handleEdit}
+        question={question}
       />
     </div>
   );

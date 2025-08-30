@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./NewQuestion.css";
 import { Select } from "antd";
+import threadService from "../../services/thread.service";
 const { Option } = Select;
 
 const NewQuestion = ({ categories = [], onSubmit }) => {
@@ -8,38 +9,41 @@ const NewQuestion = ({ categories = [], onSubmit }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (!category || !title.trim()) {
-       alert("Please fill all the fields.");
-      return;
-    }
+  if (!category || !title.trim()) {
+    alert("Please fill all the fields.");
+    return;
+  }
 
-    const newQuestion = { category, title, description };
-    onSubmit && onSubmit(newQuestion);
-
-    alert(`Category: ${category}\nTitle: ${title}\nDescription: ${description}`);
-
-    setCategory("");
-    setTitle("");
-    setDescription("");
+  const newQuestion = { 
+    categoryId: category, 
+    title, 
+    description,
+    userId: 2 
   };
+
+  onSubmit && onSubmit(newQuestion);
+
+  setCategory("");
+  setTitle("");
+  setDescription("");
+};
 
   return (
     <div className="new-question">
       <h2 className="new-question-title">Ask a new question</h2>
       <form onSubmit={handleSubmit}>
-
-          <Select
+        <Select
           value={category || undefined}
           placeholder="Select category"
           onChange={(value) => setCategory(value)}
           className="custom-sort-select"
         >
           {categories.map((cat) => (
-            <Option key={cat} value={cat}>
-              {cat}
+            <Option key={cat.id} value={cat.id}>
+              {cat.name}
             </Option>
           ))}
         </Select>

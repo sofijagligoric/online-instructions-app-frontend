@@ -12,12 +12,16 @@ import {
   AppstoreOutlined,
 } from "@ant-design/icons";
 import NewQuestion from "./NewQuestion";
+import categoryService from "../../services/category.service";
+import userService from "../../services/user.service";
+import threadService from "../../services/thread.service";
 const { Option } = Select;
 
 const DiscusionPage = () => {
   const [questions, setQuestions] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [users, setUsers] = useState({});
   const isInstructor = currentUser?.role === "instructor";
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
   const [sortOption, setSortOption] = useState("name-asc");
@@ -31,42 +35,55 @@ const DiscusionPage = () => {
 
   const canCreate = isInstructor;
 
-  const handleCreate = () => {
-    alert("Added.");
-  };
+ const handleCreate = async (newQuestion) => {
+  try {
+    const response = await threadService.addDiscussionThread(newQuestion);
+    setQuestions((prev) => [response.data, ...prev]);
+  } catch (err) {
+    console.error("Error creating question:", err);
+    alert("Error while creating question.");
+  }
+};
 
   useEffect(() => {
-    const mockCategories = ["Sport", "Edukacija", "Nekretnine", "Servisi"];
-    const mockQuestions = [
-      {
-        id: 1,
-        title: "Da li je plava bolja od zelene?",
-        description: "Pomozite mi u izboru boje.",
-        category: "Sport",
-        date: "2025-02-25",
-        authorId: 5,
-      },
-      {
-        id: 2,
-        title: "Koliko je 2+2?",
-        category: "Edukacija",
-        date: "2024-02-05",
-        authorId: 7,
-      },
-      {
-        id: 4,
-        title: "Koja je najbrza komponena zivotinja?",
-        description: "Gepard ili crna mamba?.",
-        category: "Edukacija",
-        date: "2025-02-01",
-        authorId: 10,
-      },
-    ];
+    const fetchAdverts = async () => {
+      try {
+        const response = await threadService.getAllDiscussionThreads();
+        setQuestions(response.data);
+      } catch (err) {
+        console.error("Error fetching threads:", err);
+      }
+    };
 
-    setCategories(mockCategories);
-    setQuestions(mockQuestions);
+    const fetchCategories = async () => {
+      try {
+        const response = await categoryService.getAllCategorys();
+        setCategories(response.data);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const usersList = await userService.getAllUsers();
+        const usersMap = usersList.reduce((acc, instructor) => {
+          if (!instructor) return acc; // skip null
+          acc[instructor.id] = instructor;
+          return acc;
+        }, {});
+        setUsers(usersMap);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+
+    fetchAdverts();
+    fetchCategories();
+    fetchUsers();
+
     setCurrentUser({
-      id: 5,
+      id: 2,
       role: "instructor",
     });
   }, []);
@@ -77,7 +94,7 @@ const DiscusionPage = () => {
       .includes(searchTerm.toLowerCase());
     const matchCategory =
       selectedCategories.length === 0 ||
-      selectedCategories.includes(a.category);
+      selectedCategories.includes(a.categoryId);
     return matchSearch && matchCategory;
   });
 
@@ -103,6 +120,17 @@ const DiscusionPage = () => {
   );
   const totalPages = Math.ceil(sortedQuestions.length / questionsPerPage);
 
+  const handleDeleteQuestion = (id) => {
+    setQuestions((prev) => prev.filter((ad) => ad.id !== id));
+  };
+
+  const handleUpdateQuestion = (updatedQuestion) => {
+    setQuestions((prev) =>
+      prev.map((ad) => (ad.id === updatedQuestion.id ? updatedQuestion : ad))
+    );
+  };
+  
+
   return (
     <div className="discusion-main-div">
       <div className="discusion-title-and-search">
@@ -112,7 +140,7 @@ const DiscusionPage = () => {
         <SearchBar value={searchTerm} onChange={setSearchTerm} />
       </div>
       <div className="create-question-div ">
-        {canCreate && <NewQuestion categories={categories} />}
+        {canCreate && <NewQuestion categories={categories}  onSubmit={handleCreate}/>}
       </div>
       <div className="discusion-sort-add-div">
         <div className="discusion-sort-filter-div">
@@ -146,8 +174,8 @@ const DiscusionPage = () => {
             className="custom-sort-select"
           >
             {categories.map((cat) => (
-              <Option key={cat} value={cat}>
-                {cat}
+              <Option key={cat.id} value={cat.id}>
+                {cat.name}
               </Option>
             ))}
           </Select>
@@ -158,8 +186,11 @@ const DiscusionPage = () => {
         <Question
           key={ad.id}
           question={ad}
-          currentUser={{ id: 5, role: "instructor" }}
+          currentUser={currentUser}
+          userName={users[ad.userId]?.username}
           backgroundColor={colors[index % colors.length]}
+          onDelete={handleDeleteQuestion}
+          onEdit={handleUpdateQuestion}
         />
       ))}
       {totalPages > 1 && (
