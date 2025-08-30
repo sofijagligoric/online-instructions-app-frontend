@@ -16,13 +16,14 @@ import EditAdvertModal from "./EditAdvertModal";
 const Advert = ({
   advert,
   currentUser,
+  role,
   backgroundColor,
   instructor,
   onDelete,
   onEdit,
 }) => {
-  const isOwner = currentUser?.id === advert.instructorId;
-  const isAdmin = currentUser?.role === "admin";
+  const isOwner = currentUser === advert.instructorId;
+  const isAdmin = role === "Admin";
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
@@ -46,7 +47,7 @@ const Advert = ({
   };
 
   const handleEdit = (updatedAdvert) => {
-    if (onEdit) onEdit(updatedAdvert); // parent će update-ovati listu
+    if (onEdit) onEdit(updatedAdvert); 
   };
 
   const handleReportSubmit = ({ advertId, reason, description }) => {

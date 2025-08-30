@@ -3,7 +3,7 @@ import { Modal, Form, } from "antd";
 import "../../pages/LoginPage/ForgotPasswordModal.css";
 import "../../App.css";
 
-const ChangePasswordModal = ({visible, onCancel}) => {
+const ChangePasswordModal = ({visible, onCancel, userId}) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");

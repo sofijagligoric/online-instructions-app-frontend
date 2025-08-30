@@ -12,9 +12,9 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
-const Resource = ({ resource, currentUser, backgroundColor }) => {
-  const isOwner = currentUser?.id === resource.authorId;
-  const isAdmin = currentUser?.role === "admin";
+const Resource = ({ resource, currentUser, role, backgroundColor }) => {
+  const isOwner = currentUser === resource.authorId;
+  const isAdmin = role === "Admin";
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
 

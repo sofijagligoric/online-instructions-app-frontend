@@ -13,14 +13,15 @@ import {
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import Footer from "../Footer/Footer";
-// import { useAuth } from "../components/AuthContext";
+import { useAuth } from "../AuthContext/AuthContext";
+import authService from "../../services/auth.service";
 
 const { Header, Content } = Layout;
 
 function MainLayoutInstructor() {
   const location = useLocation();
   const navigate = useNavigate();
-  // const { logout } = useAuth();
+   const { logout } = useAuth();
 
   const [drawerVisible, setDrawerVisible] = useState(false);
 
@@ -29,15 +30,15 @@ function MainLayoutInstructor() {
     setDrawerVisible(false);
   };
 
-  /*   const handleLogOut = async () => {
+    const handleLogOut = async () => {
     try {
       await authService.logout();
       logout();
-      navigate("/home");
+      navigate("/login");
     } catch (err) {
       console.error("Greška pri logoutu:", err);
     }
-  }; */
+  };
 
   const selectedKey =
     location.pathname === "/instructor"
@@ -99,7 +100,7 @@ function MainLayoutInstructor() {
           <Button
             className="user_button"
             icon={<PoweroffOutlined />}
-            onClick={() => navigate("/login")}
+            onClick={handleLogOut}
           />
         </div>
       </Header>

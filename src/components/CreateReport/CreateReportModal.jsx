@@ -32,7 +32,7 @@ const CreateReportModal = ({ visible, onCancel, advertId, onSubmit }) => {
 
   return (
     <Modal
-      title="Report Advert"
+      title="Report Content"
       open={visible}
       onCancel={onCancel}
       footer={null}

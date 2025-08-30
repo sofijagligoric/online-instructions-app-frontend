@@ -8,8 +8,8 @@ export const getAllDiscussionThreads = () => {
 };
 
 
-export const getDiscussionThreadsForUser = async (userId) => {
-    const response = await instance.get(`/api/thread/user/${userId}`);
+export const getDiscussionThreadsForUser = async (id) => {
+    const response = await instance.get(`/api/thread/user/${id}`);
     return response.data;
 };
 

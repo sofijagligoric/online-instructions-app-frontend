@@ -4,7 +4,7 @@ import "./ReviewsSection.css";
 import { Popconfirm } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 
-const ReviewsSection = ({ currentUser, instructorId }) => {
+const ReviewsSection = ({ currentUser, role, instructorId }) => {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({ rating: 0, description: "" });
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +16,7 @@ const ReviewsSection = ({ currentUser, instructorId }) => {
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
 
   const hasReviewed = reviews.some(
-    (r) => r.studentId === currentUser.id && r.instructorId === instructorId
+    (r) => r.studentId === currentUser && r.instructorId === instructorId
   );
 
   const avgRating =
@@ -51,7 +51,7 @@ const ReviewsSection = ({ currentUser, instructorId }) => {
 
     try {
       const payload = {
-        studentId: currentUser.id,
+        studentId: currentUser,
         instructorId,
         rating: newReview.rating,
         description: newReview.description,
@@ -63,8 +63,8 @@ const ReviewsSection = ({ currentUser, instructorId }) => {
       setReviews((prev) => [
         ...prev,
         {
-          id: `${instructorId}-${currentUser.id}`, 
-          studentId: currentUser.id,
+          id: `${instructorId}-${currentUser}`, 
+          studentId: currentUser,
           instructorId,
           rating: newReview.rating,
           description: newReview.description,
@@ -107,7 +107,7 @@ const handleDelete = async (review) => {
         )}
       </h3>
 
-      {currentUser.role === "student" && !hasReviewed && (
+      {role === "student" && !hasReviewed && (
         <div className="add-review">
           <h4>Add Review</h4>
           <select
@@ -141,7 +141,7 @@ const handleDelete = async (review) => {
               <p>
                 <strong>Rating:</strong> {rev.rating} ⭐
               </p>
-              {currentUser.id === rev.studentId && (
+              {currentUser === rev.studentId && (
                 <Popconfirm
                   title="Are you sure to delete this review?"
                   onConfirm={() => handleDelete(rev)}

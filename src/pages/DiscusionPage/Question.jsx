@@ -18,21 +18,22 @@ import EditQuestionModal from "./EditQuestionModal";
 const Question = ({
   question,
   currentUser,
+  role,
   backgroundColor,
   userName,
   onDelete,
   onEdit,
 }) => {
-  const isOwner = currentUser?.id === question.userId;
-  const isAdmin = currentUser?.role === "admin";
+  const isOwner = currentUser === question.userId;
+  const isAdmin = role === "Admin";
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const basePath =
-    currentUser.role === "admin"
+    role === "Admin"
       ? "/admin"
-      : currentUser.role === "instructor"
+      : role === "Instructor"
       ? "/instructor"
       : "/student";
   const canDelete = isOwner || isAdmin;

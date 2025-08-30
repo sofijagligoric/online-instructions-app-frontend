@@ -4,6 +4,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import "./ResourcesPage.css";
 import "../../App.css";
 import AddResourceModal from "./AddResourceModal";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 import { Select } from "antd";
 import {
   SortAscendingOutlined,
@@ -16,9 +17,9 @@ const { Option } = Select;
 
 const ResourcesPage = () => {
   const [resources, setResources] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+   const { userId, role } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const isInstructor = currentUser?.role === "instructor";
+  const isInstructor = role === "Instructor";
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
   const [sortOption, setSortOption] = useState("name-asc");
   const [categories, setCategories] = useState([]);
@@ -66,10 +67,6 @@ const ResourcesPage = () => {
 
     setCategories(mockCategories);
     setResources(mockResources);
-    setCurrentUser({
-      id: 5,
-      role: "instructor",
-    });
   }, []);
 
   const filteredResources = resources.filter((a) => {
@@ -162,7 +159,8 @@ const ResourcesPage = () => {
         <Resource
           key={ad.id}
           resource={ad}
-          currentUser={{ id: 5, role: "instructor" }}
+          currentUser={userId}
+          role={role}
           backgroundColor={colors[index % colors.length]}
         />
       ))}

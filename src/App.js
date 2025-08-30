@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./utils/HomePageTesting";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
@@ -17,45 +17,12 @@ import UsersPage from "./pages/UsersPage/UsersPage";
 import ViewProfilePage from "./pages/UsersPage/ViewProfilePage";
 
 function App() {
-  // TODO - Popraviti rutiranje kada bude omoguceno na backu, staviti da bude preglednije i smislenije
-/*   return (
-    <Router>
-      <Routes>
-        
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
 
-        <Route path="/admin/main" element={<MainLayoutAdmin />} />
-        <Route path="/admin/home" element={<AdminHomePage />} />
-        <Route path="/admin/users" element={<AdminHomePage />} />
-        <Route path="/admin/adverts" element={<AdminHomePage />} />
-        <Route path="/admin/resources" element={<AdminHomePage />} />
-        <Route path="/admin/discusion" element={<AdminHomePage />} />
-        <Route path="/admin/reports" element={<AdminHomePage />} />
-
-        <Route path="/instructor/main" element={<MainLayoutInstructor />} />
-        <Route path="/instructor/home" element={<InstructorHomePage />} />
-        <Route path="/instructor/users" element={<InstructorHomePage />} />
-        <Route path="/instructor/adverts" element={<InstructorHomePage />} />
-        <Route path="/instructor/resources" element={<InstructorHomePage />} />
-        <Route path="/instructor/discusion" element={<InstructorHomePage />} />
-
-        <Route path="/student/main" element={<MainLayoutStudent />} />
-        <Route path="/student/home" element={<StudentHomePage />} />
-        <Route path="/student/users" element={<StudentHomePage />} />
-        <Route path="/student/adverts" element={<StudentHomePage />} />
-        <Route path="/student/resources" element={<StudentHomePage />} />
-        <Route path="/student/discusion" element={<StudentHomePage />} />
-      </Routes>
-    </Router>
-  );
- */
   return (
     <Router>
       <Routes>
         {/* JAVNE RUTE */}
-        <Route path="/" element={<HomePage />} />
+       <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
 

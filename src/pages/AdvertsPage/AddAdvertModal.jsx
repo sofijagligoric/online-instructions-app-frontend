@@ -3,15 +3,18 @@ import { Modal, Form, Input } from "antd";
 import { Select } from "antd";
 import "./AddAdvertModal.css";
 import advertsService from "../../services/adverts.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 import categoryService from "../../services/category.service";
+
 const { Option } = Select;
 
 const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
   const [form] = Form.useForm();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+/*   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState(""); */
   const [categories, setCategories] = useState([]);
    const [categoryId, setCategoryId] = useState(null);
+   const { userId } = useAuth();
 
   useEffect(() => {
      const fetchCategories = async () => {
@@ -34,7 +37,7 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
       const advertData = {
         title: values.title,
         description: values.description,
-        instructorId: 2, 
+        instructorId: userId, 
         categoryId: categoryId,
         timestamp: new Date().toISOString(), 
       };

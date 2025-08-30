@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, Dropdown, Button, Input } from "antd";
 import {
   DeleteOutlined,
@@ -9,14 +9,23 @@ import {
 import Comment from "./Comment";
 import "./ViewQuestion.css";
 import CreateReportModal from "../../components/CreateReport/CreateReportModal";
+import commentService from "../../services/comment.service";
+import threadService from "../../services/thread.service";
+import EditQuestionModal from "./EditQuestionModal";
+import { formatDateTime } from "../../utils/formatDateTime";
+import userService from "../../services/user.service";
 
-export default function ViewQuestion({ question, currentUser }) {
-  const isOwner = currentUser?.id === question.authorId;
-  const isAdmin = currentUser?.role === "admin";
+export default function ViewQuestion({ questionRecieved, currentUser, role, author }) {
+   const [question, setQuestion] = useState(questionRecieved); 
+  const isOwner = currentUser === question.authorId;
+  const isAdmin = role === "Admin";
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState(question.comments || []);
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+   const [users, setUsers] = useState({});
   const [reportVisible, setReportVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const commentsPerPage = 4;
   const totalPages = Math.ceil(comments.length / commentsPerPage);
 
@@ -28,6 +37,58 @@ export default function ViewQuestion({ question, currentUser }) {
 
   const canDelete = isOwner || isAdmin;
 
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const data = await commentService.getCommentsByThread(question.id);
+        setComments(data);
+      } catch (err) {
+        console.error("Greška pri učitavanju komentara:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+      const fetchUsers = async () => {
+          try {
+            const usersList = await userService.getAllUsers();
+            const usersMap = usersList.reduce((acc, instructor) => {
+              if (!instructor) return acc; // skip null
+              acc[instructor.id] = instructor;
+              return acc;
+            }, {});
+            setUsers(usersMap);
+          } catch (err) {
+            console.error("Error fetching users:", err);
+          }
+        };
+    
+    fetchComments();
+     fetchUsers();
+  }, [question.id]);
+
+  const handleDelete = async () => {
+    try {
+      await threadService.deleteDiscussionThread(question.id);
+      alert("Thread deleted.");
+    } catch (err) {
+      console.error("Error deleting thread:", err);
+      alert("Failed to delete thread.");
+    }
+  };
+
+    const handleEdit = (updatedData) => {
+    setQuestion((prev) => ({
+      ...prev,
+      ...updatedData,
+    }));
+    setIsEditModalVisible(false);
+  };
+
+  const handleEditClick = () => {
+    setIsEditModalVisible(true);
+  };
+
   const handleReportSubmit = ({ advertId, reason, description }) => {
     // alert(`Advert ID: ${advertId}\nReason: ${reason}\nDescription: ${description || "N/A"}`);
     setReportVisible(false);
@@ -36,11 +97,7 @@ export default function ViewQuestion({ question, currentUser }) {
   const menu = (
     <Menu>
       {isOwner && (
-        <Menu.Item
-          key="edit"
-          icon={<EditOutlined />}
-          onClick={() => alert("Edit question")}
-        >
+        <Menu.Item key="edit" icon={<EditOutlined />} onClick={handleEditClick}>
           Edit
         </Menu.Item>
       )}
@@ -48,7 +105,7 @@ export default function ViewQuestion({ question, currentUser }) {
         <Menu.Item
           key="delete"
           icon={<DeleteOutlined />}
-          onClick={() => alert("Delete question")}
+          onClick={handleDelete}
         >
           Delete
         </Menu.Item>
@@ -65,26 +122,37 @@ export default function ViewQuestion({ question, currentUser }) {
     </Menu>
   );
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (!newComment.trim()) return;
+
     const commentObj = {
-      id: Date.now().toString(),
-      text: newComment,
-      date: new Date().toLocaleDateString(),
-      authorUsername: currentUser.username,
-      authorId: currentUser.id,
+      description: newComment,
+      threadId: question.id,
+      userId: currentUser,
+      timestamp: new Date().toISOString(),
     };
-    setComments([commentObj, ...comments]);
-    setNewComment("");
-    setCurrentPage(1);
+
+    try {
+      const response = await commentService.addComment(commentObj);
+      setComments([response.data, ...comments]);
+      setNewComment("");
+      setCurrentPage(1);
+    } catch (err) {
+      console.error("Greška pri dodavanju komentara:", err);
+      alert("Nije moguće dodati komentar.");
+    }
+  };
+
+    const handleDeleteComment = (id) => {
+    setComments((prev) => prev.filter((ad) => ad.id !== id));
   };
 
   return (
     <div className="view-question-container">
       <div className="view-question-header">
         <div className="view-question-info">
-          <p>{question.date}</p>
-          <p>@{question.authorUsername}</p>
+          <p>{formatDateTime(question.timestamp)}</p>
+                   <p>@{author.username || "N/A"}</p>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button shape="circle" icon={<MoreOutlined />} />
@@ -109,14 +177,22 @@ export default function ViewQuestion({ question, currentUser }) {
           </div>
         )}
 
-        {currentComments.map((comment, index) => (
-          <Comment
-            key={comment.id}
-            comment={comment}
-            currentUser={currentUser}
-            isLast={index === currentComments.length - 1}
-          />
-        ))}
+        {loading ? (
+          <p>Loading comments...</p>
+        ) : currentComments.length > 0 ? (
+          currentComments.map((comment, index) => (
+            <Comment
+              key={comment.id}
+              comment={comment}
+              currentUser={currentUser}
+              isLast={index === currentComments.length - 1}
+               author={users[comment.userId]?.username}
+                onDelete={handleDeleteComment}
+            />
+          ))
+        ) : (
+          <p>No comments yet.</p>
+        )}
 
         {totalPages > 1 && (
           <div
@@ -148,6 +224,13 @@ export default function ViewQuestion({ question, currentUser }) {
         onCancel={() => setReportVisible(false)}
         advertId={question.id}
         onSubmit={handleReportSubmit}
+      />
+
+      <EditQuestionModal
+        visible={isEditModalVisible}
+        onCancel={() => setIsEditModalVisible(false)}
+        onEdit={handleEdit}
+        question={question}
       />
     </div>
   );

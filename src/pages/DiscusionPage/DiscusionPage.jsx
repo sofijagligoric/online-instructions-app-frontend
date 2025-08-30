@@ -15,14 +15,15 @@ import NewQuestion from "./NewQuestion";
 import categoryService from "../../services/category.service";
 import userService from "../../services/user.service";
 import threadService from "../../services/thread.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 const { Option } = Select;
 
 const DiscusionPage = () => {
   const [questions, setQuestions] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+   const { userId, role } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState({});
-  const isInstructor = currentUser?.role === "instructor";
+  const isInstructor = role === "Instructor";
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
   const [sortOption, setSortOption] = useState("name-asc");
   const [categories, setCategories] = useState([]);
@@ -81,11 +82,6 @@ const DiscusionPage = () => {
     fetchAdverts();
     fetchCategories();
     fetchUsers();
-
-    setCurrentUser({
-      id: 2,
-      role: "instructor",
-    });
   }, []);
 
   const filteredQuestions = questions.filter((a) => {
@@ -186,7 +182,8 @@ const DiscusionPage = () => {
         <Question
           key={ad.id}
           question={ad}
-          currentUser={currentUser}
+          currentUser={userId}
+          role={role}
           userName={users[ad.userId]?.username}
           backgroundColor={colors[index % colors.length]}
           onDelete={handleDeleteQuestion}

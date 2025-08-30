@@ -8,14 +8,20 @@ import ReviewsSection from "./ReviewsSection";
 import EditProfileModal from "./EditProfileModal";
 import userService from "../../services/user.service";
 import reviewService from "../../services/review.service";
+import ChangePasswordModal from "../../components/ChangePassword/ChangePasswordModal";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 import advertsService from "../../services/adverts.service";
+import threadService from "../../services/thread.service";
 
 const ViewProfilePage = () => {
   const { id } = useParams();
+  const { userId, role } = useAuth();
   const location = useLocation();
   const [user, setUser] = useState(location.state?.user || null);
   const backgroundColor = location.state?.backgroundColor || "#4a6cac";
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] =
+    useState(false);
 
   const [userQuestions, setUserQuestions] = useState([]);
   const [userResources, setUserResources] = useState([]);
@@ -51,9 +57,7 @@ const ViewProfilePage = () => {
   );
 
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
-  // const currentUser = { id: 5, role: "instructor" };
-  const currentUser = { id: 7, role: "student" };
-  const profileId = id || currentUser.id;
+  const profileId = id || userId;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -65,23 +69,6 @@ const ViewProfilePage = () => {
 
   useEffect(() => {
     if (!user) return;
-    setUserQuestions([
-      {
-        id: 2,
-        title: "Koliko je 2+2?",
-        category: "Edukacija",
-        date: "2024-02-05",
-        authorId: 7,
-      },
-      {
-        id: 1,
-        title: "Da li je plava bolja od zelene?",
-        description: "Pomozite mi u izboru boje.",
-        category: "Sport",
-        date: "2025-02-25",
-        authorId: 5,
-      },
-    ]);
 
     setUserResources([
       {
@@ -100,17 +87,37 @@ const ViewProfilePage = () => {
       },
     ]);
 
-   if(user.type === "instructor") {
-  const fetchAdverts = async () => {
-    try {
-      const adverts = await advertsService.getAdvertsForInstructor(user.id);
-      setUserAdverts(adverts); 
-    } catch (err) {
-      console.error("Error fetching adverts:", err);
+    const fetchQuestions = async () => {
+      try {
+        const questions = await threadService.getDiscussionThreadsForUser(
+          user.id
+        );
+        setUserQuestions(questions);
+      } catch (err) {
+        if (err.response && err.response.status === 404) {
+          setUserQuestions([]); // nema pitanja → prazan niz
+        } else {
+          console.error("Error fetching questions:", err);
+        }
+      }
+    };
+    fetchQuestions();
+
+    if (user.type === "instructor") {
+      const fetchAdverts = async () => {
+        try {
+          const adverts = await advertsService.getAdvertsForInstructor(user.id);
+          setUserAdverts(adverts);
+        } catch (err) {
+          if (err.response && err.response.status === 404) {
+            setUserAdverts([]);
+          } else {
+            console.error("Error fetching adverts:", err);
+          }
+        }
+      };
+      fetchAdverts();
     }
-  };
-  fetchAdverts();
-}
   }, [user]);
 
   if (!user) return <p>Loading...</p>;
@@ -129,6 +136,10 @@ const ViewProfilePage = () => {
     setUser((prev) => ({ ...prev, ...updatedData }));
   };
 
+  const handleChangePassword = () => {
+    console.log("Changed password");
+  };
+
   const handleDeleteAdvert = (id) => {
     setUserAdverts((prev) => prev.filter((ad) => ad.id !== id));
   };
@@ -136,6 +147,16 @@ const ViewProfilePage = () => {
   const handleUpdateAdvert = (updatedAdvert) => {
     setUserAdverts((prev) =>
       prev.map((ad) => (ad.id === updatedAdvert.id ? updatedAdvert : ad))
+    );
+  };
+
+  const handleDeleteQuestion = (id) => {
+    setUserQuestions((prev) => prev.filter((ad) => ad.id !== id));
+  };
+
+  const handleUpdateQuestion = (updatedQuestion) => {
+    setUserQuestions((prev) =>
+      prev.map((ad) => (ad.id === updatedQuestion.id ? updatedQuestion : ad))
     );
   };
   return (
@@ -152,14 +173,23 @@ const ViewProfilePage = () => {
         </div>
       </div>
 
-      {currentUser.id === user.id ? (
-        <button
-          className="user-profile-edit-button"
-          onClick={() => setIsEditModalVisible(true)}
-        >
-          Edit Profile
-        </button>
-      ) : currentUser.role === "admin" ? (
+      {userId === user.id ? (
+        <div className="user-profile-options-div">
+          <button
+            className="user-profile-edit-button"
+            onClick={() => setIsEditModalVisible(true)}
+          >
+            Edit Profile
+          </button>
+
+          <button
+            className="user-profile-edit-button"
+            onClick={() => setIsChangePasswordModalVisible(true)}
+          >
+            Change password
+          </button>
+        </div>
+      ) : role === "Admin" ? (
         <button
           className="user-profile-delete-button"
           onClick={handleDeleteAccount}
@@ -186,7 +216,7 @@ const ViewProfilePage = () => {
           </div>
 
           {user.type === "instructor" && (
-            <ReviewsSection currentUser={currentUser} instructorId={user.id} />
+            <ReviewsSection currentUser={userId} instructorId={user.id} />
           )}
         </div>
 
@@ -223,8 +253,12 @@ const ViewProfilePage = () => {
                   <Question
                     key={q.id}
                     question={q}
-                    currentUser={currentUser}
+                    currentUser={userId}
+                    role={role}
+                    userName={user.username}
                     backgroundColor={colors[index % colors.length]}
+                    onDelete={handleDeleteQuestion}
+                    onEdit={handleUpdateQuestion}
                   />
                 ))}
                 {totalQuestionPages > 1 && (
@@ -259,11 +293,12 @@ const ViewProfilePage = () => {
                   <Advert
                     key={a.id}
                     advert={a}
-                    currentUser={currentUser}
+                    currentUser={userId}
+                    role={role}
                     backgroundColor={colors[index % colors.length]}
-                     instructor={user}
-          onDelete={handleDeleteAdvert}
-          onEdit={handleUpdateAdvert}
+                    instructor={user}
+                    onDelete={handleDeleteAdvert}
+                    onEdit={handleUpdateAdvert}
                   />
                 ))}
                 {totalAdvertPages > 1 && (
@@ -296,7 +331,8 @@ const ViewProfilePage = () => {
                   <Resource
                     key={r.id}
                     resource={r}
-                    currentUser={currentUser}
+                    currentUser={userId}
+                    role={role}
                     backgroundColor={colors[index % colors.length]}
                   />
                 ))}
@@ -333,6 +369,12 @@ const ViewProfilePage = () => {
         onCancel={() => setIsEditModalVisible(false)}
         onSave={handleSaveProfile}
         user={user}
+      />
+
+      <ChangePasswordModal
+        visible={isChangePasswordModalVisible}
+        onCancel={() => setIsChangePasswordModalVisible(false)}
+        userId={user.id}
       />
     </div>
   );

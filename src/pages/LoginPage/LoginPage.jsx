@@ -3,17 +3,58 @@ import Background1 from "../../utils/Background1";
 import { useNavigate, Link } from "react-router-dom";
 import "./LoginPage.css";
 import ForgotPasswordModal from "./ForgotPasswordModal";
+import authService from "../../services/auth.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
    const [isForgotModalVisible, setIsForgotModalVisible] = useState(false); 
+    const { login } = useAuth();
+      const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    alert(`Korisničko ime: ${username}\nLozinka: ${password}`);
+const handleLogin = async (e) => {
+    e.preventDefault(); // sprječava refresh stranice
+    try {
+      const credentials = { username, password };
+      const response = await authService.login(credentials);
+
+      if (!response.active) {
+        alert("Vaš nalog je deaktiviran. Prijava nije moguća.");
+        return;
+      }
+
+      // Postavljanje user-a u AuthContext
+      login(response);
+
+      // Redirect po role-u
+      switch (response.role) {
+        case "Instructor":
+          navigate("/instructor/home");
+          break;
+        case "Admin":
+          navigate("/admin/home");
+          break;
+        default:
+          navigate("/student/home");
+      }
+
+    } catch (error) {
+      console.error("Greška pri loginu:", error);
+      if (error.response) {
+        alert(
+          error.response.data?.message || 
+          typeof error.response.data === "string" 
+            ? error.response.data 
+            : "Greška pri loginu sa servera."
+        );
+      } else {
+        alert("Greška pri loginu: " + error.message);
+      }
+    }
   };
+
 
   return (
     <div className="login-container">

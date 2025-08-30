@@ -15,14 +15,15 @@ const baseService = {
     const instance = axios.create(baseConfig); 
 
     instance.interceptors.request.use(
-      (config) => {
-        console.log("Pokrenut zahtjev na URL:", config.baseURL + config.url);
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
+  (config) => {
+    const token = localStorage.getItem("token"); // ili sessionStorage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 
     instance.interceptors.response.use(

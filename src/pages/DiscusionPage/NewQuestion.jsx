@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import "./NewQuestion.css";
 import { Select } from "antd";
 import threadService from "../../services/thread.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 const { Option } = Select;
 
 const NewQuestion = ({ categories = [], onSubmit }) => {
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const { userId } = useAuth();
 
 const handleSubmit = (e) => {
   e.preventDefault();
@@ -21,7 +23,7 @@ const handleSubmit = (e) => {
     categoryId: category, 
     title, 
     description,
-    userId: 2 
+    userId: userId
   };
 
   onSubmit && onSubmit(newQuestion);

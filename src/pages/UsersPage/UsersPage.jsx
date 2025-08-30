@@ -4,6 +4,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import "./UsersPage.css";
 import "../../App.css";
 import usersService from "../../services/user.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 import { Select } from "antd";
 import {
   SortAscendingOutlined,

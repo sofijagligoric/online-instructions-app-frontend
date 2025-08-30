@@ -14,14 +14,15 @@ import {
 import advertsService from "../../services/adverts.service";
 import categoryService from "../../services/category.service";
 import userService from "../../services/user.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 import AddAdvertModal from "./AddAdvertModal";
 const { Option } = Select;
 
 const AdvertsPage = () => {
   const [adverts, setAdverts] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+   const { userId, role } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const isInstructor = currentUser?.role === "instructor";
+  const isInstructor = role === "instructor";
   //   const colors = ["#e1f4fa", "#daeaf5", "#e6ecfa", "#d5e1e8"];
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
   const [sortOption, setSortOption] = useState("name-asc");
@@ -77,11 +78,6 @@ const AdvertsPage = () => {
     fetchAdverts();
     fetchCategories();
     fetchInstructors();
-
-    setCurrentUser({
-      id: 2,
-      role: "instructor",
-    });
   }, []);
 
   const filteredAdverts = adverts.filter((a) => {
@@ -184,7 +180,8 @@ const AdvertsPage = () => {
         <Advert
           key={ad.id}
           advert={ad}
-          currentUser={currentUser}
+          currentUser={userId}
+          role={role}
           backgroundColor={colors[index % colors.length]}
           instructor={instructors[ad.instructorId]}
           onDelete={handleDeleteAdvert}
