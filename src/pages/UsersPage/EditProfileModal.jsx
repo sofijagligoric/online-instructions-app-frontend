@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Modal, Form, Input } from "antd";
 import "./EditProfileModal.css";
+import { updateAccount } from "../../services/account.service";
+import { updateUser } from "../../services/user.service";
 
 const EditProfileModal = ({ visible, onCancel, onSave, user }) => {
   const [form] = Form.useForm();
@@ -17,16 +19,34 @@ const EditProfileModal = ({ visible, onCancel, onSave, user }) => {
     }
   }, [user, form]);
 
-  const handleOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        onSave(values);
-        onCancel();
-      })
-      .catch((info) => {
-        console.log("Validation failed:", info);
+  const handleSave = async () => {
+    try {
+      const values = await form.validateFields();
+
+
+      await updateAccount(user.id, {
+        id: user.id,
+        username: values.username,
+        password: "pppp",
+        type: user.type.toUpperCase(),
+        created: user.dateCreated,
+        isActive: user.isActive,
       });
+
+
+      await updateUser(user.id, {
+        account_id: user.id,
+        fName: values.firstName,
+        lName: values.lastName,
+        email: values.email,
+        phone: values.phone,
+      });
+
+      onSave({ ...user, ...values }); 
+      onCancel(); 
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (
@@ -34,7 +54,7 @@ const EditProfileModal = ({ visible, onCancel, onSave, user }) => {
       title="Edit Profile"
       open={visible}
       onCancel={onCancel}
-      onOk={handleOk}
+      onOk={handleSave}
       centered
       className="custom-edit-profile-modal"
       footer={[
@@ -45,7 +65,7 @@ const EditProfileModal = ({ visible, onCancel, onSave, user }) => {
         >
           Cancel
         </button>,
-        <button key="submit" type="primary" onClick={handleOk}>
+        <button key="submit" type="primary" onClick={handleSave}>
           Save Changes
         </button>,
       ]}

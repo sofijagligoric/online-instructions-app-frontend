@@ -13,6 +13,7 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import threadService from "../../services/thread.service";
+import reportsService from "../../services/report.service";
 import EditQuestionModal from "./EditQuestionModal";
 
 const Question = ({
@@ -57,10 +58,33 @@ const Question = ({
     if (onEdit) onEdit(updatedQuestion);
   };
 
-  const handleReportSubmit = ({ advertId, reason, description }) => {
-    // alert(`Advert ID: ${advertId}\nReason: ${reason}\nDescription: ${description || "N/A"}`);
+const handleReportSubmit = async ({ reason, description }) => {
+  try {
+    
+    const reportDTO = {
+      userId: currentUser,         
+      violationTypeId: reason,
+      description: description || null,
+      timestamp: new Date().toISOString(), 
+    };
+
+    const reportResponse = await reportsService.addReport(reportDTO);
+    const reportId = reportResponse.data.id; 
+
+    const questionReportDTO = {
+      reportId: reportId,
+      threadId: question.id, 
+    };
+
+    await reportsService.addThreadReport(questionReportDTO);
+
+    alert("Thread report submitted successfully.");
     setReportVisible(false);
-  };
+  } catch (err) {
+    console.error("Error submitting Thread report:", err);
+    alert("Failed to submit Thread report.");
+  }
+};
 
   const menu = (
     <Menu>

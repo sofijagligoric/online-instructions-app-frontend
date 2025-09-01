@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Advert.css";
 import "../../App.css";
 import CreateReportModal from "../../components/CreateReport/CreateReportModal";
+import reportsService from "../../services/report.service";
 import { Menu, Dropdown, Button } from "antd";
 import { formatDateTime } from "../../utils/formatDateTime";
 import {
@@ -50,11 +51,33 @@ const Advert = ({
     if (onEdit) onEdit(updatedAdvert); 
   };
 
-  const handleReportSubmit = ({ advertId, reason, description }) => {
-    // alert(`Advert ID: ${advertId}\nReason: ${reason}\nDescription: ${description || "N/A"}`);
-    setReportVisible(false);
-  };
+  const handleReportSubmit = async ({ reason, description }) => {
+  try {
+    
+    const reportDTO = {
+      userId: currentUser,         
+      violationTypeId: reason,
+      description: description || null,
+      timestamp: new Date().toISOString(), 
+    };
 
+    const reportResponse = await reportsService.addReport(reportDTO);
+    const reportId = reportResponse.data.id; 
+
+    const advertReportDTO = {
+      reportId: reportId,
+      advertId: advert.id, 
+    };
+
+    await reportsService.addAdvertReport(advertReportDTO);
+
+    alert("Advert report submitted successfully.");
+    setReportVisible(false);
+  } catch (err) {
+    console.error("Error submitting advert report:", err);
+    alert("Failed to submit advert report.");
+  }
+};
   const menu = (
     <Menu>
       {isOwner && (

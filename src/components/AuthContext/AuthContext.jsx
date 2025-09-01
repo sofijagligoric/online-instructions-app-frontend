@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+
 
 const AuthContext = createContext();
 
@@ -8,13 +9,28 @@ export const AuthProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
   const [active, setActive] = useState(false);
 
+    useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const savedUser = JSON.parse(localStorage.getItem("user")); 
+      if (savedUser) {
+        setIsLoggedIn(true);
+        setRole(savedUser.role);
+        setUserId(savedUser.userId);
+        setActive(savedUser.active);
+
+      }
+    }
+  }, []);
+
   const login = (user) => {
     if (!user) return;
     setIsLoggedIn(user.active);
     setRole(user.role);
     setUserId(user.userId);
     setActive(user.active);
-    localStorage.setItem("token", user.token); // ako koristiš token
+    localStorage.setItem("token", user.token); 
+    localStorage.setItem("user", JSON.stringify(user));
     console.log("Prijavljen userId:", user.userId, "role:", user.role);
   };
 
@@ -24,6 +40,7 @@ export const AuthProvider = ({ children }) => {
     setUserId(null);
     setActive(false);
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
   return (
@@ -32,5 +49,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
 export const useAuth = () => useContext(AuthContext);

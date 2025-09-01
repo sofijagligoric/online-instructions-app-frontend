@@ -30,14 +30,9 @@ function MainLayoutInstructor() {
     setDrawerVisible(false);
   };
 
-    const handleLogOut = async () => {
-    try {
-      await authService.logout();
-      logout();
-      navigate("/login");
-    } catch (err) {
-      console.error("Greška pri logoutu:", err);
-    }
+   const handleLogout = () => {
+    logout();
+    navigate("/login"); 
   };
 
   const selectedKey =
@@ -62,7 +57,7 @@ function MainLayoutInstructor() {
       </Menu.Item>
 
       <Menu.Item key="/instructor/discusion" icon={<FormOutlined />}>
-        Discusion
+        Discussion
       </Menu.Item>
     </Menu>
   );
@@ -100,7 +95,7 @@ function MainLayoutInstructor() {
           <Button
             className="user_button"
             icon={<PoweroffOutlined />}
-            onClick={handleLogOut}
+            onClick={handleLogout}
           />
         </div>
       </Header>

@@ -10,6 +10,7 @@ import {
   MoreOutlined,
   ArrowRightOutlined,
 } from "@ant-design/icons";
+import reportsService from "../../services/report.service";
 import { Link } from "react-router-dom";
 
 const Resource = ({ resource, currentUser, role, backgroundColor }) => {
@@ -28,10 +29,34 @@ const Resource = ({ resource, currentUser, role, backgroundColor }) => {
     alert("Edit resource.");
   };
 
-  const handleReportSubmit = ({ advertId, reason, description }) => {
-    // alert(`Advert ID: ${advertId}\nReason: ${reason}\nDescription: ${description || "N/A"}`);
+  const handleReportSubmit = async ({ reason, description }) => {
+  try {
+    
+    const reportDTO = {
+      userId: currentUser,         
+      violationTypeId: reason,
+      description: description || null,
+      timestamp: new Date().toISOString(), 
+    };
+
+    const reportResponse = await reportsService.addReport(reportDTO);
+    const reportId = reportResponse.data.id; 
+
+    const resourceReportDTO = {
+      reportId: reportId,
+      resourceId: resource.id, 
+    };
+
+    await reportsService.addResourceReport(resourceReportDTO);
+
+    alert("Resource report submitted successfully.");
     setReportVisible(false);
-  };
+  } catch (err) {
+    console.error("Error submitting resource report:", err);
+    alert("Failed to submit resource report.");
+  }
+};
+
 
   const menu = (
     <Menu>

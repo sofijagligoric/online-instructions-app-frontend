@@ -29,16 +29,11 @@ const { logout } = useAuth();
     navigate(key);
     setDrawerVisible(false);
   };
+   const handleLogout = () => {
+    logout();
+    navigate("/login"); 
+  };
 
- const handleLogOut = async () => {
-    try {
-      await authService.logout();
-      logout();
-      navigate("/login");
-    } catch (err) {
-      console.error("Greška pri logoutu:", err);
-    }
-  }; 
 
   const selectedKey =
     location.pathname === "/student" ? "/student/home" : location.pathname;
@@ -60,7 +55,7 @@ const { logout } = useAuth();
       </Menu.Item>
 
       <Menu.Item key="/student/discusion" icon={<FormOutlined />}>
-        Discusion
+        Discussion
       </Menu.Item>
     </Menu>
   );
@@ -97,7 +92,7 @@ const { logout } = useAuth();
           <Button
             className="user_button"
             icon={<PoweroffOutlined />}
-            onClick={handleLogOut}
+            onClick={handleLogout}
           />
         </div>
       </Header>

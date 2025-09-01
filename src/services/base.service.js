@@ -10,9 +10,9 @@ const baseConfig = {
 };
 const baseService = {
   service: () => {
-    const config = environment();
-    console.log("Base URL:", config.baseServiceURL); 
-    const instance = axios.create(baseConfig); 
+   // const config = environment();
+    const instance = axios.create(baseConfig);
+console.log("Base URL:", baseConfig.baseURL);
 
     instance.interceptors.request.use(
   (config) => {

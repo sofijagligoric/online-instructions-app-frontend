@@ -25,7 +25,7 @@ const Footer = ({ role }) => {
       </div>
 
       <nav className="footer-center">
-        <a href={getPath("/home")} className="footer-link">
+        <a  href={role === "admin" ? "/admin/reports" : getPath("/home")} className="footer-link">
           Home
         </a>
           <a href={getPath("/users")} className="footer-link">

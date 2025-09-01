@@ -24,6 +24,7 @@ const DiscusionPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState({});
   const isInstructor = role === "Instructor";
+   const isStudent = role === "Student";
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
   const [sortOption, setSortOption] = useState("name-asc");
   const [categories, setCategories] = useState([]);
@@ -34,7 +35,7 @@ const DiscusionPage = () => {
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
 
-  const canCreate = isInstructor;
+  const canCreate = isInstructor || isStudent;
 
  const handleCreate = async (newQuestion) => {
   try {

@@ -34,7 +34,7 @@ const handleLogin = async (e) => {
           navigate("/instructor/home");
           break;
         case "Admin":
-          navigate("/admin/home");
+          navigate("/admin/reports");
           break;
         default:
           navigate("/student/home");

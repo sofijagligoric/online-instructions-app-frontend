@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import HomePage from "./utils/HomePageTesting";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
-import AdminHomePage from "./pages/HomePages/AdminHomePage";
 import InstructorHomePage from "./pages/HomePages/InstructorHomePage";
 import StudentHomePage from "./pages/HomePages/StudentHomePage";
 import MainLayoutAdmin from "./components/MainLayout/MainLayoutAdmin";
@@ -15,6 +14,7 @@ import ViewQuestionPage from "./pages/DiscusionPage/ViewQuestionPage";
 import ResoucesPage from "./pages/ResourcesPage/ResurcesPage";
 import UsersPage from "./pages/UsersPage/UsersPage";
 import ViewProfilePage from "./pages/UsersPage/ViewProfilePage";
+import ReportsPage from "./pages/ReportsPage/ReportsPage";
 
 function App() {
 
@@ -22,20 +22,19 @@ function App() {
     <Router>
       <Routes>
         {/* JAVNE RUTE */}
-       <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
 
         {/* ADMIN RUTE */}
         <Route path="/admin" element={<MainLayoutAdmin />}>
-         <Route index element={<AdminHomePage />} />
-           <Route path="home" element={<AdminHomePage />} />
+         <Route index element={<ReportsPage />} />
         <Route path="users" element={<UsersPage />} />
         <Route path="users/:id" element={<ViewProfilePage />} />
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
         <Route path="discusion" element={<DiscusionPage />} />
-        <Route path="reports" element={<AdminHomePage />} />
+        <Route path="reports" element={<ReportsPage />} />
         <Route path="discusion/thread/:id" element={<ViewQuestionPage />} />
         </Route>
 

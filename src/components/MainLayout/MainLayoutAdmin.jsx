@@ -31,25 +31,11 @@ function MainLayoutAdmin() {
     setDrawerVisible(false);
   };
 
-  const handleLogOut = async () => {
-    try {
-      await authService.logout();
-      logout();
-      navigate("/login");
-    } catch (err) {
-      console.error("Greška pri logoutu:", err);
-    }
-  };
 
-  /*   const handleLogOut = async () => {
-    try {
-      await authService.logout();
-      logout();
-      navigate("/home");
-    } catch (err) {
-      console.error("Greška pri logoutu:", err);
-    }
-  }; */
+ const handleLogout = () => {
+    logout();
+    navigate("/login"); 
+  };
 
   const selectedKey =
     location.pathname === "/admin" ? "/admin/home" : location.pathname;
@@ -61,10 +47,10 @@ function MainLayoutAdmin() {
       mode="inline"
       onClick={handleMenuClick}
     >
-      <Menu.Item key="/admin/home" icon={<HomeOutlined />}>
-        Home
+    
+      <Menu.Item key="/admin/reports" icon={<ExclamationCircleOutlined />}>
+        Reports
       </Menu.Item>
-
       <Menu.Item key="/admin/users" icon={<UsergroupAddOutlined />}>
         Users
       </Menu.Item>
@@ -77,11 +63,9 @@ function MainLayoutAdmin() {
       </Menu.Item>
 
       <Menu.Item key="/admin/discusion" icon={<FormOutlined />}>
-        Discusion
+        Discussion
       </Menu.Item>
-      <Menu.Item key="/admin/reports" icon={<ExclamationCircleOutlined />}>
-        Reports
-      </Menu.Item>
+    
     </Menu>
   );
 
@@ -94,7 +78,7 @@ function MainLayoutAdmin() {
             icon={<MenuOutlined />}
             onClick={() => setDrawerVisible(true)}
           />
-          <Link to="/admin/home">
+          <Link to="/admin/reports">
             <img
               src="/logo-blue.png"
               alt="Logo"
@@ -112,7 +96,7 @@ function MainLayoutAdmin() {
           <Button
             className="user_button"
             icon={<PoweroffOutlined />}
-            onClick={handleLogOut()}
+            onClick={handleLogout}
           />
         </div>
       </Header>

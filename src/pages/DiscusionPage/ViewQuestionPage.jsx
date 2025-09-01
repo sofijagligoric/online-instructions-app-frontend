@@ -17,12 +17,10 @@ export default function ViewQuestionPage() {
  useEffect(() => {
     const fetchData = async () => {
       try {
-        // prvo dovuci pitanje
         const res = await threadService.getById(id);
         const q = res.data;
         setQuestion(q);
 
-        // ako postoji userId → dovuci autora
         if (q?.userId) {
           const user = await userService.getUserById(q.userId);
           setAuthor(user);

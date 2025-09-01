@@ -22,7 +22,7 @@ const AdvertsPage = () => {
   const [adverts, setAdverts] = useState([]);
    const { userId, role } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const isInstructor = role === "instructor";
+  const isInstructor = role === "Instructor";
   //   const colors = ["#e1f4fa", "#daeaf5", "#e6ecfa", "#d5e1e8"];
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
   const [sortOption, setSortOption] = useState("name-asc");

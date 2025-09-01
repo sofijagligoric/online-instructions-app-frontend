@@ -149,4 +149,9 @@ export const getInstructorById = async (id) => {
     return null;
   }
 };
+
+
+export const updateUser = (id, updatedUser) => {
+  return instance.put(`/api/user/edit/${id}`, updatedUser);
+};
 export default { getAllUsers, getUserById, getAllInstructors, getInstructorById};

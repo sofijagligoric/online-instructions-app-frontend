@@ -14,10 +14,13 @@ import threadService from "../../services/thread.service";
 import EditQuestionModal from "./EditQuestionModal";
 import { formatDateTime } from "../../utils/formatDateTime";
 import userService from "../../services/user.service";
+import { useNavigate } from "react-router-dom";
+import reportsService from "../../services/report.service";
 
 export default function ViewQuestion({ questionRecieved, currentUser, role, author }) {
    const [question, setQuestion] = useState(questionRecieved); 
-  const isOwner = currentUser === question.authorId;
+   const navigate = useNavigate();
+  const isOwner = currentUser === question.userId;
   const isAdmin = role === "Admin";
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
@@ -67,15 +70,23 @@ export default function ViewQuestion({ questionRecieved, currentUser, role, auth
      fetchUsers();
   }, [question.id]);
 
-  const handleDelete = async () => {
-    try {
-      await threadService.deleteDiscussionThread(question.id);
-      alert("Thread deleted.");
-    } catch (err) {
-      console.error("Error deleting thread:", err);
-      alert("Failed to delete thread.");
-    }
-  };
+const handleDelete = async () => {
+  try {
+    await threadService.deleteDiscussionThread(question.id);
+    alert("Thread deleted.");
+
+    // odredi prefix na osnovu role
+    let prefix = "";
+    if (role === "Admin") prefix = "admin";
+    else if (role === "Instructor") prefix = "instructor";
+    else if (role === "Student") prefix = "student";
+
+    navigate(`/${prefix}/discusion`);
+  } catch (err) {
+    console.error("Error deleting thread:", err);
+    alert("Failed to delete thread.");
+  }
+};
 
     const handleEdit = (updatedData) => {
     setQuestion((prev) => ({
@@ -89,10 +100,34 @@ export default function ViewQuestion({ questionRecieved, currentUser, role, auth
     setIsEditModalVisible(true);
   };
 
-  const handleReportSubmit = ({ advertId, reason, description }) => {
-    // alert(`Advert ID: ${advertId}\nReason: ${reason}\nDescription: ${description || "N/A"}`);
-    setReportVisible(false);
-  };
+ const handleReportSubmit = async ({ reason, description }) => {
+   try {
+     
+     const reportDTO = {
+       userId: currentUser,         
+       violationTypeId: reason,
+       description: description || null,
+       timestamp: new Date().toISOString(), 
+     };
+ 
+     const reportResponse = await reportsService.addReport(reportDTO);
+     const reportId = reportResponse.data.id; 
+ 
+     const questionReportDTO = {
+       reportId: reportId,
+       threadId: question.id, 
+     };
+ 
+     await reportsService.addThreadReport(questionReportDTO);
+ 
+     alert("Thread report submitted successfully.");
+     setReportVisible(false);
+   } catch (err) {
+     console.error("Error submitting Thread report:", err);
+     alert("Failed to submit Thread report.");
+   }
+ };
+ 
 
   const menu = (
     <Menu>

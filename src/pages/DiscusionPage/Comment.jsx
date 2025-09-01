@@ -5,6 +5,7 @@ import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import { formatDateTime } from "../../utils/formatDateTime";
 import "./Comment.css";
 import commentService from "../../services/comment.service";
+import reportsService from "../../services/report.service";
 
 export default function Comment({ comment, currentUser, role, isLast, author, onDelete }) {
   const isOwner = currentUser === comment.userId;
@@ -13,9 +14,32 @@ export default function Comment({ comment, currentUser, role, isLast, author, on
   const [reportVisible, setReportVisible] = useState(false);
   const canDelete = isOwner || isAdmin;
 
-  const handleReportSubmit = ({ advertId, reason, description }) => {
-    // alert(`Advert ID: ${advertId}\nReason: ${reason}\nDescription: ${description || "N/A"}`);
-    setReportVisible(false);
+  const handleReportSubmit = async ({ reason, description }) => {
+    try {
+      
+      const reportDTO = {
+        userId: currentUser,         
+        violationTypeId: reason,
+        description: description || null,
+        timestamp: new Date().toISOString(), 
+      };
+  
+      const reportResponse = await reportsService.addReport(reportDTO);
+      const reportId = reportResponse.data.id; 
+  
+      const commentReportDTO = {
+        reportId: reportId,
+        commentId: comment.id, 
+      };
+  
+      await reportsService.addCommentReport(commentReportDTO);
+  
+      alert("Comment report submitted successfully.");
+      setReportVisible(false);
+    } catch (err) {
+      console.error("Error submitting Comment report:", err);
+      alert("Failed to submit Comment report.");
+    }
   };
 
   const handleDelete = async () => {
