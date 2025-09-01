@@ -25,10 +25,7 @@ const handleLogin = async (e) => {
         return;
       }
 
-      // Postavljanje user-a u AuthContext
       login(response);
-
-      // Redirect po role-u
       switch (response.role) {
         case "Instructor":
           navigate("/instructor/home");

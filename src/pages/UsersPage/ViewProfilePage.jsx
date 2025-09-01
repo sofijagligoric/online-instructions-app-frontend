@@ -8,6 +8,7 @@ import ReviewsSection from "./ReviewsSection";
 import EditProfileModal from "./EditProfileModal";
 import userService from "../../services/user.service";
 import reviewService from "../../services/review.service";
+import accountService from "../../services/account.service";
 import ChangePasswordModal from "../../components/ChangePassword/ChangePasswordModal";
 import { useAuth } from "../../components/AuthContext/AuthContext";
 import advertsService from "../../services/adverts.service";
@@ -95,7 +96,7 @@ const ViewProfilePage = () => {
         setUserQuestions(questions);
       } catch (err) {
         if (err.response && err.response.status === 404) {
-          setUserQuestions([]); // nema pitanja → prazan niz
+          setUserQuestions([]);
         } else {
           console.error("Error fetching questions:", err);
         }
@@ -124,20 +125,26 @@ const ViewProfilePage = () => {
 
   const initials = `${user.firstName[0]}${user.lastName[0]}`;
 
-  const handleDeleteAccount = () => {
-    if (window.confirm("Da li ste sigurni da želite obrisati ovaj nalog?")) {
-      console.log("Nalog obrisan:", user.id);
-      // pozvati API za brisanje
+  const handleToggleAccount = async () => {
+    try {
+      if (user.active) {
+        await accountService.deactivateAccount(user.id);
+        setUser((prev) => ({ ...prev, active: false }));
+        alert("Nalog je deaktiviran.");
+      } else {
+        await accountService.activateAccount(user.id);
+        setUser((prev) => ({ ...prev, active: true }));
+        alert("Nalog je aktiviran.");
+      }
+    } catch (err) {
+      console.error("Greška prilikom promjene statusa naloga:", err);
+      alert("Neuspjela promjena statusa naloga.");
     }
   };
 
   const handleSaveProfile = (updatedData) => {
     console.log("Updated profile:", updatedData);
     setUser((prev) => ({ ...prev, ...updatedData }));
-  };
-
-  const handleChangePassword = () => {
-    console.log("Changed password");
   };
 
   const handleDeleteAdvert = (id) => {
@@ -191,10 +198,12 @@ const ViewProfilePage = () => {
         </div>
       ) : role === "Admin" ? (
         <button
-          className="user-profile-delete-button"
-          onClick={handleDeleteAccount}
+          className={`user-profile-delete-button ${
+            user.active ? "" : "green-button"
+          }`}
+          onClick={handleToggleAccount}
         >
-          Delete Account
+          {user.active ? "Deactivate Account" : "Activate Account"}
         </button>
       ) : null}
 

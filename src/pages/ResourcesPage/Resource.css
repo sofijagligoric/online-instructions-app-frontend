@@ -71,3 +71,14 @@
   gap: 5px;
   color: #4a5f66;
 }
+
+.view-resource-link {
+  background: transparent;
+  color: #10afe8;
+  width: fit-content;
+  padding: 0;
+}
+
+.view-resource-link:hover {
+  color: #1882a8;
+}

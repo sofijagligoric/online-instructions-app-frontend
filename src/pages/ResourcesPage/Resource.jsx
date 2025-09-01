@@ -11,18 +11,26 @@ import {
   ArrowRightOutlined,
 } from "@ant-design/icons";
 import reportsService from "../../services/report.service";
-import { Link } from "react-router-dom";
+import resourceService from "../../services/resource.service";
+import { formatDateTime } from "../../utils/formatDateTime";
 
-const Resource = ({ resource, currentUser, role, backgroundColor }) => {
-  const isOwner = currentUser === resource.authorId;
+const Resource = ({ userName, resource, currentUser, role, backgroundColor, onDelete }) => {
+  const isOwner = currentUser === resource.userId;
   const isAdmin = role === "Admin";
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
-  const handleDelete = () => {
-    alert("Resource deleted.");
+const handleDelete = async () => {
+    try {
+      await resourceService.deleteResource(resource.id);
+      alert("Advert deleted.");
+      if (onDelete) onDelete(resource.id);
+    } catch (err) {
+      console.error("Error deleting resource:", err);
+      alert("Failed to delete resource.");
+    }
   };
 
   const handleEdit = () => {
@@ -30,33 +38,49 @@ const Resource = ({ resource, currentUser, role, backgroundColor }) => {
   };
 
   const handleReportSubmit = async ({ reason, description }) => {
-  try {
-    
-    const reportDTO = {
-      userId: currentUser,         
-      violationTypeId: reason,
-      description: description || null,
-      timestamp: new Date().toISOString(), 
-    };
+    try {
+      const reportDTO = {
+        userId: currentUser,
+        violationTypeId: reason,
+        description: description || null,
+        timestamp: new Date().toISOString(),
+      };
 
-    const reportResponse = await reportsService.addReport(reportDTO);
-    const reportId = reportResponse.data.id; 
+      const reportResponse = await reportsService.addReport(reportDTO);
+      const reportId = reportResponse.data.id;
 
-    const resourceReportDTO = {
-      reportId: reportId,
-      resourceId: resource.id, 
-    };
+      const resourceReportDTO = {
+        reportId: reportId,
+        resourceId: resource.id,
+      };
 
-    await reportsService.addResourceReport(resourceReportDTO);
+      await reportsService.addResourceReport(resourceReportDTO);
 
-    alert("Resource report submitted successfully.");
-    setReportVisible(false);
-  } catch (err) {
-    console.error("Error submitting resource report:", err);
-    alert("Failed to submit resource report.");
+      alert("Resource report submitted successfully.");
+      setReportVisible(false);
+    } catch (err) {
+      console.error("Error submitting resource report:", err);
+      alert("Failed to submit resource report.");
+    }
+  };
+
+const handleViewResource = () => {
+  if (!resource.path) return;
+
+  const fileExtension = resource.path.split(".").pop().toLowerCase();
+  const fileUrl = `http://localhost:8080/api/resource/download/${resource.path}`;
+
+  if (fileExtension === "pdf") {
+    window.open(fileUrl, "_blank", "noopener,noreferrer");
+  } else {
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = resource.title; 
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 };
-
 
   const menu = (
     <Menu>
@@ -90,8 +114,8 @@ const Resource = ({ resource, currentUser, role, backgroundColor }) => {
     <div className="resource-card" style={{ backgroundColor }}>
       <div className="resource-header">
         <div className="resource-info">
-          <p>{resource.date || "01.02.2025."}</p>
-          <p>@{resource.authorUsername || "korisnik1"}</p>
+           <p>{formatDateTime(resource.timestamp)}</p>
+                    <p>@{userName || "N/A"}</p>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button
@@ -109,9 +133,13 @@ const Resource = ({ resource, currentUser, role, backgroundColor }) => {
       >
         <h3>{resource.title}</h3>
       </div>
-      <Link to={`/login`} className="view-resource-link">
+      {/* <Link to={`/login`} className="view-resource-link">
         View details <ArrowRightOutlined />
-      </Link>
+      </Link> */}
+
+      <button className="view-resource-link" onClick={handleViewResource}>
+        View <ArrowRightOutlined />
+      </button>
 
       <CreateReportModal
         visible={reportVisible}

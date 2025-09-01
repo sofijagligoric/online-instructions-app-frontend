@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import Background1 from "../../utils/Background1";
 import "./SignUpPage.css";
 import { Select as AntSelect } from "antd";
+
+import accountService from "../../services/account.service";
 const { Option } = AntSelect;
 
 const SignUpPage = () => {
@@ -14,25 +16,67 @@ const SignUpPage = () => {
    const [phone, setPhone] = useState("");
   const [type, setType] = useState("Student");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
+  const handleSignUp = async (e) => {
+  e.preventDefault();
 
-    if (password.length < 6 || confirmPassword.length < 6) {
-      alert("Password has to have at least 6 characters.");
-      return;
+  if (password.length < 6 || confirmPassword.length < 6) {
+    alert("Password has to have at least 6 characters.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert("Passwords don't match.");
+    return;
+  }
+
+  try {
+
+    const accountResponse = await accountService.addAccount({
+      username: username,
+      password: password,
+      type: type, 
+      isActive: true
+    });
+
+    const account = accountResponse.data;
+    console.log("Account created:", account);
+
+
+    const userResponse = await accountService.createUser({
+      account: { id: account.id },
+      user: {
+        fName: firstName,
+        lName: lastName,
+        email: email,
+        phone: phone || null
+      }
+    });
+
+    console.log("User created:", userResponse.data);
+
+
+    if (type === "Student") {
+      const studentResponse = await accountService.createStudent({
+        account_Id: account.id
+      });
+      console.log("Student created:", studentResponse.data);
+    } else {
+      const instructorResponse = await accountService.createInstructor({
+        account_Id: account.id
+      });
+      console.log("Instructor created:", instructorResponse.data);
     }
 
-    if (password !== confirmPassword) {
-      alert("Passwords don't match.");
-      return;
-    }
+    alert("Account successfully created!");
+     navigate("/login");
 
-    alert(
-      `Ime: ${firstName}\nPrezime: ${lastName}\nEmail: ${email}\nKorisničko ime: ${username}\nLozinka: ${password}\nTip naloga: ${type}`
-    );
-  };
-
+  } catch (error) {
+    console.error("Error during sign up:", error);
+    alert("Failed to create account.");
+  }
+};
   return (
     <div className="signup-container">
       <Background1 />

@@ -3,46 +3,64 @@ import { Modal, Form, Input, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 import "./AddResourceModal.css";
+import categoryService from "../../services/category.service";
+import resourceService from "../../services/resource.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
 const { Option } = Select;
 
 const AddResourceModal = ({ visible, onCancel, onAdd }) => {
   const [form] = Form.useForm();
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
+  /* const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState(""); */
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const { userId } = useAuth();
+  const [categoryId, setCategoryId] = useState(null);
 
   useEffect(() => {
-    setCategories([
-      { id: 1, name: "Mathematics" },
-      { id: 2, name: "Programming" },
-      { id: 3, name: "Languages" },
-    ]);
-    setCategory(1);
+    const fetchCategories = async () => {
+      try {
+        const response = await categoryService.getAllCategorys();
+        setCategories(response.data);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+    fetchCategories();
+    setCategoryId(1);
   }, []);
 
-  const handleOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        const formData = {
-          ...values,
-          category: categories.find((c) => c.id === category)?.name || "",
-        };
+const handleOk = async () => {
+  form.validateFields().then(async (values) => {
+    if (!selectedFile) {
+      alert("Please select a file");
+      return;
+    }
 
-        alert(
-          `Title: ${formData.title}\nAuthor: ${formData.author}\nCategory: ${formData.category}`
-        );
+    try {
+      const uploadResponse = await resourceService.uploadResourceFile(selectedFile);
+      const filePath = uploadResponse.data.split(": ")[1];
 
-      ///  onAdd(formData);
+      const resourceData = {
+        title: values.title,
+        userId: userId,
+        categoryId: categoryId,
+        path: filePath,
+      };
 
-        form.resetFields();
-      })
-      .catch((info) => {
-        console.log("Validation failed:", info);
-      });
-  };
+      const addedResourceResponse = await resourceService.addResource(resourceData);
+      const addedResource = addedResourceResponse.data; 
+
+      onAdd(addedResource); 
+
+      form.resetFields();
+      setSelectedFile(null);
+    } catch (err) {
+      console.error("Error uploading resource:", err);
+      alert("Failed to upload resource");
+    }
+  });
+};
 
   return (
     <Modal
@@ -68,7 +86,7 @@ const AddResourceModal = ({ visible, onCancel, onAdd }) => {
       ]}
     >
       <Form form={form} layout="vertical">
-        <Form.Item
+        {/*  <Form.Item
           name="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -76,9 +94,16 @@ const AddResourceModal = ({ visible, onCancel, onAdd }) => {
           rules={[{ required: true, message: "Please enter a title" }]}
         >
           <Input placeholder="Enter resource title" />
+        </Form.Item> */}
+        <Form.Item
+          name="title"
+          label="Resource Title"
+          rules={[{ required: true, message: "Please enter a title" }]}
+        >
+          <Input placeholder="Enter resource title" />
         </Form.Item>
 
-        <Form.Item
+        {/*  <Form.Item
           name="author"
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
@@ -86,15 +111,21 @@ const AddResourceModal = ({ visible, onCancel, onAdd }) => {
           rules={[{ required: true, message: "Please enter author name" }]}
         >
           <Input placeholder="Enter author's name" />
-        </Form.Item>
+        </Form.Item> */}
+       {/*  <Form.Item
+          name="author"
+          label="Author"
+          rules={[{ required: true, message: "Please enter an author" }]}
+        >
+          <Input placeholder="Enter resource author" />
+        </Form.Item> */}
 
         <Form.Item label="Category" required>
           <Select
-            value={category}
+            value={categoryId}
             placeholder="Select category"
-            onChange={(value) => setCategory(value)}
+            onChange={setCategoryId}
             className="custom-sort-select"
-            style={{boxShadow: "none"}}
           >
             {categories.map((cat) => (
               <Option key={cat.id} value={cat.id}>
@@ -112,7 +143,11 @@ const AddResourceModal = ({ visible, onCancel, onAdd }) => {
           <Upload.Dragger
             name="file"
             multiple={false}
-            beforeUpload={() => false}
+            beforeUpload={(file) => {
+              setSelectedFile(file);
+              return false;
+            }}
+            fileList={selectedFile ? [selectedFile] : []}
           >
             <p className="ant-upload-drag-icon">
               <UploadOutlined />

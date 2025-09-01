@@ -25,6 +25,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = (user) => {
     if (!user) return;
+    if (!user.token) {
+    console.error("Nema tokena u user objektu:", user);
+    return;
+  }
     setIsLoggedIn(user.active);
     setRole(user.role);
     setUserId(user.userId);

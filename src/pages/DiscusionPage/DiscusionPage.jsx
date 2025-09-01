@@ -48,7 +48,7 @@ const DiscusionPage = () => {
 };
 
   useEffect(() => {
-    const fetchAdverts = async () => {
+    const fetchThreads = async () => {
       try {
         const response = await threadService.getAllDiscussionThreads();
         setQuestions(response.data);
@@ -80,7 +80,7 @@ const DiscusionPage = () => {
       }
     };
 
-    fetchAdverts();
+    fetchThreads();
     fetchCategories();
     fetchUsers();
   }, []);

@@ -13,6 +13,9 @@ import {
   FieldTimeOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons";
+import resourceService from "../../services/resource.service";
+import categoryService from "../../services/category.service";
+import userService from "../../services/user.service";
 const { Option } = Select;
 
 const ResourcesPage = () => {
@@ -21,6 +24,7 @@ const ResourcesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const isInstructor = role === "Instructor";
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
+    const [users, setUsers] = useState({});
   const [sortOption, setSortOption] = useState("name-asc");
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -30,43 +34,51 @@ const ResourcesPage = () => {
   const indexOfLastResource = currentPage * resourcesPerPage;
   const indexOfFirstResource = indexOfLastResource - resourcesPerPage;
 
-  const canCreate = isInstructor;
+  const canCreate = isInstructor || role === "Student";
 
    const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
-  const handleAddResource = (resource) => {
-    console.log("New resource:", resource);
-    setIsAddModalVisible(false);
-  };
+  const handleAddResource = (newResource) => {
+  setResources((prev) => [newResource, ...prev]);
+  setIsAddModalVisible(false);
+};
 
   useEffect(() => {
-    const mockCategories = ["Sport", "Edukacija", "Nekretnine", "Servisi"];
-    const mockResources = [
-      {
-        id: 1,
-        title: "Matematika 4 - zbirka rijesenih zadataka",
-        category: "Edukacija",
-        date: "2025-02-25",
-        authorId: 5,
-      },
-      {
-        id: 2,
-        title: "Uvod u osnove programskog jezika Java",
-        category: "Edukacija",
-        date: "2024-02-05",
-        authorId: 7,
-      },
-      {
-        id: 4,
-        title: "Skripta iz predmeta Mobilno racunarstvo",
-        category: "Edukacija",
-        date: "2025-02-01",
-        authorId: 10,
-      },
-    ];
+    const fetchResources= async () => {
+      try {
+        const response = await resourceService.getAllResources();
+        setResources(response.data);
+      } catch (err) {
+        console.error("Error fetching resources:", err);
+      }
+    };
 
-    setCategories(mockCategories);
-    setResources(mockResources);
+    const fetchCategories = async () => {
+      try {
+        const response = await categoryService.getAllCategorys();
+        setCategories(response.data);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+      const fetchUsers = async () => {
+          try {
+            const usersList = await userService.getAllUsers();
+            const usersMap = usersList.reduce((acc, instructor) => {
+              if (!instructor) return acc; // skip null
+              acc[instructor.id] = instructor;
+              return acc;
+            }, {});
+            setUsers(usersMap);
+          } catch (err) {
+            console.error("Error fetching users:", err);
+          }
+        };
+
+    fetchResources();
+    fetchCategories();
+    fetchUsers();
   }, []);
 
   const filteredResources = resources.filter((a) => {
@@ -75,7 +87,7 @@ const ResourcesPage = () => {
       .includes(searchTerm.toLowerCase());
     const matchCategory =
       selectedCategories.length === 0 ||
-      selectedCategories.includes(a.category);
+      selectedCategories.includes(a.categoryId);
     return matchSearch && matchCategory;
   });
 
@@ -101,6 +113,9 @@ const ResourcesPage = () => {
   );
   const totalPages = Math.ceil(sortedResources.length / resourcesPerPage);
 
+  const handleDeleteResource = (id) => {
+    setResources((prev) => prev.filter((ad) => ad.id !== id));
+  };
   return (
     <div className="resources-main-div">
       <div className="resources-title-and-search">
@@ -159,9 +174,11 @@ const ResourcesPage = () => {
         <Resource
           key={ad.id}
           resource={ad}
+          userName={users[ad.userId]?.username}
           currentUser={userId}
           role={role}
           backgroundColor={colors[index % colors.length]}
+          onDelete={handleDeleteResource}
         />
       ))}
       {totalPages > 1 && (

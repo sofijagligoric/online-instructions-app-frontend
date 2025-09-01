@@ -36,6 +36,7 @@ const UsersPage = () => {
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const mockCategories = ["Instructors", "Students"];
+  const { role } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -61,7 +62,7 @@ const UsersPage = () => {
         u.type === "student" ? "Students" : "Instructors"
       );
 
-    const matchActive = u.isActive === true;
+    const matchActive = role === "Admin" ? true : u.isActive === true;
 
     return matchSearch && matchCategory && matchActive;
   });

@@ -162,6 +162,11 @@ background-color: var(--primary-button-color);
   cursor: not-allowed;
 }
 
+.green-button {
+  background-color: #4CAF50; /* zelena */
+  color: white;
+}
+
 @media (max-width: 768px) {
   .user-profile-options-div {
     gap: 2px;
