@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Modal, Form, Input } from "antd";
 import "./EditProfileModal.css";
-import { updateAccount } from "../../services/account.service";
-import { updateUser } from "../../services/user.service";
+import userService from "../../services/user.service";
+import accountService from "../../services/account.service";
 
-const EditProfileModal = ({ visible, onCancel, onSave, user }) => {
+const EditProfileModal = ({ visible, onCancel, onSave, user, userId, role }) => {
   const [form] = Form.useForm();
 
-  useEffect(() => {
+useEffect(() => {
     if (user) {
       form.setFieldsValue({
         firstName: user.firstName,
@@ -23,25 +23,37 @@ const EditProfileModal = ({ visible, onCancel, onSave, user }) => {
     try {
       const values = await form.validateFields();
 
+       if (values.username !== user.username) {
+      try {
+        await accountService.checkUsername(values.username);
+        alert("Username already exists, please choose another one.");
+        return; 
+      } catch (err) {
+        if (err.response && err.response.status === 404) {
+        } else {
+          console.error("Error checking username:", err);
+          alert("Something went wrong while checking username.");
+          return;
+        }
+      }
+    }
+      const payload = {
+        account: {
+          username: values.username,  
+          password: user.password,     
+          type: role,
+          created: user.created,
+          isActive: user.isActive,
+        },
+        user: {
+          fName: values.firstName,
+          lName: values.lastName,
+          email: values.email,
+          phone: values.phone || null,
+        },
+      };
 
-      await updateAccount(user.id, {
-        id: user.id,
-        username: values.username,
-        password: "pppp",
-        type: user.type.toUpperCase(),
-        created: user.dateCreated,
-        isActive: user.isActive,
-      });
-
-
-      await updateUser(user.id, {
-        account_id: user.id,
-        fName: values.firstName,
-        lName: values.lastName,
-        email: values.email,
-        phone: values.phone,
-      });
-
+      await userService.updateUser(userId, payload);
       onSave({ ...user, ...values }); 
       onCancel(); 
     } catch (error) {

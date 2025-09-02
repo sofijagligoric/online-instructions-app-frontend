@@ -380,6 +380,8 @@ const ViewProfilePage = () => {
         onCancel={() => setIsEditModalVisible(false)}
         onSave={handleSaveProfile}
         user={user}
+        userId={userId}
+        role={role}
       />
 
       <ChangePasswordModal
