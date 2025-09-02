@@ -21,7 +21,7 @@ const handleLogin = async (e) => {
       const response = await authService.login(credentials);
 
       if (!response.active) {
-        alert("Vaš nalog je deaktiviran. Prijava nije moguća.");
+        alert("Your account has been deactivated. Failed to login.");
         return;
       }
 
@@ -44,10 +44,10 @@ const handleLogin = async (e) => {
           error.response.data?.message || 
           typeof error.response.data === "string" 
             ? error.response.data 
-            : "Greška pri loginu sa servera."
+            : "Failed to login."
         );
       } else {
-        alert("Greška pri loginu: " + error.message);
+        alert("Failed to login.");
       }
     }
   };

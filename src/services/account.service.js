@@ -46,6 +46,10 @@ export const createInstructor = (instructorDTO) => {
   return instance.post("/api/instructor", instructorDTO);
 };
 
+const checkUsername = (username) => {
+  return instance.get(`/api/account/username/${username}`);
+};
+
 export default {
   getAll,
   deactivateAccount,
@@ -57,5 +61,6 @@ export default {
   passwordChange,
   createUser,
   createStudent,
-  createInstructor
+  createInstructor,
+  checkUsername
 };

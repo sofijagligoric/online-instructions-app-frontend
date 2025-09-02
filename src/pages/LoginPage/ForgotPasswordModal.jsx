@@ -12,10 +12,6 @@ const ForgotPasswordModal = ({visible, onCancel}) => {
       alert("Please enter your new password.");
       return;
     }
-    alert(
-      `New: ${newPassword}\nNew again: ${newPassword2
-      }`
-    );
      setNewPassword("");
     setNewPassword2("");
     onCancel(); 

@@ -13,29 +13,28 @@ import {
 import reportsService from "../../services/report.service";
 import resourceService from "../../services/resource.service";
 import { formatDateTime } from "../../utils/formatDateTime";
+import EditResourceModal from "./EditResourceModal";
+import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
-const Resource = ({ userName, resource, currentUser, role, backgroundColor, onDelete }) => {
+const Resource = ({ userName, resource, currentUser, role, backgroundColor, onDelete,  onEdit, }) => {
   const isOwner = currentUser === resource.userId;
   const isAdmin = role === "Admin";
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
 const handleDelete = async () => {
     try {
       await resourceService.deleteResource(resource.id);
-      alert("Advert deleted.");
       if (onDelete) onDelete(resource.id);
     } catch (err) {
       console.error("Error deleting resource:", err);
-      alert("Failed to delete resource.");
     }
   };
 
-  const handleEdit = () => {
-    alert("Edit resource.");
-  };
 
   const handleReportSubmit = async ({ reason, description }) => {
     try {
@@ -64,6 +63,16 @@ const handleDelete = async () => {
     }
   };
 
+  
+  const handleEditClick = () => {
+    setIsEditModalVisible(true);
+  };
+
+  const handleEdit = (updatedResource) => {
+    if (onEdit) onEdit(updatedResource); 
+  };
+
+
 const handleViewResource = () => {
   if (!resource.path) return;
 
@@ -85,7 +94,7 @@ const handleViewResource = () => {
   const menu = (
     <Menu>
       {isOwner && (
-        <Menu.Item key="edit" icon={<EditOutlined />} onClick={handleEdit}>
+        <Menu.Item key="edit" icon={<EditOutlined />} onClick={handleEditClick}>
           Edit
         </Menu.Item>
       )}
@@ -93,7 +102,7 @@ const handleViewResource = () => {
         <Menu.Item
           key="delete"
           icon={<DeleteOutlined />}
-          onClick={handleDelete}
+           onClick={() => setIsDeleteModalVisible(true)}
         >
           Delete
         </Menu.Item>
@@ -147,6 +156,19 @@ const handleViewResource = () => {
         advertId={resource.id}
         onSubmit={handleReportSubmit}
       />
+
+       <EditResourceModal
+        visible={isEditModalVisible}
+        onCancel={() => setIsEditModalVisible(false)}
+        onEdit={handleEdit}
+        resource={resource}
+      />
+
+        <ConfirmDeleteModal
+            visible={isDeleteModalVisible}
+            onConfirm={handleDelete}
+            onCancel={() => setIsDeleteModalVisible(false)}
+          />
     </div>
   );
 };

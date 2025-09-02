@@ -13,6 +13,7 @@ import ChangePasswordModal from "../../components/ChangePassword/ChangePasswordM
 import { useAuth } from "../../components/AuthContext/AuthContext";
 import advertsService from "../../services/adverts.service";
 import threadService from "../../services/thread.service";
+import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
 const ViewProfilePage = () => {
   const { id } = useParams();
@@ -21,6 +22,7 @@ const ViewProfilePage = () => {
   const [user, setUser] = useState(location.state?.user || null);
   const backgroundColor = location.state?.backgroundColor || "#4a6cac";
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] =
     useState(false);
 
@@ -127,18 +129,18 @@ const ViewProfilePage = () => {
 
   const handleToggleAccount = async () => {
     try {
-      if (user.active) {
+      if (user.isActive) {
         await accountService.deactivateAccount(user.id);
-        setUser((prev) => ({ ...prev, active: false }));
-        alert("Nalog je deaktiviran.");
+        setUser((prev) => ({ ...prev, isActive: false }));
+        alert("Account deactivated.");
       } else {
         await accountService.activateAccount(user.id);
-        setUser((prev) => ({ ...prev, active: true }));
-        alert("Nalog je aktiviran.");
+        setUser((prev) => ({ ...prev, isActive: true }));
+        alert("Account activated.");
       }
     } catch (err) {
       console.error("Greška prilikom promjene statusa naloga:", err);
-      alert("Neuspjela promjena statusa naloga.");
+      alert("Failed to change account activity status.");
     }
   };
 
@@ -199,11 +201,11 @@ const ViewProfilePage = () => {
       ) : role === "Admin" ? (
         <button
           className={`user-profile-delete-button ${
-            user.active ? "" : "green-button"
+            user.isActive ? "" : "green-button"
           }`}
           onClick={handleToggleAccount}
         >
-          {user.active ? "Deactivate Account" : "Activate Account"}
+          {user.isActive ? "Deactivate Account" : "Activate Account"}
         </button>
       ) : null}
 
@@ -385,6 +387,8 @@ const ViewProfilePage = () => {
         onCancel={() => setIsChangePasswordModalVisible(false)}
         userId={user.id}
       />
+
+    
     </div>
   );
 };

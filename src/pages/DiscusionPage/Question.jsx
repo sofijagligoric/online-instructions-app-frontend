@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import threadService from "../../services/thread.service";
 import reportsService from "../../services/report.service";
 import EditQuestionModal from "./EditQuestionModal";
+import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
 const Question = ({
   question,
@@ -30,6 +31,7 @@ const Question = ({
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const basePath =
     role === "Admin"
@@ -42,11 +44,9 @@ const Question = ({
   const handleDelete = async () => {
     try {
       await threadService.deleteDiscussionThread(question.id);
-      alert("Thread deleted.");
       if (onDelete) onDelete(question.id);
     } catch (err) {
       console.error("Error deleting thread:", err);
-      alert("Failed to delete thread.");
     }
   };
 
@@ -97,7 +97,7 @@ const handleReportSubmit = async ({ reason, description }) => {
         <Menu.Item
           key="delete"
           icon={<DeleteOutlined />}
-          onClick={handleDelete}
+           onClick={() => setIsDeleteModalVisible(true)}
         >
           Delete
         </Menu.Item>
@@ -156,6 +156,12 @@ const handleReportSubmit = async ({ reason, description }) => {
         onEdit={handleEdit}
         question={question}
       />
+
+        <ConfirmDeleteModal
+            visible={isDeleteModalVisible}
+            onConfirm={handleDelete}
+            onCancel={() => setIsDeleteModalVisible(false)}
+          />
     </div>
   );
 };

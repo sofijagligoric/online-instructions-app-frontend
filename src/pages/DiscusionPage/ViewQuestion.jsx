@@ -16,6 +16,7 @@ import { formatDateTime } from "../../utils/formatDateTime";
 import userService from "../../services/user.service";
 import { useNavigate } from "react-router-dom";
 import reportsService from "../../services/report.service";
+import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
 export default function ViewQuestion({ questionRecieved, currentUser, role, author }) {
    const [question, setQuestion] = useState(questionRecieved); 
@@ -29,6 +30,7 @@ export default function ViewQuestion({ questionRecieved, currentUser, role, auth
    const [users, setUsers] = useState({});
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const commentsPerPage = 4;
   const totalPages = Math.ceil(comments.length / commentsPerPage);
 
@@ -73,9 +75,7 @@ export default function ViewQuestion({ questionRecieved, currentUser, role, auth
 const handleDelete = async () => {
   try {
     await threadService.deleteDiscussionThread(question.id);
-    alert("Thread deleted.");
-
-    // odredi prefix na osnovu role
+  
     let prefix = "";
     if (role === "Admin") prefix = "admin";
     else if (role === "Instructor") prefix = "instructor";
@@ -84,7 +84,6 @@ const handleDelete = async () => {
     navigate(`/${prefix}/discusion`);
   } catch (err) {
     console.error("Error deleting thread:", err);
-    alert("Failed to delete thread.");
   }
 };
 
@@ -140,7 +139,7 @@ const handleDelete = async () => {
         <Menu.Item
           key="delete"
           icon={<DeleteOutlined />}
-          onClick={handleDelete}
+           onClick={() => setIsDeleteModalVisible(true)}
         >
           Delete
         </Menu.Item>
@@ -174,7 +173,7 @@ const handleDelete = async () => {
       setCurrentPage(1);
     } catch (err) {
       console.error("Greška pri dodavanju komentara:", err);
-      alert("Nije moguće dodati komentar.");
+      alert("Failed to create comment.");
     }
   };
 
@@ -267,6 +266,12 @@ const handleDelete = async () => {
         onEdit={handleEdit}
         question={question}
       />
+
+        <ConfirmDeleteModal
+            visible={isDeleteModalVisible}
+            onConfirm={handleDelete}
+            onCancel={() => setIsDeleteModalVisible(false)}
+          />
     </div>
   );
 }

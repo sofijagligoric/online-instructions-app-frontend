@@ -6,6 +6,7 @@ import { formatDateTime } from "../../utils/formatDateTime";
 import "./Comment.css";
 import commentService from "../../services/comment.service";
 import reportsService from "../../services/report.service";
+import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
 export default function Comment({ comment, currentUser, role, isLast, author, onDelete }) {
   const isOwner = currentUser === comment.userId;
@@ -13,6 +14,7 @@ export default function Comment({ comment, currentUser, role, isLast, author, on
   const [expanded, setExpanded] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const canDelete = isOwner || isAdmin;
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const handleReportSubmit = async ({ reason, description }) => {
     try {
@@ -45,11 +47,9 @@ export default function Comment({ comment, currentUser, role, isLast, author, on
   const handleDelete = async () => {
       try {
         await commentService.deleteComment(comment.id);
-        alert("Comment deleted.");
          if (onDelete) onDelete(comment.id);
       } catch (err) {
         console.error("Error deleting comment:", err);
-        alert("Failed to delete comment.");
       }
     };
 
@@ -59,7 +59,7 @@ export default function Comment({ comment, currentUser, role, isLast, author, on
         <Menu.Item
           key="delete"
           icon={<DeleteOutlined />}
-          onClick={handleDelete}
+          onClick={() => setIsDeleteModalVisible(true)}
         >
           Delete
         </Menu.Item>
@@ -98,6 +98,12 @@ export default function Comment({ comment, currentUser, role, isLast, author, on
         advertId={comment.id}
         onSubmit={handleReportSubmit}
       />
+
+        <ConfirmDeleteModal
+            visible={isDeleteModalVisible}
+            onConfirm={handleDelete}
+            onCancel={() => setIsDeleteModalVisible(false)}
+          />
     </div>
   );
 }

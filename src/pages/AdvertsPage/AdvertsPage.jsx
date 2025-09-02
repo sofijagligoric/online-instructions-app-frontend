@@ -20,7 +20,7 @@ const { Option } = Select;
 
 const AdvertsPage = () => {
   const [adverts, setAdverts] = useState([]);
-   const { userId, role } = useAuth();
+  const { userId, role } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const isInstructor = role === "Instructor";
   //   const colors = ["#e1f4fa", "#daeaf5", "#e6ecfa", "#d5e1e8"];
@@ -158,6 +158,7 @@ const AdvertsPage = () => {
             onChange={(value) => setSelectedCategories(value)}
             suffixIcon={<AppstoreOutlined />}
             className="custom-sort-select"
+            maxTagCount={0}
           >
             {categories.map((cat) => (
               <Option key={cat.id} value={cat.id}>
@@ -175,6 +176,30 @@ const AdvertsPage = () => {
           </button>
         )}
       </div>
+
+      {selectedCategories.length > 0 && (
+        <div className="selected-categories">
+          {selectedCategories.map((catId) => {
+            const cat = categories.find((c) => c.id === catId);
+            return (
+              <span key={catId} className="category-tag">
+                {cat?.name}
+                <button
+                  type="button"
+                  className="remove-tag-btn"
+                  onClick={() =>
+                    setSelectedCategories((prev) =>
+                      prev.filter((c) => c !== catId)
+                    )
+                  }
+                >
+                  ×
+                </button>
+              </span>
+            );
+          })}
+        </div>
+      )}
 
       {currentAdverts.map((ad, index) => (
         <Advert

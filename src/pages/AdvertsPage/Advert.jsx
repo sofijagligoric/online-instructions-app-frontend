@@ -13,6 +13,7 @@ import {
 } from "@ant-design/icons";
 import advertsService from "../../services/adverts.service";
 import EditAdvertModal from "./EditAdvertModal";
+import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
 const Advert = ({
   advert,
@@ -29,17 +30,16 @@ const Advert = ({
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
   const handleDelete = async () => {
     try {
       await advertsService.deleteAdvert(advert.id);
-      alert("Advert deleted.");
       if (onDelete) onDelete(advert.id);
     } catch (err) {
       console.error("Error deleting advert:", err);
-      alert("Failed to delete advert.");
     }
   };
 
@@ -89,7 +89,7 @@ const Advert = ({
         <Menu.Item
           key="delete"
           icon={<DeleteOutlined />}
-          onClick={handleDelete}
+          onClick={() => setIsDeleteModalVisible(true)}
         >
           Delete
         </Menu.Item>
@@ -156,6 +156,12 @@ const Advert = ({
         onEdit={handleEdit}
         advert={advert}
       />
+
+       <ConfirmDeleteModal
+            visible={isDeleteModalVisible}
+            onConfirm={handleDelete}
+            onCancel={() => setIsDeleteModalVisible(false)}
+          />
     </div>
   );
 };

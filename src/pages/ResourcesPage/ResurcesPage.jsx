@@ -20,11 +20,11 @@ const { Option } = Select;
 
 const ResourcesPage = () => {
   const [resources, setResources] = useState([]);
-   const { userId, role } = useAuth();
+  const { userId, role } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const isInstructor = role === "Instructor";
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
-    const [users, setUsers] = useState({});
+  const [users, setUsers] = useState({});
   const [sortOption, setSortOption] = useState("name-asc");
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -36,15 +36,15 @@ const ResourcesPage = () => {
 
   const canCreate = isInstructor || role === "Student";
 
-   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
   const handleAddResource = (newResource) => {
-  setResources((prev) => [newResource, ...prev]);
-  setIsAddModalVisible(false);
-};
+    setResources((prev) => [newResource, ...prev]);
+    setIsAddModalVisible(false);
+  };
 
   useEffect(() => {
-    const fetchResources= async () => {
+    const fetchResources = async () => {
       try {
         const response = await resourceService.getAllResources();
         setResources(response.data);
@@ -62,19 +62,19 @@ const ResourcesPage = () => {
       }
     };
 
-      const fetchUsers = async () => {
-          try {
-            const usersList = await userService.getAllUsers();
-            const usersMap = usersList.reduce((acc, instructor) => {
-              if (!instructor) return acc; // skip null
-              acc[instructor.id] = instructor;
-              return acc;
-            }, {});
-            setUsers(usersMap);
-          } catch (err) {
-            console.error("Error fetching users:", err);
-          }
-        };
+    const fetchUsers = async () => {
+      try {
+        const usersList = await userService.getAllUsers();
+        const usersMap = usersList.reduce((acc, instructor) => {
+          if (!instructor) return acc; // skip null
+          acc[instructor.id] = instructor;
+          return acc;
+        }, {});
+        setUsers(usersMap);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
 
     fetchResources();
     fetchCategories();
@@ -116,12 +116,17 @@ const ResourcesPage = () => {
   const handleDeleteResource = (id) => {
     setResources((prev) => prev.filter((ad) => ad.id !== id));
   };
+
+  const handleUpdateResource = (updatedResource) => {
+    setResources((prev) =>
+      prev.map((ad) => (ad.id === updatedResource.id ? updatedResource : ad))
+    );
+  };
+
   return (
     <div className="resources-main-div">
       <div className="resources-title-and-search">
-        <h1 className="resources-title">
-          Post. Share. Inspire.
-        </h1>
+        <h1 className="resources-title">Post. Share. Inspire.</h1>
         <SearchBar value={searchTerm} onChange={setSearchTerm} />
       </div>
       <div className="resources-sort-add-div">
@@ -146,7 +151,7 @@ const ResourcesPage = () => {
             </Option>
           </Select>
 
-          <Select
+          {/*  <Select
             mode="multiple"
             allowClear
             placeholder="Select categories"
@@ -160,16 +165,59 @@ const ResourcesPage = () => {
                 {cat}
               </Option>
             ))}
+          </Select> */}
+
+          <Select
+            mode="multiple"
+            allowClear
+            placeholder="Select categories"
+            value={selectedCategories}
+            onChange={(value) => setSelectedCategories(value)}
+            suffixIcon={<AppstoreOutlined />}
+            className="custom-sort-select"
+            maxTagCount={0}
+          >
+            {categories.map((cat) => (
+              <Option key={cat.id} value={cat.id}>
+                {cat.name}
+              </Option>
+            ))}
           </Select>
         </div>
 
-          {canCreate && (
-          <button className="create-button"  onClick={() => setIsAddModalVisible(true)}>
+        {canCreate && (
+          <button
+            className="create-button"
+            onClick={() => setIsAddModalVisible(true)}
+          >
             Add resource
           </button>
         )}
       </div>
 
+      {selectedCategories.length > 0 && (
+        <div className="selected-categories">
+          {selectedCategories.map((catId) => {
+            const cat = categories.find((c) => c.id === catId);
+            return (
+              <span key={catId} className="category-tag">
+                {cat?.name}
+                <button
+                  type="button"
+                  className="remove-tag-btn"
+                  onClick={() =>
+                    setSelectedCategories((prev) =>
+                      prev.filter((c) => c !== catId)
+                    )
+                  }
+                >
+                  ×
+                </button>
+              </span>
+            );
+          })}
+        </div>
+      )}
       {currentResources.map((ad, index) => (
         <Resource
           key={ad.id}
@@ -179,6 +227,7 @@ const ResourcesPage = () => {
           role={role}
           backgroundColor={colors[index % colors.length]}
           onDelete={handleDeleteResource}
+          onEdit={handleUpdateResource}
         />
       ))}
       {totalPages > 1 && (
@@ -203,7 +252,7 @@ const ResourcesPage = () => {
         </div>
       )}
 
-        <AddResourceModal
+      <AddResourceModal
         visible={isAddModalVisible}
         onCancel={() => setIsAddModalVisible(false)}
         onAdd={handleAddResource}

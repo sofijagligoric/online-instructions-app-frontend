@@ -18,7 +18,7 @@ const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSignUp = async (e) => {
+const handleSignUp = async (e) => {
   e.preventDefault();
 
   if (password.length < 6 || confirmPassword.length < 6) {
@@ -32,46 +32,43 @@ const SignUpPage = () => {
   }
 
   try {
+    try {
+      await accountService.checkUsername(username);
+      alert("Username already exists, please choose another one.");
+      return; 
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+      } else {
+        console.error("Error checking username:", err);
+        alert("Something went wrong while checking username.");
+        return;
+      }
+    }
 
-    const accountResponse = await accountService.addAccount({
-      username: username,
-      password: password,
-      type: type, 
-      isActive: true
-    });
-
-    const account = accountResponse.data;
-    console.log("Account created:", account);
-
-
-    const userResponse = await accountService.createUser({
-      account: { id: account.id },
+    const payload = {
+      account: {
+        username: username,
+        password: password,
+        type: type,
+        created: new Date().toISOString().split("T")[0],
+        isActive: true,
+      },
       user: {
         fName: firstName,
         lName: lastName,
         email: email,
-        phone: phone || null
-      }
-    });
-
-    console.log("User created:", userResponse.data);
-
+        phone: phone || null,
+      },
+    };
 
     if (type === "Student") {
-      const studentResponse = await accountService.createStudent({
-        account_Id: account.id
-      });
-      console.log("Student created:", studentResponse.data);
+      await accountService.createStudent(payload);
     } else {
-      const instructorResponse = await accountService.createInstructor({
-        account_Id: account.id
-      });
-      console.log("Instructor created:", instructorResponse.data);
+      await accountService.createInstructor(payload);
     }
 
     alert("Account successfully created!");
-     navigate("/login");
-
+    navigate("/login");
   } catch (error) {
     console.error("Error during sign up:", error);
     alert("Failed to create account.");

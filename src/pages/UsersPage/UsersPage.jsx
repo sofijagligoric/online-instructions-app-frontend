@@ -30,6 +30,7 @@ const UsersPage = () => {
   const [sortOption, setSortOption] = useState("name-asc");
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
@@ -62,7 +63,13 @@ const UsersPage = () => {
         u.type === "student" ? "Students" : "Instructors"
       );
 
-    const matchActive = role === "Admin" ? true : u.isActive === true;
+    let matchActive = true;
+    if (role !== "Admin") {
+      matchActive = u.isActive === true;
+    } else {
+      if (statusFilter === "active") matchActive = u.isActive === true;
+      if (statusFilter === "inactive") matchActive = u.isActive === false;
+    }
 
     return matchSearch && matchCategory && matchActive;
   });
@@ -121,6 +128,7 @@ const UsersPage = () => {
             onChange={(value) => setSelectedCategories(value)}
             suffixIcon={<AppstoreOutlined />}
             className="custom-sort-select"
+            maxTagCount={0}
           >
             {categories.map((cat) => (
               <Option key={cat} value={cat}>
@@ -128,8 +136,43 @@ const UsersPage = () => {
               </Option>
             ))}
           </Select>
+
+          {role === "Admin" && (
+            <Select
+              value={statusFilter}
+              onChange={(value) => setStatusFilter(value)}
+              className="custom-sort-select"
+              style={{ minWidth: 150 }}
+            >
+              <Option value="all">All users</Option>
+              <Option value="active">Active</Option>
+              <Option value="inactive">Inactive</Option>
+            </Select>
+          )}
         </div>
       </div>
+
+      {selectedCategories.length > 0 && (
+        <div className="selected-categories">
+          {selectedCategories.map((cat) => (
+        <span key={cat} className="category-tag">
+          {cat}
+                <button
+                  type="button"
+                  className="remove-tag-btn"
+                  onClick={() =>
+              setSelectedCategories((prev) =>
+                prev.filter((c) => c !== cat)
+              )
+            }
+                >
+                  ×
+                </button>
+              </span>
+            )
+          )}
+        </div>
+      )}
 
       <div className="users-list">
         {currentUsers.map((user, index) => (

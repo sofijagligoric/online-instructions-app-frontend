@@ -56,8 +56,10 @@
   width: 90%;
   margin: 0 auto;
 }
-
-
+/* 
+.users-sort-filter-div .custom-sort-select {
+   max-width: 100%; 
+} */
 
 @media (max-width: 768px) {
   .users-title-and-search {
@@ -67,19 +69,24 @@
     margin-top: 5px;
     margin-bottom: 20px;
   }
-
+/* 
   .users-sort-add-div {
      flex-direction: column;
      gap: 15px;
-  }
+  } */
 
   .users-sort-filter-div {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 15px;
   align-items: flex-start;
   width: 100%;
   margin-top: 20px;
+}
+
+.users-sort-filter-div .custom-sort-select {
+  width: 100%;
+   max-width: 100%; 
 }
 
   .users-title {

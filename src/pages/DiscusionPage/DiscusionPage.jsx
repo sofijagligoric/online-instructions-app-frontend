@@ -20,11 +20,11 @@ const { Option } = Select;
 
 const DiscusionPage = () => {
   const [questions, setQuestions] = useState([]);
-   const { userId, role } = useAuth();
+  const { userId, role } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState({});
   const isInstructor = role === "Instructor";
-   const isStudent = role === "Student";
+  const isStudent = role === "Student";
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
   const [sortOption, setSortOption] = useState("name-asc");
   const [categories, setCategories] = useState([]);
@@ -37,15 +37,15 @@ const DiscusionPage = () => {
 
   const canCreate = isInstructor || isStudent;
 
- const handleCreate = async (newQuestion) => {
-  try {
-    const response = await threadService.addDiscussionThread(newQuestion);
-    setQuestions((prev) => [response.data, ...prev]);
-  } catch (err) {
-    console.error("Error creating question:", err);
-    alert("Error while creating question.");
-  }
-};
+  const handleCreate = async (newQuestion) => {
+    try {
+      const response = await threadService.addDiscussionThread(newQuestion);
+      setQuestions((prev) => [response.data, ...prev]);
+    } catch (err) {
+      console.error("Error creating question:", err);
+      alert("Error while creating question.");
+    }
+  };
 
   useEffect(() => {
     const fetchThreads = async () => {
@@ -126,7 +126,6 @@ const DiscusionPage = () => {
       prev.map((ad) => (ad.id === updatedQuestion.id ? updatedQuestion : ad))
     );
   };
-  
 
   return (
     <div className="discusion-main-div">
@@ -137,7 +136,9 @@ const DiscusionPage = () => {
         <SearchBar value={searchTerm} onChange={setSearchTerm} />
       </div>
       <div className="create-question-div ">
-        {canCreate && <NewQuestion categories={categories}  onSubmit={handleCreate}/>}
+        {canCreate && (
+          <NewQuestion categories={categories} onSubmit={handleCreate} />
+        )}
       </div>
       <div className="discusion-sort-add-div">
         <div className="discusion-sort-filter-div">
@@ -169,6 +170,7 @@ const DiscusionPage = () => {
             onChange={(value) => setSelectedCategories(value)}
             suffixIcon={<AppstoreOutlined />}
             className="custom-sort-select"
+            maxTagCount={0}
           >
             {categories.map((cat) => (
               <Option key={cat.id} value={cat.id}>
@@ -178,6 +180,30 @@ const DiscusionPage = () => {
           </Select>
         </div>
       </div>
+
+      {selectedCategories.length > 0 && (
+        <div className="selected-categories">
+          {selectedCategories.map((catId) => {
+            const cat = categories.find((c) => c.id === catId);
+            return (
+              <span key={catId} className="category-tag">
+                {cat?.name}
+                <button
+                  type="button"
+                  className="remove-tag-btn"
+                  onClick={() =>
+                    setSelectedCategories((prev) =>
+                      prev.filter((c) => c !== catId)
+                    )
+                  }
+                >
+                  ×
+                </button>
+              </span>
+            );
+          })}
+        </div>
+      )}
 
       {currentQuestions.map((ad, index) => (
         <Question
