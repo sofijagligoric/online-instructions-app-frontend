@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { Popconfirm } from "antd";
 import Question from "../DiscusionPage/Question";
 import Resource from "../ResourcesPage/Resource";
 import Advert from "../AdvertsPage/Advert";
@@ -7,13 +8,12 @@ import "./ViewProfilePage.css";
 import ReviewsSection from "./ReviewsSection";
 import EditProfileModal from "./EditProfileModal";
 import userService from "../../services/user.service";
-import reviewService from "../../services/review.service";
 import accountService from "../../services/account.service";
 import ChangePasswordModal from "../../components/ChangePassword/ChangePasswordModal";
 import { useAuth } from "../../components/AuthContext/AuthContext";
 import advertsService from "../../services/adverts.service";
 import threadService from "../../services/thread.service";
-import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
+import resourceService from "../../services/resource.service";
 
 const ViewProfilePage = () => {
   const { id } = useParams();
@@ -22,7 +22,6 @@ const ViewProfilePage = () => {
   const [user, setUser] = useState(location.state?.user || null);
   const backgroundColor = location.state?.backgroundColor || "#4a6cac";
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] =
     useState(false);
 
@@ -73,22 +72,21 @@ const ViewProfilePage = () => {
   useEffect(() => {
     if (!user) return;
 
-    setUserResources([
-      {
-        id: 1,
-        title: "Matematika 4 - zbirka rijesenih zadataka",
-        category: "Edukacija",
-        date: "2025-02-25",
-        authorId: 5,
-      },
-      {
-        id: 2,
-        title: "Uvod u osnove programskog jezika Java",
-        category: "Edukacija",
-        date: "2024-02-05",
-        authorId: 7,
-      },
-    ]);
+    const fetchResources = async () => {
+      try {
+        const resources = await resourceService.getResourcesForUser(
+          user.id
+        );
+        setUserResources(resources);
+      } catch (err) {
+        if (err.response && err.response.status === 404) {
+          setUserQuestions([]);
+        } else {
+          console.error("Error fetching resources:", err);
+        }
+      }
+    };
+    fetchResources();
 
     const fetchQuestions = async () => {
       try {
@@ -168,6 +166,16 @@ const ViewProfilePage = () => {
       prev.map((ad) => (ad.id === updatedQuestion.id ? updatedQuestion : ad))
     );
   };
+
+  const handleDeleteResource = (id) => {
+    setUserResources((prev) => prev.filter((ad) => ad.id !== id));
+  };
+
+  const handleUpdateResource = (updatedResource) => {
+    setUserResources((prev) =>
+      prev.map((ad) => (ad.id === updatedResource.id ? updatedResource : ad))
+    );
+  };
   return (
     <div className="profile-page">
       <div className="profile-header">
@@ -197,6 +205,23 @@ const ViewProfilePage = () => {
           >
             Change password
           </button>
+
+          <Popconfirm
+            title={`Are you sure you want to ${
+              user.isActive ? "deactivate" : "activate"
+            } this account?`}
+            onConfirm={handleToggleAccount}
+            okText="Yes"
+            cancelText="No"
+          >
+            <button
+              className={`user-profile-delete-button ${
+                user.isActive ? "" : "green-button"
+              }`}
+            >
+              {user.isActive ? "Deactivate Account" : "Activate Account"}
+            </button>
+          </Popconfirm>
         </div>
       ) : role === "Admin" ? (
         <button
@@ -344,7 +369,10 @@ const ViewProfilePage = () => {
                     resource={r}
                     currentUser={userId}
                     role={role}
+                    userName={user.username}
                     backgroundColor={colors[index % colors.length]}
+                    onDelete={handleDeleteResource}
+                    onEdit={handleUpdateResource}
                   />
                 ))}
                 {totalResourcePages > 1 && (
@@ -389,8 +417,6 @@ const ViewProfilePage = () => {
         onCancel={() => setIsChangePasswordModalVisible(false)}
         userId={user.id}
       />
-
-    
     </div>
   );
 };

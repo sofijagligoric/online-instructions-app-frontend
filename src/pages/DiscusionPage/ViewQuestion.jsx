@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Menu, Dropdown, Button, Input } from "antd";
+import { Menu, Dropdown, Button, Input, Popconfirm } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -16,7 +16,6 @@ import { formatDateTime } from "../../utils/formatDateTime";
 import userService from "../../services/user.service";
 import { useNavigate } from "react-router-dom";
 import reportsService from "../../services/report.service";
-import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
 export default function ViewQuestion({ questionRecieved, currentUser, role, author }) {
    const [question, setQuestion] = useState(questionRecieved); 
@@ -30,7 +29,6 @@ export default function ViewQuestion({ questionRecieved, currentUser, role, auth
    const [users, setUsers] = useState({});
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const commentsPerPage = 4;
   const totalPages = Math.ceil(comments.length / commentsPerPage);
 
@@ -136,12 +134,15 @@ const handleDelete = async () => {
         </Menu.Item>
       )}
       {canDelete && (
-        <Menu.Item
-          key="delete"
-          icon={<DeleteOutlined />}
-           onClick={() => setIsDeleteModalVisible(true)}
-        >
-          Delete
+         <Menu.Item key="delete" icon={<DeleteOutlined />}>
+          <Popconfirm
+            title="Are you sure you want to delete this thread?"
+            onConfirm={handleDelete}
+            okText="Yes"
+            cancelText="No"
+          >
+            <span>Delete</span>
+          </Popconfirm>
         </Menu.Item>
       )}
       {!canDelete && (
@@ -267,11 +268,6 @@ const handleDelete = async () => {
         question={question}
       />
 
-        <ConfirmDeleteModal
-            visible={isDeleteModalVisible}
-            onConfirm={handleDelete}
-            onCancel={() => setIsDeleteModalVisible(false)}
-          />
     </div>
   );
 }

@@ -121,18 +121,20 @@ background-color: var(--primary-button-color);
     display: flex;
   margin-bottom: 15px;
   flex-wrap: wrap;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .user-profile-edit-button {
-  margin-top: 10px;
+margin-top: 15px;
+   margin-bottom: 15px;
   padding: 10px 16px;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   width: 100%;
-  max-width: 250px;
+  max-width: 200px;
   background: #020f3d;
 }
 
@@ -169,12 +171,21 @@ background-color: var(--primary-button-color);
 
 @media (max-width: 768px) {
   .user-profile-options-div {
-    gap: 2px;
+    flex-direction: column;
    
   }
 
   .user-profile-edit-button{
     margin-bottom: 0px;
+    max-width: 250px;
+     margin-top: 0px;
+  }
+
+  .user-profile-delete-button
+  {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    max-width: 250px;
   }
 
   .tabs{

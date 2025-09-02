@@ -15,6 +15,7 @@ import ResoucesPage from "./pages/ResourcesPage/ResurcesPage";
 import UsersPage from "./pages/UsersPage/UsersPage";
 import ViewProfilePage from "./pages/UsersPage/ViewProfilePage";
 import ReportsPage from "./pages/ReportsPage/ReportsPage";
+import AdminSettingsPage from "./pages/AdminSettings/AdminSettingsPage";
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="discusion" element={<DiscusionPage />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="discusion/thread/:id" element={<ViewQuestionPage />} />
+         <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
 
         {/* INSTRUCTOR RUTE */}

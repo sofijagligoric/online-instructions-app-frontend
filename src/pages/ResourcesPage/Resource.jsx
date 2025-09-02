@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Resource.css";
 import "../../App.css";
-import { Menu, Dropdown, Button } from "antd";
+import { Menu, Dropdown, Button, Popconfirm } from "antd";
 import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import {
   DeleteOutlined,
@@ -14,19 +14,25 @@ import reportsService from "../../services/report.service";
 import resourceService from "../../services/resource.service";
 import { formatDateTime } from "../../utils/formatDateTime";
 import EditResourceModal from "./EditResourceModal";
-import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
-const Resource = ({ userName, resource, currentUser, role, backgroundColor, onDelete,  onEdit, }) => {
+const Resource = ({
+  userName,
+  resource,
+  currentUser,
+  role,
+  backgroundColor,
+  onDelete,
+  onEdit,
+}) => {
   const isOwner = currentUser === resource.userId;
   const isAdmin = role === "Admin";
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
-const handleDelete = async () => {
+  const handleDelete = async () => {
     try {
       await resourceService.deleteResource(resource.id);
       if (onDelete) onDelete(resource.id);
@@ -34,7 +40,6 @@ const handleDelete = async () => {
       console.error("Error deleting resource:", err);
     }
   };
-
 
   const handleReportSubmit = async ({ reason, description }) => {
     try {
@@ -63,33 +68,31 @@ const handleDelete = async () => {
     }
   };
 
-  
   const handleEditClick = () => {
     setIsEditModalVisible(true);
   };
 
   const handleEdit = (updatedResource) => {
-    if (onEdit) onEdit(updatedResource); 
+    if (onEdit) onEdit(updatedResource);
   };
 
+  const handleViewResource = () => {
+    if (!resource.path) return;
 
-const handleViewResource = () => {
-  if (!resource.path) return;
+    const fileExtension = resource.path.split(".").pop().toLowerCase();
+    const fileUrl = `http://localhost:8080/api/resource/download/${resource.path}`;
 
-  const fileExtension = resource.path.split(".").pop().toLowerCase();
-  const fileUrl = `http://localhost:8080/api/resource/download/${resource.path}`;
-
-  if (fileExtension === "pdf") {
-    window.open(fileUrl, "_blank", "noopener,noreferrer");
-  } else {
-    const link = document.createElement("a");
-    link.href = fileUrl;
-    link.download = resource.title; 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-};
+    if (fileExtension === "pdf") {
+      window.open(fileUrl, "_blank", "noopener,noreferrer");
+    } else {
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.download = resource.title;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   const menu = (
     <Menu>
@@ -99,12 +102,15 @@ const handleViewResource = () => {
         </Menu.Item>
       )}
       {canDelete && (
-        <Menu.Item
-          key="delete"
-          icon={<DeleteOutlined />}
-           onClick={() => setIsDeleteModalVisible(true)}
-        >
-          Delete
+        <Menu.Item key="delete" icon={<DeleteOutlined />}>
+          <Popconfirm
+            title="Are you sure you want to delete this resource?"
+            onConfirm={handleDelete}
+            okText="Yes"
+            cancelText="No"
+          >
+            <span>Delete</span>
+          </Popconfirm>
         </Menu.Item>
       )}
       {!canDelete && (
@@ -123,8 +129,8 @@ const handleViewResource = () => {
     <div className="resource-card" style={{ backgroundColor }}>
       <div className="resource-header">
         <div className="resource-info">
-           <p>{formatDateTime(resource.timestamp)}</p>
-                    <p>@{userName || "N/A"}</p>
+          <p>{formatDateTime(resource.timestamp)}</p>
+          <p>@{userName || "N/A"}</p>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button
@@ -157,18 +163,12 @@ const handleViewResource = () => {
         onSubmit={handleReportSubmit}
       />
 
-       <EditResourceModal
+      <EditResourceModal
         visible={isEditModalVisible}
         onCancel={() => setIsEditModalVisible(false)}
         onEdit={handleEdit}
         resource={resource}
       />
-
-        <ConfirmDeleteModal
-            visible={isDeleteModalVisible}
-            onConfirm={handleDelete}
-            onCancel={() => setIsDeleteModalVisible(false)}
-          />
     </div>
   );
 };

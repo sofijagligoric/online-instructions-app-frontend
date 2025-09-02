@@ -9,6 +9,7 @@ import {
   BookOutlined,
   ExclamationCircleOutlined,
   ScheduleOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
@@ -64,6 +65,10 @@ function MainLayoutAdmin() {
 
       <Menu.Item key="/admin/discusion" icon={<FormOutlined />}>
         Discussion
+      </Menu.Item>
+
+       <Menu.Item key="/admin/settings" icon={<SettingOutlined />}>
+        Settings
       </Menu.Item>
     
     </Menu>

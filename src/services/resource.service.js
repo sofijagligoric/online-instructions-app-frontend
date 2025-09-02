@@ -11,6 +11,12 @@ export const getResourceById = (id) => {
     return instance.get(`/api/resource/${id}`);
 };
 
+export const getResourcesForUser = async (id) => {
+    const response = await instance.get(`/api/resource/user/${id}`);
+    return response.data;
+};
+
+
 
 export const addResource = (newResource) => {
     return instance.post("/api/resource", newResource);
@@ -52,4 +58,5 @@ export default {
     deleteResource,
     uploadResourceFile,
     downloadResourceFile,
+    getResourcesForUser,
 };

@@ -1,0 +1,99 @@
+/* Glavni wrapper */
+.admin-settings {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Card spacing */
+.admin-settings .ant-card {
+  margin-bottom: 24px;
+}
+
+/* Input i dugmad */
+.admin-settings .input-add {
+  width: 100%;
+  max-width: 300px;
+  margin-right: 8px;
+}
+
+.admin-settings label {
+  color: var(--main-text-color) !important;
+  font-weight: 500;
+}
+
+.admin-settings input,
+.admin-settings textarea {
+  border-radius: 8px;
+  padding: 8px;
+   color: var(--main-text-color) !important;
+   border-color: #bcdee8;
+}
+
+.admin-settings input:hover,
+.admin-settings textarea:hover {
+   border-color: #2c7fab !important;
+}
+
+.admin-settings .add-btn {
+  margin-bottom: 16px;
+}
+
+/* Tabela */
+.admin-settings .ant-table {
+  margin-top: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-settings .input-add {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .admin-settings .add-btn {
+    width: 100%;
+  }
+
+  .admin-settings .ant-table {
+    overflow-x: auto;
+  }
+}
+
+/* Editable cell sa dugmetom */
+.editable-cell {
+  display: flex;
+  align-items: center;
+}
+
+.editable-cell input {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.editable-cell button {
+  flex-shrink: 0;
+}
+
+.settings-change-password {
+  margin-top: 10px;
+  padding: 10px 16px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 250px;
+  background: #020f3d;
+}
+
+.settings-change-password:hover {
+  opacity: 0.9;
+
+  
+}
+
+.admin-settings .create-button {
+  font-size: 1rem;
+  border-radius: 10px;
+}

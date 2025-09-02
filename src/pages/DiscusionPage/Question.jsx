@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Question.css";
 import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import "../../App.css";
-import { Menu, Dropdown, Button } from "antd";
+import { Menu, Dropdown, Button, Popconfirm } from "antd";
 import { formatDateTime } from "../../utils/formatDateTime";
 import {
   DeleteOutlined,
@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 import threadService from "../../services/thread.service";
 import reportsService from "../../services/report.service";
 import EditQuestionModal from "./EditQuestionModal";
-import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
 const Question = ({
   question,
@@ -31,7 +30,6 @@ const Question = ({
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const basePath =
     role === "Admin"
@@ -94,12 +92,15 @@ const handleReportSubmit = async ({ reason, description }) => {
         </Menu.Item>
       )}
       {canDelete && (
-        <Menu.Item
-          key="delete"
-          icon={<DeleteOutlined />}
-           onClick={() => setIsDeleteModalVisible(true)}
-        >
-          Delete
+        <Menu.Item key="delete" icon={<DeleteOutlined />}>
+          <Popconfirm
+            title="Are you sure you want to delete this thread?"
+            onConfirm={handleDelete}
+            okText="Yes"
+            cancelText="No"
+          >
+            <span>Delete</span>
+          </Popconfirm>
         </Menu.Item>
       )}
       {!canDelete && (
@@ -157,11 +158,6 @@ const handleReportSubmit = async ({ reason, description }) => {
         question={question}
       />
 
-        <ConfirmDeleteModal
-            visible={isDeleteModalVisible}
-            onConfirm={handleDelete}
-            onCancel={() => setIsDeleteModalVisible(false)}
-          />
     </div>
   );
 };

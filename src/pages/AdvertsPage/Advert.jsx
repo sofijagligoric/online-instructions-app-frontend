@@ -3,7 +3,7 @@ import "./Advert.css";
 import "../../App.css";
 import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import reportsService from "../../services/report.service";
-import { Menu, Dropdown, Button } from "antd";
+import { Menu, Dropdown, Button, Popconfirm } from "antd";
 import { formatDateTime } from "../../utils/formatDateTime";
 import {
   DeleteOutlined,
@@ -13,7 +13,6 @@ import {
 } from "@ant-design/icons";
 import advertsService from "../../services/adverts.service";
 import EditAdvertModal from "./EditAdvertModal";
-import ConfirmDeleteModal from "../../components/Confirmation/ConfirmDeleteModal";
 
 const Advert = ({
   advert,
@@ -30,7 +29,6 @@ const Advert = ({
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const canDelete = isOwner || isAdmin;
 
@@ -86,12 +84,15 @@ const Advert = ({
         </Menu.Item>
       )}
       {canDelete && (
-        <Menu.Item
-          key="delete"
-          icon={<DeleteOutlined />}
-          onClick={() => setIsDeleteModalVisible(true)}
-        >
-          Delete
+         <Menu.Item key="delete" icon={<DeleteOutlined />}>
+          <Popconfirm
+            title="Are you sure you want to delete this advert?"
+            onConfirm={handleDelete}
+            okText="Yes"
+            cancelText="No"
+          >
+            <span>Delete</span>
+          </Popconfirm>
         </Menu.Item>
       )}
       {!canDelete && (
@@ -156,12 +157,6 @@ const Advert = ({
         onEdit={handleEdit}
         advert={advert}
       />
-
-       <ConfirmDeleteModal
-            visible={isDeleteModalVisible}
-            onConfirm={handleDelete}
-            onCancel={() => setIsDeleteModalVisible(false)}
-          />
     </div>
   );
 };

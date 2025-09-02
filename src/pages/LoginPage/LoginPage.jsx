@@ -15,7 +15,7 @@ const LoginPage = () => {
       const navigate = useNavigate();
 
 const handleLogin = async (e) => {
-    e.preventDefault(); // sprječava refresh stranice
+    e.preventDefault();  
     try {
       const credentials = { username, password };
       const response = await authService.login(credentials);
