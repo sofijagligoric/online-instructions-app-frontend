@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Input,
-  Table,
-  Popconfirm,
-  Card,
-} from "antd";
+import { Button, Input, Table, Popconfirm, Card } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import "../../App.css";
 import "./AdminSettingsPage.css";
@@ -75,10 +69,12 @@ const AdminSettings = () => {
       title: "Category name",
       dataIndex: "name",
       key: "name",
+      className: "category-col",
       render: (text, record) => (
         <EditableCell
           text={text}
-          onSave={(newName) => editCategory(record.id, newName)}
+          id={record.id}
+          onSave={(id, newName) => editCategory(id, newName)}
         />
       ),
     },
@@ -124,7 +120,7 @@ const AdminSettings = () => {
 
   const editViolation = async (id, newName) => {
     try {
-      await violationService.editViolationType(id, { name: newName });
+     await violationService.editViolationType(id, { id: id, name: newName });
       setViolationTypes(
         violationTypes.map((v) => (v.id === id ? { ...v, name: newName } : v))
       );
@@ -149,10 +145,12 @@ const AdminSettings = () => {
       title: "Title",
       dataIndex: "name",
       key: "name",
+       className: "violation-col",
       render: (text, record) => (
         <EditableCell
           text={text}
-          onSave={(newName) => editViolation(record.id, newName)}
+          id={record.id}
+          onSave={(id, newName) => editViolation(id, newName)}
         />
       ),
     },
@@ -192,14 +190,11 @@ const AdminSettings = () => {
           placeholder="New category"
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
-          style={{ width: 300, marginRight: 8 }}
+          style={{ width: 250, marginRight: 8 }}
         />
-        <button
-            className="create-button"
-            onClick={addCategory}
-          >
-            Add category
-          </button>
+        <button className="create-button" onClick={addCategory}>
+          Add category
+        </button>
         <Table
           style={{ marginTop: 16 }}
           columns={categoryColumns}
@@ -214,14 +209,11 @@ const AdminSettings = () => {
           placeholder="New violation type"
           value={newViolation}
           onChange={(e) => setNewViolation(e.target.value)}
-          style={{ width: 300, marginRight: 8 }}
+          style={{ width: 250, marginRight: 8 }}
         />
-       <button
-            className="create-button"
-            onClick={addViolation}
-          >
-            Add violation
-          </button>
+        <button className="create-button" onClick={addViolation}>
+          Add violation
+        </button>
         <Table
           style={{ marginTop: 16 }}
           columns={violationColumns}
@@ -235,13 +227,13 @@ const AdminSettings = () => {
 
 export default AdminSettings;
 
-const EditableCell = ({ text, onSave }) => {
+const EditableCell = ({ text, id, onSave }) => {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(text);
 
   const save = () => {
     if (value.trim() && value !== text) {
-      onSave(value);
+      onSave(id, value);   // sad ide i id
     }
     setEditing(false);
   };
@@ -254,9 +246,7 @@ const EditableCell = ({ text, onSave }) => {
         onPressEnter={save}
         autoFocus
       />
-      <Button type="primary" onClick={save}>
-        Save
-      </Button>
+      <Button type="primary" onClick={save}>Save</Button>
       <Button onClick={() => setEditing(false)}>Cancel</Button>
     </div>
   ) : (

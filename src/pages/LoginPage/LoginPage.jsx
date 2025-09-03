@@ -39,16 +39,7 @@ const handleLogin = async (e) => {
 
     } catch (error) {
       console.error("Greška pri loginu:", error);
-      if (error.response) {
-        alert(
-          error.response.data?.message || 
-          typeof error.response.data === "string" 
-            ? error.response.data 
-            : "Failed to login."
-        );
-      } else {
-        alert("Failed to login.");
-      }
+     alert("Failed to login. Try different password or username.");
     }
   };
 

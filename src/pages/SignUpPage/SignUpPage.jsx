@@ -50,7 +50,6 @@ const handleSignUp = async (e) => {
         username: username,
         password: password,
         type: type,
-        created: new Date().toISOString().split("T")[0],
         isActive: true,
       },
       user: {

@@ -44,6 +44,14 @@
   margin-top: 16px;
 }
 
+.admin-settings .ant-table .category-col,
+.admin-settings .ant-table .violation-col {
+  width: 100%; 
+  max-width: 400px;
+  white-space: normal !important;
+  word-wrap: break-word;
+  word-break: break-word;
+} 
 /* Responsive */
 @media (max-width: 768px) {
   .admin-settings .input-add {
@@ -55,15 +63,26 @@
     width: 100%;
   }
 
-  .admin-settings .ant-table {
+  /* .admin-settings .ant-table {
     overflow-x: auto;
+  } */
+
+    .editable-cell {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .editable-cell .ant-btn {
+    width: 100%;
+    margin-right: 0;
   }
 }
 
-/* Editable cell sa dugmetom */
 .editable-cell {
   display: flex;
   align-items: center;
+   flex-wrap: wrap;
+  gap: 8px;
 }
 
 .editable-cell input {
