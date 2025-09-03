@@ -44,7 +44,7 @@ const AdminSettings = () => {
 
   const editCategory = async (id, newName) => {
     try {
-      await categoryService.editCategory(id, { name: newName });
+      await categoryService.editCategory(id, { id: id, name: newName });
       setCategories(
         categories.map((c) => (c.id === id ? { ...c, name: newName } : c))
       );

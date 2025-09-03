@@ -53,3 +53,24 @@
   min-width: 200px;
   margin: 0 auto;
 }
+
+.image-preview {
+  position: relative;
+  display: inline-block;
+}
+
+.remove-image-btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50% !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 18px;
+  text-align: center;
+  padding: 0 !important;
+  margin-left: 10px !important;
+}

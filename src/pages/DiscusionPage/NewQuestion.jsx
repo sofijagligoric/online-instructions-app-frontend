@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./NewQuestion.css";
-import { Select } from "antd";
+import { Select, Upload, Image } from "antd";
+import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import threadService from "../../services/thread.service";
 import { useAuth } from "../../components/AuthContext/AuthContext";
 const { Option } = Select;
@@ -9,30 +10,53 @@ const NewQuestion = ({ categories = [], onSubmit }) => {
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [file, setFile] = useState(null);
   const { userId } = useAuth();
+  const [preview, setPreview] = useState(null);
 
-const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!category || !title.trim()) {
+      alert("Please fill all the fields.");
+      return;
+    }
 
-  if (!category || !title.trim()) {
-    alert("Please fill all the fields.");
-    return;
-  }
+    const newThread = {
+      categoryId: category,
+      title,
+      description,
+      userId,
+      imagePath: null,
+    };
 
-  const newQuestion = { 
-    categoryId: category, 
-    title, 
-    description,
-    userId: userId
+    try {
+      // 1️⃣ Kreiraj thread bez slike
+      const response = await threadService.addDiscussionThread(newThread);
+      let threadData = response.data;
+
+      // 2️⃣ Ako postoji slika, uploaduj je i odmah ažuriraj objekat
+      if (file) {
+        const uploadResp = await threadService.uploadThreadImage(
+          threadData.id,
+          file
+        );
+        threadData = { ...threadData, imagePath: uploadResp.data };
+      }
+
+      // 3️⃣ Pozovi onSubmit sa finalnim podacima
+      onSubmit && onSubmit(threadData);
+
+      // 4️⃣ Reset forme
+      setCategory("");
+      setTitle("");
+      setDescription("");
+      setFile(null);
+      setPreview(null);
+    } catch (err) {
+      console.error("Failed to create thread", err);
+      alert("Failed to create thread");
+    }
   };
-
-  onSubmit && onSubmit(newQuestion);
-
-  setCategory("");
-  setTitle("");
-  setDescription("");
-};
-
   return (
     <div className="new-question">
       <h2 className="new-question-title">Ask a new question</h2>
@@ -40,7 +64,7 @@ const handleSubmit = (e) => {
         <Select
           value={category || undefined}
           placeholder="Select category"
-          onChange={(value) => setCategory(value)}
+          onChange={setCategory}
           className="custom-sort-select"
         >
           {categories.map((cat) => (
@@ -61,7 +85,40 @@ const handleSubmit = (e) => {
           placeholder="Describe your question..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
+        />
+
+        <Upload
+          beforeUpload={(file) => {
+            setFile(file);
+            setPreview(URL.createObjectURL(file)); // samo preview
+            return false; // ne uploaduj odmah
+          }}
+          maxCount={1}
+          accept="image/*"
+          showUploadList={false}
+        >
+          <button type="button">
+            {file ? "Change image" : "Upload image (optional)"}
+          </button>
+        </Upload>
+
+        {preview && (
+          <div
+            className="image-preview"
+            style={{ position: "relative", display: "inline-block" }}
+          >
+            <Image src={preview} width={100} height={100} />
+            <button
+              className="remove-image-btn"
+              onClick={() => {
+                setFile(null);
+                setPreview(null);
+              }}
+            >
+              ×
+            </button>
+          </div>
+        )}
 
         <button type="submit">Post Question</button>
       </form>

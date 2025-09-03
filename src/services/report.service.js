@@ -13,13 +13,13 @@ export const addReport = (newReport) => {
 };
 
 
-export const editReport = (instructorId, studentId, updatedReport) => {
-    return instance.put(`/api/report/edit/${instructorId},${studentId}`, updatedReport);
+export const editReport = (reportId, updatedReport) => {
+    return instance.put(`/api/report/edit/${reportId}`, updatedReport);
 };
 
 
-export const deleteReport = (instructorId, studentId) => {
-    return instance.delete(`/api/report/${instructorId},${studentId}`);
+export const deleteReport = (reportId) => {
+    return instance.delete(`/api/report/${reportId}`);
 };
 
 export const getAllThreadReports = () => {
@@ -33,13 +33,13 @@ export const addThreadReport = (newReport) => {
 };
 
 
-export const editThreadReport = (instructorId, studentId, updatedReport) => {
-    return instance.put(`/api/thread-report/edit/${instructorId},${studentId}`, updatedReport);
+export const editThreadReport = (reportId, updatedReport) => {
+    return instance.put(`/api/thread-report/edit/${reportId}`, updatedReport);
 };
 
 
-export const deleteThreadReport = (instructorId, studentId) => {
-    return instance.delete(`/api/thread-report/${instructorId},${studentId}`);
+export const deleteThreadReport = (reportId) => {
+    return instance.delete(`/api/thread-report/${reportId}`);
 };
 
 export const getAllResourceReports = () => {
@@ -53,13 +53,13 @@ export const addResourceReport = (newReport) => {
 };
 
 
-export const editResourceReport = (instructorId, studentId, updatedReport) => {
-    return instance.put(`/api/resource-report/edit/${instructorId},${studentId}`, updatedReport);
+export const editResourceReport = (reportId, updatedReport) => {
+    return instance.put(`/api/resource-report/edit/${reportId}`, updatedReport);
 };
 
 
-export const deleteResourceReport = (instructorId, studentId) => {
-    return instance.delete(`/api/resource-report/${instructorId},${studentId}`);
+export const deleteResourceReport = (reportId) => {
+    return instance.delete(`/api/resource-report/${reportId}`);
 };
 
 
@@ -74,13 +74,13 @@ export const addCommentReport = (newReport) => {
 };
 
 
-export const editCommentReport = (instructorId, studentId, updatedReport) => {
-    return instance.put(`/api/comment-report/edit/${instructorId},${studentId}`, updatedReport);
+export const editCommentReport = (reportId, updatedReport) => {
+    return instance.put(`/api/comment-report/edit/${reportId}`, updatedReport);
 };
 
 
-export const deleteCommentReport = (instructorId, studentId) => {
-    return instance.delete(`/api/comment-report/${instructorId},${studentId}`);
+export const deleteCommentReport = (reportId) => {
+    return instance.delete(`/api/comment-report/${reportId}`);
 };
 
 export const getAllAdvertReports = () => {
@@ -94,13 +94,13 @@ export const addAdvertReport = (newReport) => {
 };
 
 
-export const editAdvertReport = (instructorId, studentId, updatedReport) => {
-    return instance.put(`/api/advert-report/edit/${instructorId},${studentId}`, updatedReport);
+export const editAdvertReport = (reportId, updatedReport) => {
+    return instance.put(`/api/advert-report/edit/${reportId}`, updatedReport);
 };
 
 
-export const deleteAdvertReport = (instructorId, studentId) => {
-    return instance.delete(`/api/advert-report/${instructorId},${studentId}`);
+export const deleteAdvertReport = (reportId) => {
+    return instance.delete(`/api/advert-report/${reportId}`);
 };
 
 export const getReportsForComment = async (id) => {
@@ -121,6 +121,81 @@ export const getReportsForAdvert = async (id) => {
 export const getReportsForThread = async (id) => {
     const response = await instance.get(`/api/thread-report/thread/${id}`);
     return response.data;
+};
+export const getAllThreadReportsWithDetails = async () => {
+    const [reportsRes, threadReportsRes] = await Promise.all([
+        getAllReports(),  
+        getAllThreadReports() 
+    ]);
+
+    const reports = reportsRes.data;          // <-- uzmi data
+    const threadReports = threadReportsRes.data;
+
+    return threadReports.map(tr => {
+        const report = reports.find(r => r.id === tr.reportId);
+        return {
+            ...report,
+            contentType: "thread",
+            contentId: tr.threadId
+        };
+    });
+};
+
+export const getAllAdvertReportsWithDetails = async () => {
+    const [reportsRes, advertReportsRes] = await Promise.all([
+        getAllReports(),
+        getAllAdvertReports()
+    ]);
+
+    const reports = reportsRes.data;
+    const advertReports = advertReportsRes.data;
+
+    return advertReports.map(ar => {
+        const report = reports.find(r => r.id === ar.reportId);
+        return {
+            ...report,
+            contentType: "advert",
+            contentId: ar.advertId
+        };
+    });
+};
+
+export const getAllResourceReportsWithDetails = async () => {
+    const [reportsRes, resourceReportsRes] = await Promise.all([
+        getAllReports(),
+        getAllResourceReports()
+    ]);
+
+    const reports = reportsRes.data;
+    const resourceReports = resourceReportsRes.data;
+
+    return resourceReports.map(rr => {
+        const report = reports.find(r => r.id === rr.reportId);
+        return {
+            ...report,
+            contentType: "resource",
+            contentId: rr.resourceId
+        };
+    });
+};
+
+export const getAllCommentReportsWithDetails = async () => {
+    const [reportsRes, commentReportsRes] = await Promise.all([
+        getAllReports(),
+        getAllCommentReports()
+    ]);
+
+    const reports = reportsRes.data;
+    const commentReports = commentReportsRes.data;
+
+    return commentReports.map(cr => {
+        const report = reports.find(r => r.id === cr.reportId);
+        return {
+            ...report,
+            contentType: "comment",
+            contentId: cr.commentId
+        };
+    });
 };
 
 export default {
@@ -152,5 +227,10 @@ export default {
     getReportsForThread,
     getReportsForComment,
     getReportsForAdvert,
-    getReportsForResource
+    getReportsForResource,
+
+    getAllResourceReportsWithDetails,
+    getAllThreadReportsWithDetails,
+    getAllAdvertReportsWithDetails,
+    getAllCommentReportsWithDetails
 };

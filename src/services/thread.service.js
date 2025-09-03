@@ -33,11 +33,22 @@ export const getById = (id) =>
     return instance.get(`/api/thread/${id}`);
 }
 
+export const uploadThreadImage = (id, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return instance.post(`/api/thread/${id}/image`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+};
+
 export default {
     getAllDiscussionThreads,
     getDiscussionThreadsForUser,
     addDiscussionThread,
     editDiscussionThread,
     deleteDiscussionThread,
-    getById
+    getById,
+    uploadThreadImage
 };
