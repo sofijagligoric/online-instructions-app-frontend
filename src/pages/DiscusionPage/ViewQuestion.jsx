@@ -14,7 +14,7 @@ import threadService from "../../services/thread.service";
 import EditQuestionModal from "./EditQuestionModal";
 import { formatDateTime } from "../../utils/formatDateTime";
 import userService from "../../services/user.service";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import reportsService from "../../services/report.service";
 import { Image } from "antd";
 
@@ -85,7 +85,7 @@ export default function ViewQuestion({
       else if (role === "Instructor") prefix = "instructor";
       else if (role === "Student") prefix = "student";
 
-      navigate(`/${prefix}/discusion`);
+      navigate(`/${prefix}/discussion`);
     } catch (err) {
       console.error("Error deleting thread:", err);
     }
@@ -186,12 +186,21 @@ export default function ViewQuestion({
     setComments((prev) => prev.filter((ad) => ad.id !== id));
   };
 
+  const basePath =
+    role === "Admin"
+      ? "/admin"
+      : role === "Instructor"
+      ? "/instructor"
+      : "/student";
+
   return (
     <div className="view-question-container">
       <div className="view-question-header">
         <div className="view-question-info">
           <p>{formatDateTime(question.timestamp)}</p>
-          <p>@{author.username || "N/A"}</p>
+           <Link to={`${basePath}/users/${question.userId}`}>
+            @{author.username || "N/A"}
+          </Link>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button shape="circle" icon={<MoreOutlined />} />

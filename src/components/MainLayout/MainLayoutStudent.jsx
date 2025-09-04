@@ -54,7 +54,7 @@ const { logout } = useAuth();
         Resources
       </Menu.Item>
 
-      <Menu.Item key="/student/discusion" icon={<FormOutlined />}>
+      <Menu.Item key="/student/discussion" icon={<FormOutlined />}>
         Discussion
       </Menu.Item>
     </Menu>

@@ -4,6 +4,7 @@ import "../../App.css";
 import CreateReportModal from "../../components/CreateReport/CreateReportModal";
 import reportsService from "../../services/report.service";
 import { Menu, Dropdown, Button, Popconfirm } from "antd";
+import { Link } from "react-router-dom";
 import { formatDateTime } from "../../utils/formatDateTime";
 import {
   DeleteOutlined,
@@ -29,7 +30,12 @@ const Advert = ({
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-
+  const basePath =
+    role === "Admin"
+      ? "/admin"
+      : role === "Instructor"
+      ? "/instructor"
+      : "/student";
   const canDelete = isOwner || isAdmin;
 
   const handleDelete = async () => {
@@ -46,36 +52,35 @@ const Advert = ({
   };
 
   const handleEdit = (updatedAdvert) => {
-    if (onEdit) onEdit(updatedAdvert); 
+    if (onEdit) onEdit(updatedAdvert);
   };
 
   const handleReportSubmit = async ({ reason, description }) => {
-  try {
-    
-    const reportDTO = {
-      userId: currentUser,         
-      violationTypeId: reason,
-      description: description || null,
-      timestamp: new Date().toISOString(), 
-    };
+    try {
+      const reportDTO = {
+        userId: currentUser,
+        violationTypeId: reason,
+        description: description || null,
+        timestamp: new Date().toISOString(),
+      };
 
-    const reportResponse = await reportsService.addReport(reportDTO);
-    const reportId = reportResponse.data.id; 
+      const reportResponse = await reportsService.addReport(reportDTO);
+      const reportId = reportResponse.data.id;
 
-    const advertReportDTO = {
-      reportId: reportId,
-      advertId: advert.id, 
-    };
+      const advertReportDTO = {
+        reportId: reportId,
+        advertId: advert.id,
+      };
 
-    await reportsService.addAdvertReport(advertReportDTO);
+      await reportsService.addAdvertReport(advertReportDTO);
 
-    alert("Advert report submitted successfully.");
-    setReportVisible(false);
-  } catch (err) {
-    console.error("Error submitting advert report:", err);
-    alert("Failed to submit advert report.");
-  }
-};
+      alert("Advert report submitted successfully.");
+      setReportVisible(false);
+    } catch (err) {
+      console.error("Error submitting advert report:", err);
+      alert("Failed to submit advert report.");
+    }
+  };
   const menu = (
     <Menu>
       {isOwner && (
@@ -84,7 +89,7 @@ const Advert = ({
         </Menu.Item>
       )}
       {canDelete && (
-         <Menu.Item key="delete" icon={<DeleteOutlined />}>
+        <Menu.Item key="delete" icon={<DeleteOutlined />}>
           <Popconfirm
             title="Are you sure you want to delete this advert?"
             onConfirm={handleDelete}
@@ -112,7 +117,9 @@ const Advert = ({
       <div className="advert-header">
         <div className="advert-info">
           <p>{formatDateTime(advert.timestamp)}</p>
-          <p>@{instructor?.username || "N/A"}</p>
+          <Link to={`${basePath}/users/${advert.instructorId}`}>
+            @{instructor?.username || "N/A"}
+          </Link>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button

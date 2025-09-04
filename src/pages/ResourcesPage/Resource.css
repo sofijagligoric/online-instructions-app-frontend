@@ -23,9 +23,19 @@
 .resource-info {
   display: flex;
   gap: 10px;
-  color: #849296;
+  color: #505063;
+  align-items: center;
 }
 
+.resource-info a, p {
+  color: #505063; 
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.resource-info a:hover {
+  text-decoration: underline; 
+}
 
 
  .resource-title h3 {

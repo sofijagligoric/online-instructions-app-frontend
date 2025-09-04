@@ -1,0 +1,113 @@
+ .home-page-main {
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.home-page-info,
+.home-page-adverts,
+.home-page-resources,
+.home-page-forum {
+  min-height: 200px;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 25%;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+
+@media (max-width: 600px) {
+.home-page-adverts,
+.home-page-resources,
+.home-page-forum  {
+  flex-direction: column;
+}
+
+.home-page-resources {
+  flex-direction: column !important;
+}
+}
+
+.home-page-info {
+  flex-direction: column;
+}
+
+.home-page-info {
+  background-color: #fcf0d9;
+}
+.home-page-adverts {
+  background-color: #fcfbd9;
+}
+.home-page-resources {
+  background-color: #e3fcd9;
+  flex-direction: row-reverse;
+}
+.home-page-forum {
+  background-color: #e3eefc;
+}
+
+.home-page-info h1,
+.home-page-adverts h2,
+.home-page-resources h2,
+.home-page-forum h2 {
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: #020f3d;
+}
+
+.home-page-info p,
+.home-page-adverts p,
+.home-page-resources p,
+.home-page-forum p {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  color: #020f3d;
+  font-size: 1.1rem;
+}
+
+
+ .home-page-main button {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+   background-color: #020f3d;
+}
+ .home-page-main button:hover {
+  transform: translateY(-3px);
+}
+
+
+.home-page-adverts h2,
+.home-page-resources h2,
+.home-page-forum h2 {
+  font-size: 2rem;
+}
+
+.home-page-info h1 {
+  font-size: 2.5rem;
+}
+
+.home-page-info {
+  clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+}
+.home-page-adverts {
+  clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
+}
+.home-page-resources {
+  clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%);
+}
+.home-page-forum {
+  clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%);
+}
+
+.text-block {
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

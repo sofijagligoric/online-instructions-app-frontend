@@ -56,7 +56,7 @@ function MainLayoutInstructor() {
         Resources
       </Menu.Item>
 
-      <Menu.Item key="/instructor/discusion" icon={<FormOutlined />}>
+      <Menu.Item key="/instructor/discussion" icon={<FormOutlined />}>
         Discussion
       </Menu.Item>
     </Menu>

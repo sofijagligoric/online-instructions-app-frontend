@@ -37,7 +37,7 @@ const Footer = ({ role }) => {
         <a href={getPath("/resources")} className="footer-link">
           Resources
         </a>
-        <a href={getPath("/discusion")} className="footer-link">
+        <a href={getPath("/discussion")} className="footer-link">
           Discusion
         </a>
       </nav>

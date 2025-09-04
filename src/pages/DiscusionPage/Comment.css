@@ -47,8 +47,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
-  color: gray;
+}
+
+.comment-info {
+  display: flex;
+  gap: 10px;
+  color: #505063;
+  align-items: center;
+}
+
+.comment-info a, p {
+  color: #505063; 
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.comment-info a:hover {
+  text-decoration: underline; 
 }
 
 .comment-text {

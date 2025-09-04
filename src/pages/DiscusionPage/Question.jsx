@@ -56,33 +56,32 @@ const Question = ({
     if (onEdit) onEdit(updatedQuestion);
   };
 
-const handleReportSubmit = async ({ reason, description }) => {
-  try {
-    
-    const reportDTO = {
-      userId: currentUser,         
-      violationTypeId: reason,
-      description: description || null,
-      timestamp: new Date().toISOString(), 
-    };
+  const handleReportSubmit = async ({ reason, description }) => {
+    try {
+      const reportDTO = {
+        userId: currentUser,
+        violationTypeId: reason,
+        description: description || null,
+        timestamp: new Date().toISOString(),
+      };
 
-    const reportResponse = await reportsService.addReport(reportDTO);
-    const reportId = reportResponse.data.id; 
+      const reportResponse = await reportsService.addReport(reportDTO);
+      const reportId = reportResponse.data.id;
 
-    const questionReportDTO = {
-      reportId: reportId,
-      threadId: question.id, 
-    };
+      const questionReportDTO = {
+        reportId: reportId,
+        threadId: question.id,
+      };
 
-    await reportsService.addThreadReport(questionReportDTO);
+      await reportsService.addThreadReport(questionReportDTO);
 
-    alert("Thread report submitted successfully.");
-    setReportVisible(false);
-  } catch (err) {
-    console.error("Error submitting Thread report:", err);
-    alert("Failed to submit Thread report.");
-  }
-};
+      alert("Thread report submitted successfully.");
+      setReportVisible(false);
+    } catch (err) {
+      console.error("Error submitting Thread report:", err);
+      alert("Failed to submit Thread report.");
+    }
+  };
 
   const menu = (
     <Menu>
@@ -120,7 +119,9 @@ const handleReportSubmit = async ({ reason, description }) => {
       <div className="question-header">
         <div className="question-info">
           <p>{formatDateTime(question.timestamp)}</p>
-          <p>@{userName || "N/A"}</p>
+          <Link to={`${basePath}/users/${question.userId}`}>
+            @{userName || "N/A"}
+          </Link>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button
@@ -139,7 +140,7 @@ const handleReportSubmit = async ({ reason, description }) => {
         <h3>{question.title}</h3>
       </div>
       <Link
-        to={`${basePath}/discusion/thread/${question.id}`}
+        to={`${basePath}/discussion/thread/${question.id}`}
         className="view-question-link"
       >
         View details <ArrowRightOutlined />
@@ -151,13 +152,12 @@ const handleReportSubmit = async ({ reason, description }) => {
         onSubmit={handleReportSubmit}
       />
 
-       <EditQuestionModal
+      <EditQuestionModal
         visible={isEditModalVisible}
         onCancel={() => setIsEditModalVisible(false)}
         onEdit={handleEdit}
         question={question}
       />
-
     </div>
   );
 };

@@ -34,9 +34,9 @@ function App() {
         <Route path="users/:id" element={<ViewProfilePage />} />
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
-        <Route path="discusion" element={<DiscusionPage />} />
+        <Route path="discussion" element={<DiscusionPage />} />
         <Route path="reports" element={<ReportsPage />} />
-        <Route path="discusion/thread/:id" element={<ViewQuestionPage />} />
+        <Route path="discussion/thread/:id" element={<ViewQuestionPage />} />
          <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
 
@@ -49,8 +49,8 @@ function App() {
         <Route path="myProfile" element={<ViewProfilePage />} /> 
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
-        <Route path="discusion" element={<DiscusionPage />} />
-        <Route path="discusion/thread/:id" element={<ViewQuestionPage />} />
+        <Route path="discussion" element={<DiscusionPage />} />
+        <Route path="discussion/thread/:id" element={<ViewQuestionPage />} />
         </Route>
 
         {/* STUDENT RUTE */}
@@ -62,8 +62,8 @@ function App() {
          <Route path="myProfile" element={<ViewProfilePage />} /> 
         <Route path="adverts" element={<AdvertsPage />} />
         <Route path="resources" element={<ResoucesPage />} />
-        <Route path="discusion" element={<DiscusionPage />} />
-        <Route path="discusion/thread/:id" element={<ViewQuestionPage />} />
+        <Route path="discussion" element={<DiscusionPage />} />
+        <Route path="discussion/thread/:id" element={<ViewQuestionPage />} />
         </Route>
       </Routes>
     </Router>

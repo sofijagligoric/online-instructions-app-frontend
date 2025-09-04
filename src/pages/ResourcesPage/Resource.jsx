@@ -14,6 +14,7 @@ import reportsService from "../../services/report.service";
 import resourceService from "../../services/resource.service";
 import { formatDateTime } from "../../utils/formatDateTime";
 import EditResourceModal from "./EditResourceModal";
+import { Link } from "react-router-dom";
 
 const Resource = ({
   userName,
@@ -29,6 +30,12 @@ const Resource = ({
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const basePath =
+    role === "Admin"
+      ? "/admin"
+      : role === "Instructor"
+      ? "/instructor"
+      : "/student";
 
   const canDelete = isOwner || isAdmin;
 
@@ -125,12 +132,15 @@ const Resource = ({
     </Menu>
   );
 
+
   return (
     <div className="resource-card" style={{ backgroundColor }}>
       <div className="resource-header">
         <div className="resource-info">
           <p>{formatDateTime(resource.timestamp)}</p>
-          <p>@{userName || "N/A"}</p>
+         <Link to={`${basePath}/users/${resource.userId}`}>
+                     @{userName || "N/A"}
+                   </Link>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button

@@ -6,6 +6,7 @@ import { formatDateTime } from "../../utils/formatDateTime";
 import "./Comment.css";
 import commentService from "../../services/comment.service";
 import reportsService from "../../services/report.service";
+import { Link } from "react-router-dom";
 
 export default function Comment({ comment, currentUser, role, isLast, author, onDelete }) {
   const isOwner = currentUser === comment.userId;
@@ -13,6 +14,12 @@ export default function Comment({ comment, currentUser, role, isLast, author, on
   const [expanded, setExpanded] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const canDelete = isOwner || isAdmin;
+    const basePath =
+    role === "Admin"
+      ? "/admin"
+      : role === "Instructor"
+      ? "/instructor"
+      : "/student";
 
   const handleReportSubmit = async ({ reason, description }) => {
     try {
@@ -80,9 +87,11 @@ export default function Comment({ comment, currentUser, role, isLast, author, on
   return (
     <div className={`comment-item ${isLast ? "last" : ""}`}>
       <div className="comment-header">
-
-        <p>{formatDateTime(comment.timestamp)} @{author || "N/A"}</p>
-
+       <div className="comment-info">
+        <p>{formatDateTime(comment.timestamp)}</p> <Link to={`${basePath}/users/${comment.userId}`}>
+                    @{author || "N/A"}
+                  </Link>
+</div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button shape="circle" icon={<MoreOutlined />} size="small" />
         </Dropdown>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect } from "react";
 import reportService from "../../services/report.service";
 import "./ReportsPage.css";
 import "../../App.css";
@@ -10,7 +10,6 @@ import advertsService from "../../services/adverts.service";
 import threadService from "../../services/thread.service";
 import commentService from "../../services/comment.service";
 import resourceService from "../../services/resource.service";
-import { useAuth } from "../../components/AuthContext/AuthContext";
 import AdvertReportModal from "./AdvertReportModal";
 import ResourceReportModal from "./ResourceReportModal";
 const { Option } = Select;
@@ -19,13 +18,18 @@ const ReportsPage = () => {
   const [reports, setReports] = useState([]);
   const navigate = useNavigate();
   const [violationTypes, setViolationTypes] = useState([]);
-   const { userId, role } = useAuth();
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 10;
   const [filters, setFilters] = useState({
     violationTypeId: "",
     contentType: "",
   });
   const [selectedReport, setSelectedReport] = useState(null);
   const [selectedContent, setSelectedContent] = useState(null);
+  const [advertModalVisible, setAdvertModalVisible] = useState(false);
+  const [advertData, setAdvertData] = useState(null);
+  const [resourceModalVisible, setResourceModalVisible] = useState(false);
+  const [resourceData, setResourceData] = useState(null);
   useEffect(() => {
     const fetchViolationTypes = async () => {
       try {
@@ -66,47 +70,53 @@ const ReportsPage = () => {
         r.violationTypeId === +filters.violationTypeId) &&
       (!filters.contentType || r.contentType === filters.contentType)
   );
-const [advertModalVisible, setAdvertModalVisible] = useState(false);
-const [advertData, setAdvertData] = useState(null);
-const [resourceModalVisible, setResourceModalVisible] = useState(false);
-const [resourceData, setResourceData] = useState(null);
 
-const viewContent = async (report) => {
-  switch (report.contentType) {
-    case "thread":
-      navigate(`/admin/discusion/thread/${report.contentId}`);
-      break;
+  const indexOfLastReport = currentPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+  const currentReports = filteredReports.slice(
+    indexOfFirstReport,
+    indexOfLastReport
+  );
+  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
 
-    case "advert":
-      try {
-        const response = await advertsService.getById(report.contentId);
-        setAdvertData(response.data);
-        setAdvertModalVisible(true);
-      } catch (err) {
-        console.error("Failed to load advert:", err);
-      }
-      break;
+  const viewContent = async (report) => {
+    switch (report.contentType) {
+      case "thread":
+        navigate(`/admin/discussion/thread/${report.contentId}`);
+        break;
 
-    case "comment":
-      const comment = await commentService.getById(report.contentId);
-      setSelectedReport(report);
-      setSelectedContent(comment.data);
-      break;
+      case "advert":
+        try {
+          const response = await advertsService.getById(report.contentId);
+          setAdvertData(response.data);
+          setAdvertModalVisible(true);
+        } catch (err) {
+          console.error("Failed to load advert:", err);
+        }
+        break;
 
-    case "resource":
-      try {
-        const response = await resourceService.getResourceById(report.contentId);
-        setResourceData(response.data);
-        setResourceModalVisible(true);
-      } catch (err) {
-        console.error("Failed to load resource:", err);
-      }
-      break;
+      case "comment":
+        const comment = await commentService.getById(report.contentId);
+        setSelectedReport(report);
+        setSelectedContent(comment.data);
+        break;
 
-    default:
-      console.warn("Unknown content type:", report.contentType);
-  }
-};
+      case "resource":
+        try {
+          const response = await resourceService.getResourceById(
+            report.contentId
+          );
+          setResourceData(response.data);
+          setResourceModalVisible(true);
+        } catch (err) {
+          console.error("Failed to load resource:", err);
+        }
+        break;
+
+      default:
+        console.warn("Unknown content type:", report.contentType);
+    }
+  };
 
   const deleteContent = async (report) => {
     try {
@@ -196,7 +206,7 @@ const viewContent = async (report) => {
     }
   };
 
-    const handleCloseResourceModal = () => {
+  const handleCloseResourceModal = () => {
     setResourceModalVisible(false);
   };
 
@@ -252,7 +262,7 @@ const viewContent = async (report) => {
           </tr>
         </thead>
         <tbody>
-          {filteredReports.map((r) => (
+          {currentReports.map((r) => (
             <tr key={`${r.contentType}-${r.id}`}>
               <td>
                 {violationTypes.find((v) => v.id === r.violationTypeId)?.name}
@@ -302,70 +312,94 @@ const viewContent = async (report) => {
         </tbody>
       </table>
 
-     {selectedReport && selectedContent && (
-  <Modal
-    title="Content details"
-    open={!!selectedReport}
-    onCancel={() => {
-      setSelectedReport(null);
-      setSelectedContent(null);
-    }}
-    centered
-    footer={[
-      <button
-        key="cancel"
-        className="cancel-advert-button"
-        onClick={() => {
-          setSelectedReport(null);
-          setSelectedContent(null);
-        }}
-      >
-        Close
-      </button>,
-    ]}
-  >
-    {selectedReport.contentType === "comment" ? (
-      <>
-        <p>
-          <strong>Content:</strong> {selectedContent.description}
-        </p>
-        <p>
-          <Link to={`/admin/users/${selectedContent.userId}`}>
-            See author
-          </Link>
-        </p>
-      </>
-    ) : (
-      <pre>{JSON.stringify(selectedContent, null, 2)}</pre>
-    )}
-  </Modal>
-)}
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Back
+          </button>
+          <span>
+            Page {currentPage} out of {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {selectedReport && selectedContent && (
+        <Modal
+          title="Content details"
+          open={!!selectedReport}
+          onCancel={() => {
+            setSelectedReport(null);
+            setSelectedContent(null);
+          }}
+          centered
+          footer={[
+            <button
+              key="cancel"
+              className="cancel-advert-button"
+              onClick={() => {
+                setSelectedReport(null);
+                setSelectedContent(null);
+              }}
+            >
+              Close
+            </button>,
+          ]}
+        >
+          {selectedReport.contentType === "comment" ? (
+            <>
+              <p>
+                <strong>Content:</strong> {selectedContent.description}
+              </p>
+              <p>
+                <Link to={`/admin/users/${selectedContent.userId}`}>
+                  See author
+                </Link>
+              </p>
+            </>
+          ) : (
+            <pre>{JSON.stringify(selectedContent, null, 2)}</pre>
+          )}
+        </Modal>
+      )}
 
       {advertModalVisible && advertData && (
-  <div className="modal">
-    <div className="modal-content">
-      <AdvertReportModal
-        visible={advertModalVisible}
-        advert={advertData}
-        onCancel={handleCloseAdvertModal}
-      />
-      <button onClick={() => setAdvertModalVisible(false)}>Close</button>
-    </div>
-  </div>
-)}
+        <div className="modal">
+          <div className="modal-content">
+            <AdvertReportModal
+              visible={advertModalVisible}
+              advert={advertData}
+              onCancel={handleCloseAdvertModal}
+            />
+            <button onClick={() => setAdvertModalVisible(false)}>Close</button>
+          </div>
+        </div>
+      )}
 
- {resourceModalVisible && resourceData && (
-  <div className="modal">
-    <div className="modal-content">
-      <ResourceReportModal
-        visible={resourceModalVisible}
-        resource={resourceData}
-        onCancel={handleCloseResourceModal}
-      />
-      <button onClick={() => setResourceModalVisible(false)}>Close</button>
-    </div>
-  </div>
-)}
+      {resourceModalVisible && resourceData && (
+        <div className="modal">
+          <div className="modal-content">
+            <ResourceReportModal
+              visible={resourceModalVisible}
+              resource={resourceData}
+              onCancel={handleCloseResourceModal}
+            />
+            <button onClick={() => setResourceModalVisible(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

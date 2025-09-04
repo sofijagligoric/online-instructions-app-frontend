@@ -63,7 +63,7 @@ function MainLayoutAdmin() {
         Resources
       </Menu.Item>
 
-      <Menu.Item key="/admin/discusion" icon={<FormOutlined />}>
+      <Menu.Item key="/admin/discussion" icon={<FormOutlined />}>
         Discussion
       </Menu.Item>
 

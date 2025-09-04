@@ -23,10 +23,19 @@
 .question-info {
   display: flex;
   gap: 10px;
-  color: #849296;
+  color: #505063;
+  align-items: center;
 }
 
+.question-info a, p {
+  color: #505063; 
+  text-decoration: none;
+  font-size: 14px;
+}
 
+.question-info a:hover {
+  text-decoration: underline; 
+}
 
  .question-title h3 {
   display: -webkit-box;
