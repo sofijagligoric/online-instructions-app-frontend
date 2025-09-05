@@ -39,7 +39,7 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
         description: values.description,
         instructorId: userId, 
         categoryId: categoryId,
-        timestamp: new Date().toISOString(), 
+        timestamp: null, 
       };
 
       const response = await advertsService.addAdvert(advertData);

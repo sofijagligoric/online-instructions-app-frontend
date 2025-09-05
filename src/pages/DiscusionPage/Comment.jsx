@@ -28,7 +28,7 @@ export default function Comment({ comment, currentUser, role, isLast, author, on
         userId: currentUser,         
         violationTypeId: reason,
         description: description || null,
-        timestamp: new Date().toISOString(), 
+        timestamp: null, 
       };
   
       const reportResponse = await reportsService.addReport(reportDTO);

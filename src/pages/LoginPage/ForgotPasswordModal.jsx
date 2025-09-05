@@ -4,16 +4,14 @@ import "./ForgotPasswordModal.css";
 import "../../App.css";
 
 const ForgotPasswordModal = ({visible, onCancel}) => {
-  const [newPassword, setNewPassword] = useState("");
-  const [newPassword2, setNewPassword2] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = () => {
-    if (!newPassword || !newPassword2) {
-      alert("Please enter your new password.");
+    if (!email) {
+      alert("Please enter your email.");
       return;
     }
-     setNewPassword("");
-    setNewPassword2("");
+     setEmail("");
     onCancel(); 
   };
 
@@ -29,19 +27,13 @@ const ForgotPasswordModal = ({visible, onCancel}) => {
       <Form layout="vertical" className="forgot-password-form" >
        
         <input
-            type="password"
-            placeholder="New password"
+            type="email"
+            placeholder="Email"
             className="forgot-password-input"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Confirm new password"
-            className="forgot-password-input"
-            value={newPassword2}
-            onChange={(e) => setNewPassword2(e.target.value)}
-          />
+          
 
         <div className="forgot-password-modal-buttons">
           

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import "./NewQuestion.css";
 import { Select, Upload, Image } from "antd";
-import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import threadService from "../../services/thread.service";
 import { useAuth } from "../../components/AuthContext/AuthContext";
 const { Option } = Select;
@@ -30,11 +29,8 @@ const NewQuestion = ({ categories = [], onSubmit }) => {
     };
 
     try {
-      // 1️⃣ Kreiraj thread bez slike
       const response = await threadService.addDiscussionThread(newThread);
       let threadData = response.data;
-
-      // 2️⃣ Ako postoji slika, uploaduj je i odmah ažuriraj objekat
       if (file) {
         const uploadResp = await threadService.uploadThreadImage(
           threadData.id,
@@ -42,11 +38,8 @@ const NewQuestion = ({ categories = [], onSubmit }) => {
         );
         threadData = { ...threadData, imagePath: uploadResp.data };
       }
-
-      // 3️⃣ Pozovi onSubmit sa finalnim podacima
       onSubmit && onSubmit(threadData);
 
-      // 4️⃣ Reset forme
       setCategory("");
       setTitle("");
       setDescription("");
@@ -90,8 +83,8 @@ const NewQuestion = ({ categories = [], onSubmit }) => {
         <Upload
           beforeUpload={(file) => {
             setFile(file);
-            setPreview(URL.createObjectURL(file)); // samo preview
-            return false; // ne uploaduj odmah
+            setPreview(URL.createObjectURL(file)); 
+            return false; 
           }}
           maxCount={1}
           accept="image/*"
