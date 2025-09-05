@@ -54,17 +54,21 @@
   }
 
   .adverts-sort-add-div {
-     flex-direction: column;
-     gap: 15px;
+  flex-direction: column;
   }
 
   .adverts-sort-filter-div {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 15px;
   align-items: flex-start;
   width: 100%;
   margin-top: 20px;
+}
+
+.adverts-sort-filter-div .custom-sort-select {
+  width: 100%;
+   max-width: 100%; 
 }
 
   .adverts-title {

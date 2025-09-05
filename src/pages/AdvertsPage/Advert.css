@@ -82,15 +82,9 @@
   color: #4a5f66;
 }
 
-/* 
-.custom-dropdown-button {
-  color: #020f3d ;   
-  border: none;     
-  background: transparent; 
-  font-size: 1.5rem;  
-  cursor: pointer;
+@media (max-width: 768px) {
+  .advert-contact-info {
+  gap: 1px;
+  flex-direction: column;
 }
-
-.custom-dropdown-button:hover {
-  color: #020f3d ;
-} */
+}

@@ -35,17 +35,17 @@
 }
 
 .home-page-info {
-  background-color: #fcf0d9;
+  background-color: #f7e6c6;
 }
 .home-page-adverts {
-  background-color: #fcfbd9;
+  background-color: #f7f6c1;
 }
 .home-page-resources {
-  background-color: #e3fcd9;
+  background-color: #d0f7c1;
   flex-direction: row-reverse;
 }
 .home-page-forum {
-  background-color: #e3eefc;
+  background-color: #d2e3f7;
 }
 
 .home-page-info h1,

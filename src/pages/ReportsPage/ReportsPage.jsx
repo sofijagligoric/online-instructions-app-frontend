@@ -228,7 +228,7 @@ const ReportsPage = () => {
           className="custom-sort-select"
           allowClear
         >
-          <Option value="">All types</Option> {/* ovo je default */}
+          <Option value="">All types</Option> 
           {violationTypes.map((v) => (
             <Option key={v.id} value={v.id}>
               {v.name}
@@ -243,7 +243,7 @@ const ReportsPage = () => {
           className="custom-sort-select"
           allowClear
         >
-          <Option value="">All</Option> {/* default */}
+          <Option value="">All</Option> 
           <Option value="advert">Advert</Option>
           <Option value="comment">Comment</Option>
           <Option value="resource">Resource</Option>
@@ -251,67 +251,125 @@ const ReportsPage = () => {
         </Select>
       </div>
 
-      <table className="reports-table">
-        <thead>
-          <tr>
-            <th>Violation Type</th>
-            <th>Description</th>
-            <th>Timestamp</th>
-            <th>Content Type</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentReports.map((r) => (
-            <tr key={`${r.contentType}-${r.id}`}>
-              <td>
-                {violationTypes.find((v) => v.id === r.violationTypeId)?.name}
-              </td>
-              <td>{r.description}</td>
-              <td>{new Date(r.timestamp).toLocaleString()}</td>
-              <td>{r.contentType}</td>
-              <td>
+      <div className="reports-table-wrapper">
+        <table className="reports-table">
+          <thead>
+            <tr>
+              <th>Violation Type</th>
+              <th>Description</th>
+              <th>Timestamp</th>
+              <th>Content Type</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentReports.map((r) => (
+              <tr key={`${r.contentType}-${r.id}`}>
+                <td>
+                  {violationTypes.find((v) => v.id === r.violationTypeId)?.name}
+                </td>
+                <td>{r.description}</td>
+                <td>{new Date(r.timestamp).toLocaleString()}</td>
+                <td>{r.contentType}</td>
+                <td>
+                  <button
+                    className="action-button-reports"
+                    onClick={() => viewContent(r)}
+                    title="View details"
+                  >
+                    <EyeOutlined style={{ color: "#020f3d" }} />
+                  </button>
+
+                  <Popconfirm
+                    title="Are you sure you want to delete this content?"
+                    onConfirm={() => deleteContent(r)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <button
+                      className="action-button-reports"
+                      title="Delete content"
+                    >
+                      <DeleteOutlined style={{ color: "orange" }} />
+                    </button>
+                  </Popconfirm>
+
+                  <Popconfirm
+                    title="Are you sure you want to delete this report?"
+                    onConfirm={() => deleteReport(r)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <button
+                      className="action-button-reports"
+                      title="Delete report"
+                    >
+                      <DeleteOutlined style={{ color: "red" }} />
+                    </button>
+                  </Popconfirm>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+
+      <div className="reports-cards">
+        {currentReports.map((r) => (
+          <div className="report-card" key={`card-${r.contentType}-${r.id}`}>
+            <p>
+              <strong>Violation:</strong>{" "}
+              {violationTypes.find((v) => v.id === r.violationTypeId)?.name}
+            </p>
+            <p>
+              <strong>Description:</strong> {r.description}
+            </p>
+            <p>
+              <strong>Timestamp:</strong>{" "}
+              {new Date(r.timestamp).toLocaleString()}
+            </p>
+            <p>
+              <strong>Type:</strong> {r.contentType}
+            </p>
+
+            <div className="card-actions">
+              <button
+                className="action-button-reports"
+                onClick={() => viewContent(r)}
+                title="View details"
+              >
+                <EyeOutlined style={{ color: "#020f3d" }} />
+              </button>
+
+              <Popconfirm
+                title="Are you sure you want to delete this content?"
+                onConfirm={() => deleteContent(r)}
+                okText="Yes"
+                cancelText="No"
+              >
                 <button
                   className="action-button-reports"
-                  onClick={() => viewContent(r)}
-                  title="View details"
+                  title="Delete content"
                 >
-                  <EyeOutlined style={{ color: "#020f3d" }} />
+                  <DeleteOutlined style={{ color: "orange" }} />
                 </button>
+              </Popconfirm>
 
-                <Popconfirm
-                  title="Are you sure you want to delete this content?"
-                  onConfirm={() => deleteContent(r)}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <button
-                    className="action-button-reports"
-                    title="Delete content"
-                  >
-                    <DeleteOutlined style={{ color: "orange" }} />
-                  </button>
-                </Popconfirm>
-
-                <Popconfirm
-                  title="Are you sure you want to delete this report?"
-                  onConfirm={() => deleteReport(r)}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <button
-                    className="action-button-reports"
-                    title="Delete report"
-                  >
-                    <DeleteOutlined style={{ color: "red" }} />
-                  </button>
-                </Popconfirm>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
+              <Popconfirm
+                title="Are you sure you want to delete this report?"
+                onConfirm={() => deleteReport(r)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <button className="action-button-reports" title="Delete report">
+                  <DeleteOutlined style={{ color: "red" }} />
+                </button>
+              </Popconfirm>
+            </div>
+          </div>
+        ))}
+      </div>
       {totalPages > 1 && (
         <div className="pagination">
           <button

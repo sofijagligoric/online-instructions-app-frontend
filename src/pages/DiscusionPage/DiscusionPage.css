@@ -65,11 +65,16 @@
 
   .discusion-sort-filter-div {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 15px;
   align-items: flex-start;
   width: 100%;
   margin-top: 20px;
+}
+
+.discusion-sort-filter-div .custom-sort-select {
+  width: 100%;
+   max-width: 100%; 
 }
 
   .discusion-title {
@@ -79,4 +84,8 @@
   .search-bar {
     width: 100%; 
   }
+
+  .create-button {
+    margin-top: 15px;
+}
 }
