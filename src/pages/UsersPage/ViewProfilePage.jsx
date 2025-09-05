@@ -62,6 +62,7 @@ const ViewProfilePage = () => {
   const profileId = id || userId;
 
   useEffect(() => {
+     if (!profileId) return; 
     const fetchUser = async () => {
       const fetchedUser = await userService.getUserById(profileId);
       setUser(fetchedUser);
@@ -252,7 +253,7 @@ const ViewProfilePage = () => {
           </div>
 
           {user.type === "instructor" && (
-            <ReviewsSection currentUser={userId} instructorId={user.id} />
+            <ReviewsSection currentUser={userId} role={role} instructorId={user.id} />
           )}
         </div>
 

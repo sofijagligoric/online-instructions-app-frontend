@@ -47,6 +47,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
+  const updateUserAuth = (updatedUser) => {
+  localStorage.setItem("user", JSON.stringify(updatedUser));
+  if (updatedUser.userId === userId) setUserId(updatedUser.userId);
+  if (updatedUser.role) setRole(updatedUser.role);
+  setActive(updatedUser.active ?? active);
+};
+
   return (
     <AuthContext.Provider value={{ isLoggedIn, role, userId, active, login, logout }}>
       {children}

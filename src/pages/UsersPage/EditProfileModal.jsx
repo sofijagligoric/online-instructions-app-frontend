@@ -3,11 +3,22 @@ import { Modal, Form, Input } from "antd";
 import "./EditProfileModal.css";
 import userService from "../../services/user.service";
 import accountService from "../../services/account.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const EditProfileModal = ({ visible, onCancel, onSave, user, userId, role }) => {
+const EditProfileModal = ({
+  visible,
+  onCancel,
+  onSave,
+  user,
+  userId,
+  role,
+}) => {
   const [form] = Form.useForm();
+  const { logout } = useAuth();
 
-useEffect(() => {
+  const navigate = useNavigate();
+  useEffect(() => {
     if (user) {
       form.setFieldsValue({
         firstName: user.firstName,
@@ -20,46 +31,53 @@ useEffect(() => {
   }, [user, form]);
 
   const handleSave = async () => {
-    try {
-      const values = await form.validateFields();
-
-       if (values.username !== user.username) {
+  try {
+    const values = await form.validateFields();
+    if (values.username !== user.username) {
       try {
         await accountService.checkUsername(values.username);
         alert("Username already exists, please choose another one.");
-        return; 
+        return;
       } catch (err) {
-        if (err.response && err.response.status === 404) {
-        } else {
-          console.error("Error checking username:", err);
+        if (err.response && err.response.status !== 404) {
           alert("Something went wrong while checking username.");
           return;
         }
       }
     }
-      const payload = {
-        account: {
-          username: values.username,  
-          password: user.password,     
-          type: role,
-          created: user.created,
-          isActive: user.isActive,
-        },
-        user: {
-          fName: values.firstName,
-          lName: values.lastName,
-          email: values.email,
-          phone: values.phone || null,
-        },
-      };
+    const payload = {
+      account: {
+        username: values.username,
+        type: role,
+        created: user.created,
+        isActive: user.isActive,
+      },
+      user: {
+        fName: values.firstName,
+        lName: values.lastName,
+        email: values.email,
+        phone: values.phone || null,
+      },
+    };
+    await userService.updateUser(userId, payload);
 
-      await userService.updateUser(userId, payload);
-      onSave({ ...user, ...values }); 
-      onCancel(); 
-    } catch (error) {
-      console.error("Error updating profile:", error);
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (values.username !== savedUser.username) {
+      if (typeof logout === "function") logout();
+      alert("Username changed. Please log in again.");
+      navigate("/login");
+      return; 
     }
-  };
+
+    const updatedUser = { ...user, ...values };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    onSave(updatedUser);
+    onCancel();
+
+  } catch (error) {
+    console.error("Error updating profile:", error);
+  }
+};
 
   return (
     <Modal

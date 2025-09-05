@@ -32,18 +32,18 @@ const handleSignUp = async (e) => {
   }
 
   try {
-    try {
-      await accountService.checkUsername(username);
-      alert("Username already exists, please choose another one.");
-      return; 
-    } catch (err) {
-      if (err.response && err.response.status === 404) {
-      } else {
-        console.error("Error checking username:", err);
-        alert("Something went wrong while checking username.");
-        return;
-      }
+   try {
+  await accountService.checkUsername(username);
+  alert("Username already exists, please choose another one.");
+  return; 
+} catch (err) {
+    if (err.response && err.response.status === 404) {
+    } else {
+      console.error(err);
+      alert("Something went wrong while checking username.");
+      return;
     }
+}
 
     const payload = {
       account: {

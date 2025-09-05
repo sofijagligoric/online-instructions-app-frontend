@@ -47,36 +47,35 @@ const ReviewsSection = ({ currentUser, role, instructorId }) => {
   }, [instructorId]);
 
   const handleSubmit = async () => {
-    if (newReview.rating === 0) return;
+  if (newReview.rating === 0) return;
 
-    try {
-      const payload = {
-        studentId: currentUser,
-        instructorId,
-        rating: newReview.rating,
-        description: newReview.description,
-        timestamp: new Date().toISOString(),
-      };
+  try {
+    const payload = {
+      studentId: currentUser,
+      instructorId,
+      rating: newReview.rating,
+      description: newReview.description,
+      timestamp: null,
+    };
 
-      const res = await reviewService.addReview(payload);
+    const res = await reviewService.addReview(payload);
+    const createdReview = {
+      id: res.data.id,
+      studentId: currentUser,
+      instructorId,
+      rating: newReview.rating,
+      description: newReview.description,
+      date: new Date().toISOString().split("T")[0],
+    };
 
-      setReviews((prev) => [
-        ...prev,
-        {
-          id: `${instructorId}-${currentUser}`, 
-          studentId: currentUser,
-          instructorId,
-          rating: newReview.rating,
-          description: newReview.description,
-          date: new Date().toISOString().split("T")[0],
-        },
-      ]);
-      setNewReview({ rating: 0, description: "" });
-      setCurrentPage(totalPages);
-    } catch (err) {
-      console.error("Failed to add review:", err);
-    }
-  };
+    setReviews((prev) => [...prev, createdReview]);
+    setNewReview({ rating: 0, description: "" });
+    const newTotalPages = Math.ceil((reviews.length + 1) / reviewsPerPage);
+    setCurrentPage(newTotalPages);
+  } catch (err) {
+    console.error("Failed to add review:", err);
+  }
+};
 
 const handleDelete = async (review) => {
   try {
@@ -107,7 +106,7 @@ const handleDelete = async (review) => {
         )}
       </h3>
 
-      {role === "student" && !hasReviewed && (
+      {role === "Student" && !hasReviewed && (
         <div className="add-review">
           <h4>Add Review</h4>
           <select
@@ -141,7 +140,7 @@ const handleDelete = async (review) => {
               <p>
                 <strong>Rating:</strong> {rev.rating} ⭐
               </p>
-              {currentUser === rev.studentId && (
+              {(currentUser === rev.studentId || role=== "Admin") && (
                 <Popconfirm
                   title="Are you sure to delete this review?"
                   onConfirm={() => handleDelete(rev)}

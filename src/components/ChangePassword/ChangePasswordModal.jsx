@@ -3,11 +3,16 @@ import { Modal, Form, message } from "antd";
 import "../../pages/LoginPage/ForgotPasswordModal.css";
 import "../../App.css";
 import accountService from "../../services/account.service";
+import { useAuth } from "../../components/AuthContext/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const ChangePasswordModal = ({ visible, onCancel, userId }) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
+  const { logout } = useAuth();
+
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!oldPassword) {
@@ -33,11 +38,13 @@ const ChangePasswordModal = ({ visible, onCancel, userId }) => {
         userId,
         updatedPasswordDTO
       );
-      alert("Password updated successfully!");
       setOldPassword("");
       setNewPassword("");
       setNewPassword2("");
       onCancel();
+      if (typeof logout === "function") logout();
+      alert("Password updated successfully!");
+      navigate("/login");
     } catch (err) {
       console.error("Error updating password:", err);
       alert("Failed to update password.");
@@ -79,7 +86,7 @@ const ChangePasswordModal = ({ visible, onCancel, userId }) => {
           <button className="cancel-forgot-password-button" onClick={onCancel}>
             Cancel
           </button>
-          <button key="submit" type="primary" onClick={handleSubmit}>
+          <button type="button" onClick={handleSubmit}>
             {" "}
             Submit{" "}
           </button>
