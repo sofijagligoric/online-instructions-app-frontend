@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Form, Input, Select, message } from "antd";
+import { Modal, Form, Input, Select } from "antd";
 import questionsService from "../../services/thread.service";
 import categoryService from "../../services/category.service";
 import { Upload, Image } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 const { Option } = Select;
 
 const EditQuestionModal = ({ visible, onCancel, onEdit, question }) => {
@@ -52,7 +51,11 @@ const EditQuestionModal = ({ visible, onCancel, onEdit, question }) => {
         description: values.description,
         categoryId,
         timestamp: question.timestamp,
-        imagePath: file ? question.imagePath : preview ? question.imagePath : null,
+        imagePath: file
+          ? question.imagePath
+          : preview
+          ? question.imagePath
+          : null,
       };
 
       let response = await questionsService.editDiscussionThread(
@@ -68,12 +71,12 @@ const EditQuestionModal = ({ visible, onCancel, onEdit, question }) => {
 
         response.data.imagePath = uploadResp.data;
       }
-
+      alert("Thread edited!");
       onEdit(response.data);
       onCancel();
     } catch (err) {
       console.error("Error updating question:", err);
-      message.error("Greška pri ažuriranju pitanja.");
+      alert("There was a problem while updating this thread.");
     }
   };
   return (
@@ -134,8 +137,8 @@ const EditQuestionModal = ({ visible, onCancel, onEdit, question }) => {
           <Upload
             beforeUpload={(file) => {
               setFile(file);
-              setPreview(URL.createObjectURL(file)); // lokalni preview
-              return false; // ne uploaduj odmah
+              setPreview(URL.createObjectURL(file));
+              return false;
             }}
             maxCount={1}
             accept="image/*"

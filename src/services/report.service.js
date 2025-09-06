@@ -128,7 +128,7 @@ export const getAllThreadReportsWithDetails = async () => {
         getAllThreadReports() 
     ]);
 
-    const reports = reportsRes.data;          // <-- uzmi data
+    const reports = reportsRes.data; 
     const threadReports = threadReportsRes.data;
 
     return threadReports.map(tr => {

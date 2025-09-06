@@ -66,7 +66,7 @@ const ResourcesPage = () => {
       try {
         const usersList = await userService.getAllUsers();
         const usersMap = usersList.reduce((acc, instructor) => {
-          if (!instructor) return acc; // skip null
+          if (!instructor) return acc;
           acc[instructor.id] = instructor;
           return acc;
         }, {});
@@ -150,22 +150,6 @@ const ResourcesPage = () => {
               <FieldTimeOutlined /> Oldest first
             </Option>
           </Select>
-
-          {/*  <Select
-            mode="multiple"
-            allowClear
-            placeholder="Select categories"
-            value={selectedCategories}
-            onChange={(value) => setSelectedCategories(value)}
-            suffixIcon={<AppstoreOutlined />}
-            className="custom-sort-select"
-          >
-            {categories.map((cat) => (
-              <Option key={cat} value={cat}>
-                {cat}
-              </Option>
-            ))}
-          </Select> */}
 
           <Select
             mode="multiple"

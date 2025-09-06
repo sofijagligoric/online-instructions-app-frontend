@@ -51,7 +51,7 @@ export default function Comment({
       setReportVisible(false);
     } catch (err) {
       console.error("Error submitting Comment report:", err);
-      alert("Failed to submit Comment report.");
+      alert("Failed to submit comment report.");
     }
   };
 
@@ -61,6 +61,7 @@ export default function Comment({
       if (onDelete) onDelete(comment.id);
     } catch (err) {
       console.error("Error deleting comment:", err);
+      alert("Problem occurred! Please try again.");
     }
   };
 

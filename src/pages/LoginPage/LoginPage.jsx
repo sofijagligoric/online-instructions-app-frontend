@@ -6,16 +6,15 @@ import ForgotPasswordModal from "./ForgotPasswordModal";
 import authService from "../../services/auth.service";
 import { useAuth } from "../../components/AuthContext/AuthContext";
 
-
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-   const [isForgotModalVisible, setIsForgotModalVisible] = useState(false); 
-    const { login } = useAuth();
-      const navigate = useNavigate();
+  const [isForgotModalVisible, setIsForgotModalVisible] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-const handleLogin = async (e) => {
-    e.preventDefault();  
+  const handleLogin = async (e) => {
+    e.preventDefault();
     try {
       const credentials = { username, password };
       const response = await authService.login(credentials);
@@ -36,23 +35,26 @@ const handleLogin = async (e) => {
         default:
           navigate("/student/home");
       }
-
     } catch (error) {
       console.error("Greška pri loginu:", error);
-     alert("Failed to login. Try different password or username.");
+      alert("Failed to login. Try different password or username.");
     }
   };
-
 
   return (
     <div className="login-container">
       <Background1 />
       <div className="login-card">
-         <h1 className="gradient-title">Online Instructions</h1>
+        <h1 className="gradient-title">Online Instructions</h1>
         <h2 className="login-title">Login</h2>
         <form className="login-form" onSubmit={handleLogin}>
-          <input type="username" placeholder="Username" className="login-input"  value={username}
-            onChange={(e) => setUsername(e.target.value)} />
+          <input
+            type="username"
+            placeholder="Username"
+            className="login-input"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <input
             type="password"
             placeholder="Password"
@@ -64,10 +66,16 @@ const handleLogin = async (e) => {
             Login
           </button>
         </form>
-      <div className="login-links">
+        <div className="login-links">
           <p>
             Forgot{" "}
-            <a href="#" onClick={(e) => { e.preventDefault(); setIsForgotModalVisible(true); }}>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsForgotModalVisible(true);
+              }}
+            >
               Password?
             </a>
           </p>
@@ -77,7 +85,6 @@ const handleLogin = async (e) => {
         </div>
       </div>
 
-      {/* MODAL */}
       <ForgotPasswordModal
         visible={isForgotModalVisible}
         onCancel={() => setIsForgotModalVisible(false)}

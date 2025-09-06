@@ -10,25 +10,22 @@ const { Option } = Select;
 
 const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
   const [form] = Form.useForm();
-/*   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState(""); */
   const [categories, setCategories] = useState([]);
-   const [categoryId, setCategoryId] = useState(null);
-   const { userId } = useAuth();
+  const [categoryId, setCategoryId] = useState(null);
+  const { userId } = useAuth();
 
   useEffect(() => {
-     const fetchCategories = async () => {
-        try {
-          const response = await categoryService.getAllCategorys();
-          setCategories(response.data);
-        } catch (err) {
-          console.error("Error fetching categories:", err);
-        }
-      };
-      fetchCategories();
+    const fetchCategories = async () => {
+      try {
+        const response = await categoryService.getAllCategorys();
+        setCategories(response.data);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+    fetchCategories();
     setCategoryId(1);
   }, []);
-
 
   const handleOk = async () => {
     try {
@@ -37,17 +34,19 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
       const advertData = {
         title: values.title,
         description: values.description,
-        instructorId: userId, 
+        instructorId: userId,
         categoryId: categoryId,
-        timestamp: null, 
+        timestamp: null,
       };
 
       const response = await advertsService.addAdvert(advertData);
 
       form.resetFields();
+      alert("Advert created!");
       onAdd(response.data);
     } catch (err) {
       console.error("Error creating advert:", err);
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -61,7 +60,11 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
       centered
       className="custom-add-advert-modal"
       footer={[
-        <button key="cancel" className="cancel-advert-button" onClick={onCancel}>
+        <button
+          key="cancel"
+          className="cancel-advert-button"
+          onClick={onCancel}
+        >
           Cancel
         </button>,
         <button key="submit" type="primary" onClick={handleOk}>
@@ -98,10 +101,7 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
           label="Description"
           rules={[{ required: false }]}
         >
-          <Input.TextArea
-            placeholder="Enter description"
-            rows={4}
-          />
+          <Input.TextArea placeholder="Enter description" rows={4} />
         </Form.Item>
       </Form>
     </Modal>
@@ -109,4 +109,3 @@ const AddAdvertModal = ({ visible, onCancel, onAdd }) => {
 };
 
 export default AddAdvertModal;
-

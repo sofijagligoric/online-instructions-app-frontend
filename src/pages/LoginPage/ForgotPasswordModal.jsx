@@ -15,7 +15,7 @@ const ForgotPasswordModal = ({ visible, onCancel }) => {
 
     try {
       const response = await accountService.forgotPassword(email);
-      alert("Your new password is: " + response.data); 
+      alert("Your new password is: " + response.data);
       setEmail("");
       onCancel();
     } catch (error) {

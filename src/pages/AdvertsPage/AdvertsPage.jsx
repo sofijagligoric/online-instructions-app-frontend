@@ -23,7 +23,6 @@ const AdvertsPage = () => {
   const { userId, role } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const isInstructor = role === "Instructor";
-  //   const colors = ["#e1f4fa", "#daeaf5", "#e6ecfa", "#d5e1e8"];
   const colors = ["#fcf0d9", "#fcfbd9", "#e3fcd9", "#e3eefc"];
   const [sortOption, setSortOption] = useState("name-asc");
   const [categories, setCategories] = useState([]);
@@ -65,7 +64,7 @@ const AdvertsPage = () => {
       try {
         const instructorsList = await userService.getAllInstructors();
         const instructorsMap = instructorsList.reduce((acc, instructor) => {
-          if (!instructor) return acc; // skip null
+          if (!instructor) return acc;
           acc[instructor.id] = instructor;
           return acc;
         }, {});

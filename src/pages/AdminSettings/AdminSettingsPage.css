@@ -1,4 +1,4 @@
-/* Glavni wrapper */
+
 .admin-settings {
   padding: 24px;
   max-width: 1200px;
@@ -6,12 +6,10 @@
   margin-bottom: 30px;
 }
 
-/* Card spacing */
 .admin-settings .ant-card {
   margin-bottom: 24px;
 }
 
-/* Input i dugmad */
 .admin-settings .input-add {
   width: 100%;
   max-width: 300px;
@@ -40,7 +38,6 @@
   margin-bottom: 16px;
 }
 
-/* Tabela */
 .admin-settings .ant-table {
   margin-top: 16px;
 }
@@ -53,7 +50,7 @@
   word-wrap: break-word;
   word-break: break-word;
 } 
-/* Responsive */
+
 @media (max-width: 768px) {
   .admin-settings .input-add {
     width: 100%;
@@ -63,10 +60,6 @@
   .admin-settings .add-btn {
     width: 100%;
   }
-
-  /* .admin-settings .ant-table {
-    overflow-x: auto;
-  } */
 
     .editable-cell {
     flex-direction: column;

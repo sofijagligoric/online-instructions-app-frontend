@@ -12,11 +12,11 @@ const User = ({ user, backgroundColor }) => {
   };
 
   return (
-   <Link 
-  to={`${user.id}`} 
-  state={{ user, backgroundColor: backgroundColor }} 
-  className="user-card"
->
+    <Link
+      to={`${user.id}`}
+      state={{ user, backgroundColor: backgroundColor }}
+      className="user-card"
+    >
       <div className="user-avatar" style={{ backgroundColor }}>
         {getInitials(user.firstName, user.lastName)}
       </div>

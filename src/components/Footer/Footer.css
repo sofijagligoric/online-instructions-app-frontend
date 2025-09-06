@@ -6,12 +6,10 @@
   color: #e1e8fc;
   padding: 20px 40px;
   min-height: 200px;
-  /* margin-top: 30px; */
   flex-wrap: wrap;
   width: 100%;
 }
 
-/* LEVO */
 .footer-left {
   display: flex;
   align-items: center;
@@ -49,7 +47,6 @@
   margin-left: 4px;
 }
 
-/* SREDINA - linkovi vertikalno */
 .footer-center {
   display: flex;
   flex-direction: row;
@@ -72,7 +69,6 @@
   text-decoration: underline;
 }
 
-/* DESNO - about us i kontakt */
 .footer-right {
   flex: 1;
   min-width: 250px;
@@ -109,7 +105,6 @@
   text-decoration: underline;
 }
 
-/* Responsive za manje ekrane */
 @media (max-width: 780px) {
   .footer {
     flex-direction: column;

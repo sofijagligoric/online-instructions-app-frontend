@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Background1 from "../../utils/Background1";
 import "./SignUpPage.css";
-import { Select as AntSelect } from "antd";
 
 import accountService from "../../services/account.service";
-const { Option } = AntSelect;
 
 const SignUpPage = () => {
   const [username, setUsername] = useState("");
@@ -13,66 +11,66 @@ const SignUpPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-   const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("");
   const [type, setType] = useState("Student");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-const handleSignUp = async (e) => {
-  e.preventDefault();
+  const handleSignUp = async (e) => {
+    e.preventDefault();
 
-  if (password.length < 6 || confirmPassword.length < 6) {
-    alert("Password has to have at least 6 characters.");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    alert("Passwords don't match.");
-    return;
-  }
-
-  try {
-   try {
-  await accountService.checkUsername(username);
-  alert("Username already exists, please choose another one.");
-  return; 
-} catch (err) {
-    if (err.response && err.response.status === 404) {
-    } else {
-      console.error(err);
-      alert("Something went wrong while checking username.");
+    if (password.length < 6 || confirmPassword.length < 6) {
+      alert("Password has to have at least 6 characters.");
       return;
     }
-}
 
-    const payload = {
-      account: {
-        username: username,
-        password: password,
-        type: type,
-        isActive: true,
-      },
-      user: {
-        fName: firstName,
-        lName: lastName,
-        email: email,
-        phone: phone || null,
-      },
-    };
-
-    if (type === "Student") {
-      await accountService.createStudent(payload);
-    } else {
-      await accountService.createInstructor(payload);
+    if (password !== confirmPassword) {
+      alert("Passwords don't match.");
+      return;
     }
 
-    alert("Account successfully created!");
-    navigate("/login");
-  } catch (error) {
-    console.error("Error during sign up:", error);
-    alert("Failed to create account.");
-  }
-};
+    try {
+      try {
+        await accountService.checkUsername(username);
+        alert("Username already exists, please choose another one.");
+        return;
+      } catch (err) {
+        if (err.response && err.response.status === 404) {
+        } else {
+          console.error(err);
+          alert("Something went wrong while checking username.");
+          return;
+        }
+      }
+
+      const payload = {
+        account: {
+          username: username,
+          password: password,
+          type: type,
+          isActive: true,
+        },
+        user: {
+          fName: firstName,
+          lName: lastName,
+          email: email,
+          phone: phone || null,
+        },
+      };
+
+      if (type === "Student") {
+        await accountService.createStudent(payload);
+      } else {
+        await accountService.createInstructor(payload);
+      }
+
+      alert("Account successfully created!");
+      navigate("/login");
+    } catch (error) {
+      console.error("Error during sign up:", error);
+      alert("Failed to create account.");
+    }
+  };
   return (
     <div className="signup-container">
       <Background1 />
@@ -112,7 +110,7 @@ const handleSignUp = async (e) => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-           <input
+          <input
             type="tel"
             placeholder="Phone number"
             className="signup-input"
@@ -135,7 +133,7 @@ const handleSignUp = async (e) => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-           <select
+          <select
             value={type}
             onChange={(e) => setType(e.target.value)}
             className="signup-select"

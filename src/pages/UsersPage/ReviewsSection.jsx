@@ -47,53 +47,54 @@ const ReviewsSection = ({ currentUser, role, instructorId }) => {
   }, [instructorId]);
 
   const handleSubmit = async () => {
-  if (newReview.rating === 0) return;
+    if (newReview.rating === 0) return;
 
-  try {
-    const payload = {
-      studentId: currentUser,
-      instructorId,
-      rating: newReview.rating,
-      description: newReview.description,
-      timestamp: null,
-    };
+    try {
+      const payload = {
+        studentId: currentUser,
+        instructorId,
+        rating: newReview.rating,
+        description: newReview.description,
+        timestamp: null,
+      };
 
-    const res = await reviewService.addReview(payload);
-    const createdReview = {
-      id: res.data.id,
-      studentId: currentUser,
-      instructorId,
-      rating: newReview.rating,
-      description: newReview.description,
-      date: new Date().toISOString().split("T")[0],
-    };
+      const res = await reviewService.addReview(payload);
+      const createdReview = {
+        id: res.data.id,
+        studentId: currentUser,
+        instructorId,
+        rating: newReview.rating,
+        description: newReview.description,
+        date: new Date().toISOString().split("T")[0],
+      };
 
-    setReviews((prev) => [...prev, createdReview]);
-    setNewReview({ rating: 0, description: "" });
-    const newTotalPages = Math.ceil((reviews.length + 1) / reviewsPerPage);
-    setCurrentPage(newTotalPages);
-  } catch (err) {
-    console.error("Failed to add review:", err);
-  }
-};
+      setReviews((prev) => [...prev, createdReview]);
+      setNewReview({ rating: 0, description: "" });
+      const newTotalPages = Math.ceil((reviews.length + 1) / reviewsPerPage);
+      alert("Review created!");
+      setCurrentPage(newTotalPages);
+    } catch (err) {
+      console.error("Failed to add review:", err);
+      alert("Problem occurred! Please try again.");
+    }
+  };
 
-const handleDelete = async (review) => {
-  try {
-
-    await reviewService.deleteReview(review.instructorId, review.studentId);
-    setReviews((prev) =>
-      prev.filter(
-        (r) =>
-          !(
-            r.studentId === review.studentId &&
-            r.instructorId === review.instructorId
-          )
-      )
-    );
-  } catch (err) {
-    console.error("Failed to delete review:", err);
-  }
-};
+  const handleDelete = async (review) => {
+    try {
+      await reviewService.deleteReview(review.instructorId, review.studentId);
+      setReviews((prev) =>
+        prev.filter(
+          (r) =>
+            !(
+              r.studentId === review.studentId &&
+              r.instructorId === review.instructorId
+            )
+        )
+      );
+    } catch (err) {
+      console.error("Failed to delete review:", err);
+    }
+  };
 
   return (
     <div className="reviews-section">
@@ -140,7 +141,7 @@ const handleDelete = async (review) => {
               <p>
                 <strong>Rating:</strong> {rev.rating} ⭐
               </p>
-              {(currentUser === rev.studentId || role=== "Admin") && (
+              {(currentUser === rev.studentId || role === "Admin") && (
                 <Popconfirm
                   title="Are you sure to delete this review?"
                   onConfirm={() => handleDelete(rev)}

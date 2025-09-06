@@ -132,15 +132,14 @@ const Resource = ({
     </Menu>
   );
 
-
   return (
     <div className="resource-card" style={{ backgroundColor }}>
       <div className="resource-header">
         <div className="resource-info">
           <p>{formatDateTime(resource.timestamp)}</p>
-         <Link to={`${basePath}/users/${resource.userId}`}>
-                     @{userName || "N/A"}
-                   </Link>
+          <Link to={`${basePath}/users/${resource.userId}`}>
+            @{userName || "N/A"}
+          </Link>
         </div>
         <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight">
           <Button
@@ -158,9 +157,6 @@ const Resource = ({
       >
         <h3>{resource.title}</h3>
       </div>
-      {/* <Link to={`/login`} className="view-resource-link">
-        View details <ArrowRightOutlined />
-      </Link> */}
 
       <button className="view-resource-link" onClick={handleViewResource}>
         View <ArrowRightOutlined />

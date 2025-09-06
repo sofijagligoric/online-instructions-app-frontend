@@ -29,7 +29,6 @@ const ViewProfilePage = () => {
   const [userResources, setUserResources] = useState([]);
   const [userAdverts, setUserAdverts] = useState([]);
   const [activeTab, setActiveTab] = useState("questions");
-  // const [reviews, setReviews] = useState([]);
 
   const [questionPage, setQuestionPage] = useState(1);
   const questionsPerPage = 10;
@@ -62,7 +61,7 @@ const ViewProfilePage = () => {
   const profileId = id || userId;
 
   useEffect(() => {
-     if (!profileId) return; 
+    if (!profileId) return;
     const fetchUser = async () => {
       const fetchedUser = await userService.getUserById(profileId);
       setUser(fetchedUser);
@@ -75,9 +74,7 @@ const ViewProfilePage = () => {
 
     const fetchResources = async () => {
       try {
-        const resources = await resourceService.getResourcesForUser(
-          user.id
-        );
+        const resources = await resourceService.getResourcesForUser(user.id);
         setUserResources(resources);
       } catch (err) {
         if (err.response && err.response.status === 404) {
@@ -253,7 +250,11 @@ const ViewProfilePage = () => {
           </div>
 
           {user.type === "instructor" && (
-            <ReviewsSection currentUser={userId} role={role} instructorId={user.id} />
+            <ReviewsSection
+              currentUser={userId}
+              role={role}
+              instructorId={user.id}
+            />
           )}
         </div>
 

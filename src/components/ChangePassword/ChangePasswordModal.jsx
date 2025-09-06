@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, message } from "antd";
+import { Modal, Form } from "antd";
 import "../../pages/LoginPage/ForgotPasswordModal.css";
 import "../../App.css";
 import accountService from "../../services/account.service";

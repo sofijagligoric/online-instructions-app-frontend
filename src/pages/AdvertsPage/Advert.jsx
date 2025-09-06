@@ -44,6 +44,7 @@ const Advert = ({
       if (onDelete) onDelete(advert.id);
     } catch (err) {
       console.error("Error deleting advert:", err);
+      alert("Problem occurred! Please try again.");
     }
   };
 

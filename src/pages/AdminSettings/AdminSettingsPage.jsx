@@ -27,6 +27,7 @@ const AdminSettings = () => {
       setCategories(response.data);
     } catch (err) {
       console.error("Greška pri učitavanju kategorija!");
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -39,6 +40,7 @@ const AdminSettings = () => {
       alert("Category added!");
     } catch (err) {
       console.error("Greška pri dodavanju kategorije!");
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -51,6 +53,7 @@ const AdminSettings = () => {
       alert("Category edited!");
     } catch (err) {
       console.error("Greška pri izmjeni kategorije!");
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -61,6 +64,7 @@ const AdminSettings = () => {
       alert("Category deleted!");
     } catch (err) {
       console.error("Greška pri brisanju kategorije!");
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -101,6 +105,7 @@ const AdminSettings = () => {
       setViolationTypes(response.data);
     } catch (err) {
       console.error("Greška pri učitavanju violation types!");
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -115,18 +120,20 @@ const AdminSettings = () => {
       alert("Violation type added!");
     } catch (err) {
       console.error("Greška pri dodavanju violation type!");
+      alert("Problem occurred! Please try again.");
     }
   };
 
   const editViolation = async (id, newName) => {
     try {
-     await violationService.editViolationType(id, { id: id, name: newName });
+      await violationService.editViolationType(id, { id: id, name: newName });
       setViolationTypes(
         violationTypes.map((v) => (v.id === id ? { ...v, name: newName } : v))
       );
       alert("Violation type edited!");
     } catch (err) {
       console.error("Greška pri izmjeni violation type!");
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -137,6 +144,7 @@ const AdminSettings = () => {
       alert("Violation type deleted!");
     } catch (err) {
       console.error("Greška pri brisanju violation type!");
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -145,7 +153,7 @@ const AdminSettings = () => {
       title: "Title",
       dataIndex: "name",
       key: "name",
-       className: "violation-col",
+      className: "violation-col",
       render: (text, record) => (
         <EditableCell
           text={text}
@@ -184,7 +192,6 @@ const AdminSettings = () => {
         userId={userId}
       />
 
-      {/* Kategorije */}
       <Card title="Categories" style={{ marginBottom: 24 }}>
         <Input
           placeholder="New category"
@@ -203,7 +210,6 @@ const AdminSettings = () => {
         />
       </Card>
 
-      {/* Violation Types */}
       <Card title="Violation Types">
         <Input
           placeholder="New violation type"
@@ -233,7 +239,7 @@ const EditableCell = ({ text, id, onSave }) => {
 
   const save = () => {
     if (value.trim() && value !== text) {
-      onSave(id, value);   // sad ide i id
+      onSave(id, value);
     }
     setEditing(false);
   };
@@ -246,7 +252,9 @@ const EditableCell = ({ text, id, onSave }) => {
         onPressEnter={save}
         autoFocus
       />
-      <Button type="primary" onClick={save}>Save</Button>
+      <Button type="primary" onClick={save}>
+        Save
+      </Button>
       <Button onClick={() => setEditing(false)}>Cancel</Button>
     </div>
   ) : (

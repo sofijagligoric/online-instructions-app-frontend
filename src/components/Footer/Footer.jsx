@@ -2,11 +2,11 @@ import React from "react";
 import "./Footer.css";
 
 const Footer = ({ role }) => {
-     const getPath = (path) => {
+  const getPath = (path) => {
     if (role === "student") return `/student${path}`;
     if (role === "instructor") return `/instructor${path}`;
     if (role === "admin") return `/admin${path}`;
-    return path; // ako nema role, vrati bez prefiksa
+    return path;
   };
 
   return (
@@ -25,10 +25,13 @@ const Footer = ({ role }) => {
       </div>
 
       <nav className="footer-center">
-        <a  href={role === "admin" ? "/admin/reports" : getPath("/home")} className="footer-link">
+        <a
+          href={role === "admin" ? "/admin/reports" : getPath("/home")}
+          className="footer-link"
+        >
           Home
         </a>
-          <a href={getPath("/users")} className="footer-link">
+        <a href={getPath("/users")} className="footer-link">
           Users
         </a>
         <a href={getPath("/adverts")} className="footer-link">

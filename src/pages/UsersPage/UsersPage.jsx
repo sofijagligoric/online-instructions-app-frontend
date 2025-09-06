@@ -155,22 +155,19 @@ const UsersPage = () => {
       {selectedCategories.length > 0 && (
         <div className="selected-categories">
           {selectedCategories.map((cat) => (
-        <span key={cat} className="category-tag">
-          {cat}
-                <button
-                  type="button"
-                  className="remove-tag-btn"
-                  onClick={() =>
-              setSelectedCategories((prev) =>
-                prev.filter((c) => c !== cat)
-              )
-            }
-                >
-                  ×
-                </button>
-              </span>
-            )
-          )}
+            <span key={cat} className="category-tag">
+              {cat}
+              <button
+                type="button"
+                className="remove-tag-btn"
+                onClick={() =>
+                  setSelectedCategories((prev) => prev.filter((c) => c !== cat))
+                }
+              >
+                ×
+              </button>
+            </span>
+          ))}
         </div>
       )}
 

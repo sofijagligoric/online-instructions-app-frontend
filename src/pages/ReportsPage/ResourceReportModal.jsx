@@ -73,7 +73,10 @@ const ResourceReportModal = ({ visible, resource, onCancel }) => {
             <Link to={`/admin/users/${resource.userId}`}>See author</Link>
           </p>
           <p>
-            <button className="view-resource-button" onClick={handleViewResource}>
+            <button
+              className="view-resource-button"
+              onClick={handleViewResource}
+            >
               View file
             </button>
           </p>

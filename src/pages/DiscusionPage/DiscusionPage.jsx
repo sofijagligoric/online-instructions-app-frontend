@@ -70,7 +70,7 @@ const DiscusionPage = () => {
       try {
         const usersList = await userService.getAllUsers();
         const usersMap = usersList.reduce((acc, instructor) => {
-          if (!instructor) return acc; // skip null
+          if (!instructor) return acc;
           acc[instructor.id] = instructor;
           return acc;
         }, {});

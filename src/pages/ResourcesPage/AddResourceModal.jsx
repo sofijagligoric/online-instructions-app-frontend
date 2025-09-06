@@ -10,8 +10,6 @@ const { Option } = Select;
 
 const AddResourceModal = ({ visible, onCancel, onAdd }) => {
   const [form] = Form.useForm();
-  /* const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState(""); */
   const [categories, setCategories] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const { userId } = useAuth();
@@ -30,42 +28,47 @@ const AddResourceModal = ({ visible, onCancel, onAdd }) => {
     setCategoryId(1);
   }, []);
 
-const handleOk = async () => {
-  form.validateFields()
-    .then(async (values) => {
-      if (!selectedFile) {
-        alert("Please select a file");
-        return;
-      }
+  const handleOk = async () => {
+    form
+      .validateFields()
+      .then(async (values) => {
+        if (!selectedFile) {
+          alert("Please select a file");
+          return;
+        }
 
-      try {
-        const uploadResponse = await resourceService.uploadResourceFile(selectedFile);
-        const filePath = uploadResponse.data.split(": ")[1];
+        try {
+          const uploadResponse = await resourceService.uploadResourceFile(
+            selectedFile
+          );
+          const filePath = uploadResponse.data.split(": ")[1];
 
-        const resourceData = {
-          title: values.title,
-          userId: userId,
-          categoryId: categoryId,
-          path: filePath,
-        };
+          const resourceData = {
+            title: values.title,
+            userId: userId,
+            categoryId: categoryId,
+            path: filePath,
+          };
 
-        const addedResourceResponse = await resourceService.addResource(resourceData);
-        const addedResource = addedResourceResponse.data; 
+          const addedResourceResponse = await resourceService.addResource(
+            resourceData
+          );
+          const addedResource = addedResourceResponse.data;
 
-        onAdd(addedResource); 
+          onAdd(addedResource);
 
-        form.resetFields();
-        setSelectedFile(null);
-      } catch (err) {
-        console.error("Error uploading resource:", err);
-        alert("Failed to upload resource");
-      }
-    })
-    .catch((errorInfo) => {
-      alert("Please fill in all required fields"); 
-      console.log("Validation failed:", errorInfo);
-    });
-};
+          form.resetFields();
+          setSelectedFile(null);
+        } catch (err) {
+          console.error("Error uploading resource:", err);
+          alert("Failed to upload resource");
+        }
+      })
+      .catch((errorInfo) => {
+        alert("Please fill in all required fields");
+        console.log("Validation failed:", errorInfo);
+      });
+  };
 
   return (
     <Modal
@@ -91,7 +94,6 @@ const handleOk = async () => {
       ]}
     >
       <Form form={form} layout="vertical">
-      
         <Form.Item
           name="title"
           label="Resource Title"
@@ -115,10 +117,7 @@ const handleOk = async () => {
           </Select>
         </Form.Item>
 
-        <Form.Item
-          name="file"
-          label="Upload Resource"
-        >
+        <Form.Item name="file" label="Upload Resource">
           <Upload.Dragger
             name="file"
             multiple={false}

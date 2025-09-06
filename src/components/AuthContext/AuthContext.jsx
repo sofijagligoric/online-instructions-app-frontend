@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -9,16 +8,15 @@ export const AuthProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
   const [active, setActive] = useState(false);
 
-    useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const savedUser = JSON.parse(localStorage.getItem("user")); 
+      const savedUser = JSON.parse(localStorage.getItem("user"));
       if (savedUser) {
         setIsLoggedIn(true);
         setRole(savedUser.role);
         setUserId(savedUser.userId);
         setActive(savedUser.active);
-
       }
     }
   }, []);
@@ -26,14 +24,14 @@ export const AuthProvider = ({ children }) => {
   const login = (user) => {
     if (!user) return;
     if (!user.token) {
-    console.error("Nema tokena u user objektu:", user);
-    return;
-  }
+      console.error("Nema tokena u user objektu:", user);
+      return;
+    }
     setIsLoggedIn(user.active);
     setRole(user.role);
     setUserId(user.userId);
     setActive(user.active);
-    localStorage.setItem("token", user.token); 
+    localStorage.setItem("token", user.token);
     localStorage.setItem("user", JSON.stringify(user));
     console.log("Prijavljen userId:", user.userId, "role:", user.role);
   };
@@ -47,15 +45,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
-  const updateUserAuth = (updatedUser) => {
-  localStorage.setItem("user", JSON.stringify(updatedUser));
-  if (updatedUser.userId === userId) setUserId(updatedUser.userId);
-  if (updatedUser.role) setRole(updatedUser.role);
-  setActive(updatedUser.active ?? active);
-};
-
   return (
-    <AuthContext.Provider value={{ isLoggedIn, role, userId, active, login, logout }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, role, userId, active, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

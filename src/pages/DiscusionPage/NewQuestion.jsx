@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import "./NewQuestion.css";
 import { Select, Upload, Image } from "antd";
 import threadService from "../../services/thread.service";
@@ -45,6 +45,7 @@ const NewQuestion = ({ categories = [], onSubmit }) => {
       setDescription("");
       setFile(null);
       setPreview(null);
+      alert("Thread created!");
     } catch (err) {
       console.error("Failed to create thread", err);
       alert("Failed to create thread");
@@ -83,8 +84,8 @@ const NewQuestion = ({ categories = [], onSubmit }) => {
         <Upload
           beforeUpload={(file) => {
             setFile(file);
-            setPreview(URL.createObjectURL(file)); 
-            return false; 
+            setPreview(URL.createObjectURL(file));
+            return false;
           }}
           maxCount={1}
           accept="image/*"

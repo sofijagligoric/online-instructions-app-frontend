@@ -33,8 +33,6 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  /* background: linear-gradient(to bottom, #4a6cac, #8dd9f0); */
-  /* background: #4a6cac; */
   color: white;
   font-size: 24px;
   display: flex;
@@ -166,7 +164,7 @@ margin-top: 15px;
 }
 
 .green-button {
-  background-color: #4CAF50; /* zelena */
+  background-color: #4CAF50; 
   color: white;
 }
 

@@ -228,7 +228,7 @@ const ReportsPage = () => {
           className="custom-sort-select"
           allowClear
         >
-          <Option value="">All types</Option> 
+          <Option value="">All types</Option>
           {violationTypes.map((v) => (
             <Option key={v.id} value={v.id}>
               {v.name}
@@ -243,7 +243,7 @@ const ReportsPage = () => {
           className="custom-sort-select"
           allowClear
         >
-          <Option value="">All</Option> 
+          <Option value="">All</Option>
           <Option value="advert">Advert</Option>
           <Option value="comment">Comment</Option>
           <Option value="resource">Resource</Option>
@@ -313,7 +313,6 @@ const ReportsPage = () => {
           </tbody>
         </table>
       </div>
-
 
       <div className="reports-cards">
         {currentReports.map((r) => (

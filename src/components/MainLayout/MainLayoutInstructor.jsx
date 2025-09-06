@@ -112,7 +112,6 @@ function MainLayoutInstructor() {
         <Content style={{ minHeight: "280px" }}>
           <Outlet />
         </Content>
-        {/* <Footer role={currentUser.role} /> */}
         <Footer role="instructor" />
       </Layout>
     </Layout>

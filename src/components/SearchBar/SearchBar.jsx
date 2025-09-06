@@ -11,7 +11,7 @@ const SearchBar = ({ value, onChange, placeholder = "Search..." }) => {
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
       />
-      <span className="search-icon">&#128269;</span> {/* Unicode lupa */}
+      <span className="search-icon">&#128269;</span>
     </div>
   );
 };

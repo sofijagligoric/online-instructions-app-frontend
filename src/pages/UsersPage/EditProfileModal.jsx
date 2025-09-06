@@ -31,53 +31,54 @@ const EditProfileModal = ({
   }, [user, form]);
 
   const handleSave = async () => {
-  try {
-    const values = await form.validateFields();
-    if (values.username !== user.username) {
-      try {
-        await accountService.checkUsername(values.username);
-        alert("Username already exists, please choose another one.");
-        return;
-      } catch (err) {
-        if (err.response && err.response.status !== 404) {
-          alert("Something went wrong while checking username.");
+    try {
+      const values = await form.validateFields();
+      if (values.username !== user.username) {
+        try {
+          await accountService.checkUsername(values.username);
+          alert("Username already exists, please choose another one.");
           return;
+        } catch (err) {
+          if (err.response && err.response.status !== 404) {
+            alert("Something went wrong while checking username.");
+            return;
+          }
         }
       }
+      const payload = {
+        account: {
+          username: values.username,
+          type: role,
+          created: user.created,
+          isActive: user.isActive,
+        },
+        user: {
+          fName: values.firstName,
+          lName: values.lastName,
+          email: values.email,
+          phone: values.phone || null,
+        },
+      };
+      await userService.updateUser(userId, payload);
+
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      if (values.username !== savedUser.username) {
+        if (typeof logout === "function") logout();
+        alert("Username changed. Please log in again.");
+        navigate("/login");
+        return;
+      }
+
+      const updatedUser = { ...user, ...values };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      alert("Profile info updated!");
+      onSave(updatedUser);
+      onCancel();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Problem occurred! Please try again.");
     }
-    const payload = {
-      account: {
-        username: values.username,
-        type: role,
-        created: user.created,
-        isActive: user.isActive,
-      },
-      user: {
-        fName: values.firstName,
-        lName: values.lastName,
-        email: values.email,
-        phone: values.phone || null,
-      },
-    };
-    await userService.updateUser(userId, payload);
-
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (values.username !== savedUser.username) {
-      if (typeof logout === "function") logout();
-      alert("Username changed. Please log in again.");
-      navigate("/login");
-      return; 
-    }
-
-    const updatedUser = { ...user, ...values };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    onSave(updatedUser);
-    onCancel();
-
-  } catch (error) {
-    console.error("Error updating profile:", error);
-  }
-};
+  };
 
   return (
     <Modal

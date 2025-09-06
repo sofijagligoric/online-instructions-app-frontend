@@ -62,7 +62,7 @@ export default function ViewQuestion({
       try {
         const usersList = await userService.getAllUsers();
         const usersMap = usersList.reduce((acc, instructor) => {
-          if (!instructor) return acc; // skip null
+          if (!instructor) return acc;
           acc[instructor.id] = instructor;
           return acc;
         }, {});
@@ -84,10 +84,11 @@ export default function ViewQuestion({
       if (role === "Admin") prefix = "admin";
       else if (role === "Instructor") prefix = "instructor";
       else if (role === "Student") prefix = "student";
-
+      alert("Thread deleted.");
       navigate(`/${prefix}/discussion`);
     } catch (err) {
       console.error("Error deleting thread:", err);
+      alert("Problem occurred! Please try again.");
     }
   };
 
@@ -198,7 +199,7 @@ export default function ViewQuestion({
       <div className="view-question-header">
         <div className="view-question-info">
           <p>{formatDateTime(question.timestamp)}</p>
-           <Link to={`${basePath}/users/${question.userId}`}>
+          <Link to={`${basePath}/users/${question.userId}`}>
             @{author.username || "N/A"}
           </Link>
         </div>
@@ -221,7 +222,7 @@ export default function ViewQuestion({
               borderRadius: "8px",
               marginTop: "15px",
               marginLeft: "15px",
-              width: "200px"
+              width: "200px",
             }}
             preview={{
               mask: "Click to preview",
@@ -253,13 +254,14 @@ export default function ViewQuestion({
               key={comment.id}
               comment={comment}
               currentUser={currentUser}
+              role={role}
               isLast={index === currentComments.length - 1}
               author={users[comment.userId]?.username}
               onDelete={handleDeleteComment}
             />
           ))
         ) : (
-          <p style={{marginLeft: "15px"}}>No comments yet.</p>
+          <p style={{ marginLeft: "15px" }}>No comments yet.</p>
         )}
 
         {totalPages > 1 && (

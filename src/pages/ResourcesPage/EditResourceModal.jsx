@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { Select, message } from "antd";
+import { Select } from "antd";
 import "./AddResourceModal.css";
 import categoryService from "../../services/category.service";
 import resourceService from "../../services/resource.service";
@@ -10,8 +10,6 @@ const { Option } = Select;
 
 const EditResourceModal = ({ visible, onCancel, onEdit, resource }) => {
   const [form] = Form.useForm();
-  /* const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState(""); */
   const [categories, setCategories] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const { userId } = useAuth();
@@ -40,14 +38,14 @@ const EditResourceModal = ({ visible, onCancel, onEdit, resource }) => {
       });
       setCategoryId(resource.categoryId || null);
 
-       if (resource.path) {
-      setSelectedFile({
-        uid: "-1", 
-        name: resource.path, 
-        status: "done",
-        url: `http://localhost:8080/uploads/${resource.path}`, 
-      });
-    }
+      if (resource.path) {
+        setSelectedFile({
+          uid: "-1",
+          name: resource.path,
+          status: "done",
+          url: `http://localhost:8080/uploads/${resource.path}`,
+        });
+      }
     }
   }, [resource, form]);
 
@@ -65,7 +63,6 @@ const EditResourceModal = ({ visible, onCancel, onEdit, resource }) => {
         const filePath = uploadResponse.data.split(": ")[1];
 
         const resourceData = {
-            
           title: values.title,
           userId: userId,
           categoryId: categoryId,
@@ -76,9 +73,7 @@ const EditResourceModal = ({ visible, onCancel, onEdit, resource }) => {
           resource.id,
           resourceData
         );
-        //   const addedResource = addedResourceResponse.data;
-
-        message.success("Resource updated successfully!");
+        alert("Resource updated successfully!");
         onEdit(response.data);
         onCancel();
       } catch (err) {
@@ -112,15 +107,6 @@ const EditResourceModal = ({ visible, onCancel, onEdit, resource }) => {
       ]}
     >
       <Form form={form} layout="vertical">
-        {/*  <Form.Item
-          name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          label="Resource Title"
-          rules={[{ required: true, message: "Please enter a title" }]}
-        >
-          <Input placeholder="Enter resource title" />
-        </Form.Item> */}
         <Form.Item
           name="title"
           label="Resource Title"
@@ -128,24 +114,6 @@ const EditResourceModal = ({ visible, onCancel, onEdit, resource }) => {
         >
           <Input placeholder="Enter resource title" />
         </Form.Item>
-
-        {/*  <Form.Item
-          name="author"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          label="Author Name"
-          rules={[{ required: true, message: "Please enter author name" }]}
-        >
-          <Input placeholder="Enter author's name" />
-        </Form.Item> */}
-        {/*  <Form.Item
-          name="author"
-          label="Author"
-          rules={[{ required: true, message: "Please enter an author" }]}
-        >
-          <Input placeholder="Enter resource author" />
-        </Form.Item> */}
-
         <Form.Item label="Category" required>
           <Select
             value={categoryId}

@@ -43,7 +43,6 @@ export const uploadResourceFile = (file) => {
     });
 };
 
-// GET download fajla
 export const downloadResourceFile = (filename) => {
     return instance.get(`/api/resource/download/${filename}`, {
         responseType: "blob",

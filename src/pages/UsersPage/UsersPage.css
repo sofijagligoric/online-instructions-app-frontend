@@ -57,10 +57,7 @@
   width: 90%;
   margin: 0 auto;
 }
-/* 
-.users-sort-filter-div .custom-sort-select {
-   max-width: 100%; 
-} */
+
 
 @media (max-width: 768px) {
   .users-title-and-search {
@@ -70,11 +67,7 @@
     margin-top: 5px;
     margin-bottom: 20px;
   }
-/* 
-  .users-sort-add-div {
-     flex-direction: column;
-     gap: 15px;
-  } */
+
 
   .users-sort-filter-div {
   display: flex;
@@ -99,6 +92,6 @@
   }
 
   .users-list {
-    grid-template-columns: 1fr; /* na manjim ekranima -> 1 kolona */
+    grid-template-columns: 1fr; 
   }
 }

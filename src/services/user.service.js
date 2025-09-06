@@ -7,11 +7,12 @@ export const getAllUsers = async () => {
     const accountResponse = await instance.get("/api/account");
     const accounts = accountResponse.data;
 
-    const userAccounts = accounts.filter(acc => 
-      acc.type.toLowerCase() === "instructor" || acc.type.toLowerCase() === "student"
+    const userAccounts = accounts.filter(
+      (acc) =>
+        acc.type.toLowerCase() === "instructor" ||
+        acc.type.toLowerCase() === "student"
     );
 
-  
     const users = await Promise.all(
       userAccounts.map(async (acc) => {
         try {
@@ -29,7 +30,6 @@ export const getAllUsers = async () => {
             phone: user.phone || null,
           };
         } catch {
-          // Ako ne postoji User zapis, vraćamo prazne vrijednosti
           return {
             id: acc.id,
             username: acc.username,
@@ -52,10 +52,8 @@ export const getAllUsers = async () => {
   }
 };
 
-
 export const getUserById = async (id) => {
   try {
-
     const accountResponse = await instance.get(`/api/account/${id}`);
     const acc = accountResponse.data;
 
@@ -88,10 +86,14 @@ export const getAllInstructors = async () => {
     return Promise.all(
       instructors.map(async (inst) => {
         try {
-          const accountResponse = await instance.get(`/api/account/${inst.Account_Id}`);
+          const accountResponse = await instance.get(
+            `/api/account/${inst.Account_Id}`
+          );
           const acc = accountResponse.data;
 
-          const userResponse = await instance.get(`/api/user/${inst.Account_Id}`);
+          const userResponse = await instance.get(
+            `/api/user/${inst.Account_Id}`
+          );
           const user = userResponse.data;
 
           return {
@@ -104,7 +106,7 @@ export const getAllInstructors = async () => {
             lastName: user.lName || "",
             email: user.email || "",
             phone: user.phone || null,
-            description: inst.description || ""
+            description: inst.description || "",
           };
         } catch (err) {
           console.error("Error merging instructor data:", err);
@@ -120,15 +122,11 @@ export const getAllInstructors = async () => {
 
 export const getInstructorById = async (id) => {
   try {
-    // uzmi account
     const accountResponse = await instance.get(`/api/account/${id}`);
     const acc = accountResponse.data;
 
-    // uzmi user podatke
     const userResponse = await instance.get(`/api/user/${id}`);
     const user = userResponse.data;
-
-    // uzmi instructor podatke
     const instResponse = await instance.get(`/api/instructor/${id}`);
     const inst = instResponse.data;
 
@@ -142,7 +140,7 @@ export const getInstructorById = async (id) => {
       lastName: user.lName || "",
       email: user.email || "",
       phone: user.phone || null,
-      description: inst.description || ""
+      description: inst.description || "",
     };
   } catch (error) {
     console.error("Error fetching instructor by id:", error);
@@ -150,8 +148,13 @@ export const getInstructorById = async (id) => {
   }
 };
 
-
 export const updateUser = (id, updatedUser) => {
   return instance.put(`/api/user/edit/${id}`, updatedUser);
 };
-export default { getAllUsers, getUserById, getAllInstructors, getInstructorById, updateUser};
+export default {
+  getAllUsers,
+  getUserById,
+  getAllInstructors,
+  getInstructorById,
+  updateUser,
+};

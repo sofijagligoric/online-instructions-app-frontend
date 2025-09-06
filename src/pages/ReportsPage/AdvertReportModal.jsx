@@ -31,7 +31,7 @@ const AdvertReportModal = ({ visible, advert, onCancel }) => {
       title="Advert details"
       open={visible}
       centered
-      onCancel={onCancel} 
+      onCancel={onCancel}
       className="custom-add-advert-modal"
       footer={[
         <button
@@ -52,10 +52,11 @@ const AdvertReportModal = ({ visible, advert, onCancel }) => {
             <strong>Category:</strong> {categoryName}
           </p>
           <p>
-            <strong>Description:</strong> {advert.description || "No description"}
+            <strong>Description:</strong>{" "}
+            {advert.description || "No description"}
           </p>
           <p>
-              <Link to={`/admin/users/${advert.instructorId}`}>See author</Link>
+            <Link to={`/admin/users/${advert.instructorId}`}>See author</Link>
           </p>
         </div>
       ) : (
