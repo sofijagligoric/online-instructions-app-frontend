@@ -50,6 +50,12 @@ const checkUsername = (username) => {
   return instance.get(`/api/account/username/${username}`);
 };
 
+export const forgotPassword = (email) => {
+  return instance.put("/login/forgotPassword", email, {
+    headers: { "Content-Type": "text/plain" }
+  });
+};
+
 export default {
   getAll,
   deactivateAccount,
@@ -62,5 +68,6 @@ export default {
   createUser,
   createStudent,
   createInstructor,
-  checkUsername
+  checkUsername,
+  forgotPassword
 };
