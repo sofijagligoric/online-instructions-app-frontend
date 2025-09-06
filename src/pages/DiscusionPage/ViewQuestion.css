@@ -33,7 +33,8 @@
   align-items: center;
 }
 
-.view-question-info a, p {
+.view-question-info a, 
+.view-question-info p {
   color: #505063; 
   text-decoration: none;
   font-size: 14px;
@@ -86,4 +87,11 @@
 
 .add-comment-button:hover {
   opacity: 0.9;
+}
+
+.view-question-title,
+.view-question-description {
+  word-wrap: break-word;   
+  overflow-wrap: break-word;
+  white-space: normal;  
 }

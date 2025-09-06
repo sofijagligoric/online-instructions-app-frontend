@@ -27,7 +27,8 @@
   align-items: center;
 }
 
-.question-info a, p {
+.question-info a,
+.question-info p {
   color: #505063; 
   text-decoration: none;
   font-size: 14px;
@@ -39,7 +40,7 @@
 
  .question-title h3 {
   display: -webkit-box;
-  -webkit-line-clamp: 1; /* 1 red */
+  -webkit-line-clamp: 1; 
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -50,13 +51,16 @@
 }
 
 .question-title.full h3 {
+  display: block;
   -webkit-line-clamp: unset;
   overflow: visible;
+  white-space: normal; 
+  word-wrap: break-word;
 }
 
 .question-description {
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* broj redova */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -65,8 +69,11 @@
 }
 
 .question-description.full {
-  -webkit-line-clamp: unset; /* skida ograničenje */
+ display: block;
+  -webkit-line-clamp: unset;
   overflow: visible;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .more-text {
@@ -80,16 +87,3 @@
   gap: 5px;
   color: #4a5f66;
 }
-
-
-/* .custom-dropdown-button {
-  color: #020f3d ;   
-  border: none;     
-  background: transparent; 
-  font-size: 1.5rem;  
-  cursor: pointer;
-}
-
-.custom-dropdown-button:hover {
-  color: #020f3d ;
-} */

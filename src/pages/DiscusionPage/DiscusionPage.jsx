@@ -103,10 +103,10 @@ const DiscusionPage = () => {
       return b.title.localeCompare(a.title);
     }
     if (sortOption === "date-new") {
-      return new Date(b.date) - new Date(a.date);
+      return new Date(b.timestamp) - new Date(a.timestamp);
     }
     if (sortOption === "date-old") {
-      return new Date(a.date) - new Date(b.date);
+      return new Date(a.timestamp) - new Date(b.timestamp);
     }
     return 0;
   });

@@ -31,35 +31,40 @@ const AddResourceModal = ({ visible, onCancel, onAdd }) => {
   }, []);
 
 const handleOk = async () => {
-  form.validateFields().then(async (values) => {
-    if (!selectedFile) {
-      alert("Please select a file");
-      return;
-    }
+  form.validateFields()
+    .then(async (values) => {
+      if (!selectedFile) {
+        alert("Please select a file");
+        return;
+      }
 
-    try {
-      const uploadResponse = await resourceService.uploadResourceFile(selectedFile);
-      const filePath = uploadResponse.data.split(": ")[1];
+      try {
+        const uploadResponse = await resourceService.uploadResourceFile(selectedFile);
+        const filePath = uploadResponse.data.split(": ")[1];
 
-      const resourceData = {
-        title: values.title,
-        userId: userId,
-        categoryId: categoryId,
-        path: filePath,
-      };
+        const resourceData = {
+          title: values.title,
+          userId: userId,
+          categoryId: categoryId,
+          path: filePath,
+        };
 
-      const addedResourceResponse = await resourceService.addResource(resourceData);
-      const addedResource = addedResourceResponse.data; 
+        const addedResourceResponse = await resourceService.addResource(resourceData);
+        const addedResource = addedResourceResponse.data; 
 
-      onAdd(addedResource); 
+        onAdd(addedResource); 
 
-      form.resetFields();
-      setSelectedFile(null);
-    } catch (err) {
-      console.error("Error uploading resource:", err);
-      alert("Failed to upload resource");
-    }
-  });
+        form.resetFields();
+        setSelectedFile(null);
+      } catch (err) {
+        console.error("Error uploading resource:", err);
+        alert("Failed to upload resource");
+      }
+    })
+    .catch((errorInfo) => {
+      alert("Please fill in all required fields"); 
+      console.log("Validation failed:", errorInfo);
+    });
 };
 
   return (
@@ -86,15 +91,7 @@ const handleOk = async () => {
       ]}
     >
       <Form form={form} layout="vertical">
-        {/*  <Form.Item
-          name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          label="Resource Title"
-          rules={[{ required: true, message: "Please enter a title" }]}
-        >
-          <Input placeholder="Enter resource title" />
-        </Form.Item> */}
+      
         <Form.Item
           name="title"
           label="Resource Title"
@@ -102,23 +99,6 @@ const handleOk = async () => {
         >
           <Input placeholder="Enter resource title" />
         </Form.Item>
-
-        {/*  <Form.Item
-          name="author"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          label="Author Name"
-          rules={[{ required: true, message: "Please enter author name" }]}
-        >
-          <Input placeholder="Enter author's name" />
-        </Form.Item> */}
-       {/*  <Form.Item
-          name="author"
-          label="Author"
-          rules={[{ required: true, message: "Please enter an author" }]}
-        >
-          <Input placeholder="Enter resource author" />
-        </Form.Item> */}
 
         <Form.Item label="Category" required>
           <Select
@@ -138,7 +118,6 @@ const handleOk = async () => {
         <Form.Item
           name="file"
           label="Upload Resource"
-          rules={[{ required: true, message: "Please upload a file" }]}
         >
           <Upload.Dragger
             name="file"

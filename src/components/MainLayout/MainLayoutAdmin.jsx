@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Layout, Menu, Button, Drawer } from "antd";
+import { Layout, Menu, Button, Drawer, Popconfirm } from "antd";
 import {
-  HomeOutlined,
   FormOutlined,
   MenuOutlined,
   UsergroupAddOutlined,
@@ -14,9 +13,7 @@ import {
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import Footer from "../Footer/Footer";
-// import { useAuth } from "../components/AuthContext";
 import { useAuth } from "../AuthContext/AuthContext";
-import authService from "../../services/auth.service";
 
 const { Header, Content } = Layout;
 
@@ -32,23 +29,16 @@ function MainLayoutAdmin() {
     setDrawerVisible(false);
   };
 
-
- const handleLogout = () => {
+  const handleLogout = () => {
     logout();
-    navigate("/login"); 
+    navigate("/login");
   };
 
   const selectedKey =
     location.pathname === "/admin" ? "/admin/home" : location.pathname;
 
   const renderMenu = () => (
-    <Menu
-      /*   selectedKeys={[location.pathname]} */
-      selectedKeys={[selectedKey]}
-      mode="inline"
-      onClick={handleMenuClick}
-    >
-    
+    <Menu selectedKeys={[selectedKey]} mode="inline" onClick={handleMenuClick}>
       <Menu.Item key="/admin/reports" icon={<ExclamationCircleOutlined />}>
         Reports
       </Menu.Item>
@@ -67,10 +57,9 @@ function MainLayoutAdmin() {
         Discussion
       </Menu.Item>
 
-       <Menu.Item key="/admin/settings" icon={<SettingOutlined />}>
+      <Menu.Item key="/admin/settings" icon={<SettingOutlined />}>
         Settings
       </Menu.Item>
-    
     </Menu>
   );
 
@@ -93,16 +82,15 @@ function MainLayoutAdmin() {
         </div>
 
         <div className="header-right">
-          {/* <Button
-            className="user_button"
-            icon={<PoweroffOutlined />}
-            onClick={handleLogOut}
-          /> */}
-          <Button
-            className="user_button"
-            icon={<PoweroffOutlined />}
-            onClick={handleLogout}
-          />
+          <Popconfirm
+            title="Are you sure you want to logout?"
+            onConfirm={handleLogout}
+            okText="Yes"
+            cancelText="No"
+            placement="bottomRight"
+          >
+            <Button className="user_button" icon={<PoweroffOutlined />} />
+          </Popconfirm>
         </div>
       </Header>
       <Drawer

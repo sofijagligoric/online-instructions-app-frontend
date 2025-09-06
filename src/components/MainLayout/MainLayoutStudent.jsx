@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Menu, Button, Drawer } from "antd";
+import { Layout, Menu, Button, Drawer, Popconfirm } from "antd";
 import {
   HomeOutlined,
   FormOutlined,
@@ -14,14 +14,13 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import Footer from "../Footer/Footer";
 import { useAuth } from "../AuthContext/AuthContext";
-import authService from "../../services/auth.service";
 
 const { Header, Content } = Layout;
 
 function MainLayoutStudent() {
   const location = useLocation();
   const navigate = useNavigate();
-const { logout } = useAuth();
+  const { logout } = useAuth();
 
   const [drawerVisible, setDrawerVisible] = useState(false);
 
@@ -29,11 +28,10 @@ const { logout } = useAuth();
     navigate(key);
     setDrawerVisible(false);
   };
-   const handleLogout = () => {
+  const handleLogout = () => {
     logout();
-    navigate("/login"); 
+    navigate("/login");
   };
-
 
   const selectedKey =
     location.pathname === "/student" ? "/student/home" : location.pathname;
@@ -79,21 +77,20 @@ const { logout } = useAuth();
         </div>
 
         <div className="header-right">
-          {/* <Button
-            className="user_button"
-            icon={<PoweroffOutlined />}
-            onClick={handleLogOut}
-          /> */}
           <Button
             className="user_button"
             icon={<UserOutlined />}
             onClick={() => navigate("/student/myProfile")}
           />
-          <Button
-            className="user_button"
-            icon={<PoweroffOutlined />}
-            onClick={handleLogout}
-          />
+          <Popconfirm
+            title="Are you sure you want to logout?"
+            onConfirm={handleLogout}
+            okText="Yes"
+            cancelText="No"
+            placement="bottomRight"
+          >
+            <Button className="user_button" icon={<PoweroffOutlined />} />
+          </Popconfirm>
         </div>
       </Header>
 
