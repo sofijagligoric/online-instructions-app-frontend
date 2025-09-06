@@ -46,8 +46,8 @@ const ChangePasswordModal = ({ visible, onCancel, userId }) => {
       alert("Password updated successfully!");
       navigate("/login");
     } catch (err) {
-      console.error("Error updating password:", err);
-      alert("Failed to update password.");
+      // console.error("Error updating password:", err);
+      alert("Failed to update password. Old password is incorrect.");
     }
   };
   return (

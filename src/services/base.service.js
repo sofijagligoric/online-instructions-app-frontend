@@ -27,8 +27,7 @@ const baseService = {
           error.response &&
           (error.response.status === 401 || error.response.status === 403)
         ) {
-          console.warn("Sesija istekla (401/403)");
-          alert("Session expired. Please login again.");
+          console.warn("Error (401/403)");
         }
         return Promise.reject(error);
       }
