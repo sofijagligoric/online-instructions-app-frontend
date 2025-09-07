@@ -96,8 +96,8 @@ const Advert = ({
           okText="Yes"
           cancelText="No"
         >
-          <Menu.Item key="delete" icon={<DeleteOutlined />}></Menu.Item>
-          Delete
+          <Menu.Item key="delete" icon={<DeleteOutlined />}> Delete</Menu.Item>
+          
         </Popconfirm>
       )}
       {!canDelete && (
