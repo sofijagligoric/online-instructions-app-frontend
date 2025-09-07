@@ -69,15 +69,13 @@ const LoginPage = () => {
         <div className="login-links">
           <p>
             Forgot{" "}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setIsForgotModalVisible(true);
-              }}
+            <button
+              type="button"
+              className="forgot-password-button"
+              onClick={() => setIsForgotModalVisible(true)}
             >
               Password?
-            </a>
+            </button>
           </p>
           <p>
             Don't have an account? <Link to="/signup">Sign up</Link>
