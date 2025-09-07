@@ -68,16 +68,16 @@ export default function Comment({
   const menu = (
     <Menu>
       {canDelete && (
-        <Menu.Item key="delete" icon={<DeleteOutlined />}>
-          <Popconfirm
-            title="Are you sure you want to delete this comment?"
-            onConfirm={handleDelete}
-            okText="Yes"
-            cancelText="No"
-          >
-            <span>Delete</span>
-          </Popconfirm>
-        </Menu.Item>
+        <Popconfirm
+          title="Are you sure you want to delete this comment?"
+          onConfirm={handleDelete}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Menu.Item key="delete" icon={<DeleteOutlined />}>
+            Delete
+          </Menu.Item>
+        </Popconfirm>
       )}
       {!canDelete && (
         <Menu.Item

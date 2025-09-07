@@ -90,16 +90,15 @@ const Advert = ({
         </Menu.Item>
       )}
       {canDelete && (
-        <Menu.Item key="delete" icon={<DeleteOutlined />}>
-          <Popconfirm
-            title="Are you sure you want to delete this advert?"
-            onConfirm={handleDelete}
-            okText="Yes"
-            cancelText="No"
-          >
-            <span>Delete</span>
-          </Popconfirm>
-        </Menu.Item>
+        <Popconfirm
+          title="Are you sure you want to delete this advert?"
+          onConfirm={handleDelete}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Menu.Item key="delete" icon={<DeleteOutlined />}></Menu.Item>
+          Delete
+        </Popconfirm>
       )}
       {!canDelete && (
         <Menu.Item

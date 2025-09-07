@@ -139,16 +139,16 @@ export default function ViewQuestion({
         </Menu.Item>
       )}
       {canDelete && (
-        <Menu.Item key="delete" icon={<DeleteOutlined />}>
-          <Popconfirm
-            title="Are you sure you want to delete this thread?"
-            onConfirm={handleDelete}
-            okText="Yes"
-            cancelText="No"
-          >
-            <span>Delete</span>
-          </Popconfirm>
-        </Menu.Item>
+        <Popconfirm
+          title="Are you sure you want to delete this thread?"
+          onConfirm={handleDelete}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Menu.Item key="delete" icon={<DeleteOutlined />}>
+            Delete
+          </Menu.Item>
+        </Popconfirm>
       )}
       {!canDelete && (
         <Menu.Item
