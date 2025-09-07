@@ -191,3 +191,12 @@ margin-top: 15px;
     flex-direction: column;
   }
 }
+
+.inactive-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  text-align: center;
+  color: #666;
+}

@@ -174,6 +174,18 @@ const ViewProfilePage = () => {
       prev.map((ad) => (ad.id === updatedResource.id ? updatedResource : ad))
     );
   };
+
+  if (!user) return <p>Loading...</p>;
+  if (!user.isActive && role !== "Admin" && userId !== user.id) {
+    return (
+      <div className="profile-page">
+        <div className="inactive-message">
+          <h2>This user is no longer active.</h2>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="profile-page">
       <div className="profile-header">

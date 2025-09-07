@@ -91,7 +91,7 @@ const NewQuestion = ({ categories = [], onSubmit }) => {
           accept="image/*"
           showUploadList={false}
         >
-          <button type="button">
+          <button type="button" style={{background: "#121d54"}}>
             {file ? "Change image" : "Upload image (optional)"}
           </button>
         </Upload>
